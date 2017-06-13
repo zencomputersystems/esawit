@@ -4,6 +4,9 @@ import { Http, Headers, RequestOptions } from '@angular/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AcceptedBunchesHistoryPage } from '../AcceptedBunchesHistory/AcceptedBunchesHistory';
 import { Observable } from 'rxjs/Observable';
+import * as constants from '../../../config/constants';
+import {AcceptBunchesModel } from '../../../models/AcceptBunchesModel';
+import {SharedFunctions} from '../../../providers/Shared/Functions';
 
 @Component({
     selector: 'page-AcceptBunches',
@@ -14,33 +17,39 @@ export class AcceptBunchesPage {
     locationFromDb: any;
     vehicleFromDb: any;
     driverFromDb: any;
-    AddTransaction: FormGroup;
+    UIDFromMobile: string;
+    UserGUID: string;
+        factoryModel: AcceptBunchesModel = new AcceptBunchesModel();
 
-    constructor(public actionsheetCtrl: ActionSheetController,
+    constructor(public actionsheetCtrl: ActionSheetController,public global:SharedFunctions,
         public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public _form: FormBuilder, public navParams: NavParams, public alertCtrl: AlertController) {
+ this.UIDFromMobile = "3";
+        var loggedInUserFromDB: any;
+        var url : string;
+        url = constants.DREAMFACTORY_TABLE_URL + "/user_imei/" + this.UIDFromMobile + "?id_field=user_IMEI&api_key=" + constants.DREAMFACTORY_API_KEY;
+        this.http.get(url).map(res => res.json()).subscribe(data => {
+            loggedInUserFromDB = data;
+            this.UserGUID = loggedInUserFromDB.user_GUID;
+            console.log(this.UserGUID);
+    });
 
         //Todo: Inject into a global function
-        var url = "http://api.zen.com.my/api/v2/esawitdb/_table/master_location?api_key=b34c8b6e26a41f07dee48513714a534920f647cd48f299e9f28410a86d8a2cb4";
+        var url = constants.DREAMFACTORY_TABLE_URL+ "/master_location?api_key="+constants.DREAMFACTORY_API_KEY;
         this.http.get(url).map(res => res.json()).subscribe(data => {
             this.locationFromDb = data["resource"];
         });
-        this.AddTransaction = this._form.group({
-            "loading_location_GUID": ["", Validators.required],
-            "bunch_count": ["", Validators.required],
-            "vehicle_GUID": ["", Validators.required],
-            "driver_GUID": ["", Validators.required]
-        });
+
     }
 
     onLocationSelect(locationSelected: any) {
 
         //Todo: Inject into a global function
-        var url = "http://api.zen.com.my/api/v2/esawitdb/_table/active_vehicle_location_view?filter=location_GUID=" + locationSelected + "&api_key=b34c8b6e26a41f07dee48513714a534920f647cd48f299e9f28410a86d8a2cb4";
+        var url = constants.DREAMFACTORY_TABLE_URL+ "/active_vehicle_location_view?filter=location_GUID=" + locationSelected + "&api_key="+constants.DREAMFACTORY_API_KEY;
         this.http.get(url).map(res => res.json()).subscribe(data => {
             this.vehicleFromDb = data["resource"];
         });
         //Todo: Inject into a global function
-        var url = "http://api.zen.com.my/api/v2/esawitdb/_table/active_driver_location_view?filter=location_GUID=" + locationSelected + "&api_key=b34c8b6e26a41f07dee48513714a534920f647cd48f299e9f28410a86d8a2cb4";
+        url = constants.DREAMFACTORY_TABLE_URL+ "/active_driver_location_view?filter=location_GUID=" + locationSelected + "&api_key="+constants.DREAMFACTORY_API_KEY;
         this.http.get(url).map(res => res.json()).subscribe(data => {
             this.driverFromDb = data["resource"];
         });
@@ -56,53 +65,19 @@ export class AcceptBunchesPage {
     }
 
 
-    submitCount() {
-        var queryHeaders = new Headers();
-        queryHeaders.append('Content-Type', 'application/json');
-        let options = new RequestOptions({ headers: queryHeaders });
-        this.showConfirm();
+    submitCount(location:string,vehicle:string,driver:string,bunchCount:number) {
+         this.factoryModel.loading_location_GUID = location;
+         this.factoryModel.vehicle_GUID = vehicle;
+         this.factoryModel.driver_GUID = driver;
+          this.factoryModel.user_GUID = this.UserGUID;
+        this.factoryModel.bunch_count = bunchCount;
+        this.factoryModel.createdby_GUID = this.UserGUID;
+        this.factoryModel.updated_ts = this.factoryModel.created_ts = this.global.getTimeStamp();
+        this.factoryModel.updatedby_GUID = this.UserGUID;
+                this.global.showConfirm(constants.DREAMFACTORY_TABLE_URL + '/transact_unloading', this.factoryModel.toJson(true));
     }
 
-    //Todo: Make it Global
-    showConfirm() {
-        let confirm = this.alertCtrl.create({
-            title: 'Create New Record?',
-            message: 'Do you really want to add new count with given values?',
-            buttons: [
-                {
-                    text: 'Cancel',
-                    handler: () => {
-                        console.log('Cancel clicked');
-                    }
-                },
-                {
-                    text: 'Yes',
-                    handler: () => {
-                        this.http
-                            .post('http://api.zen.com.my/api/v2/esawitdb/_table/transact_unloading?api_key=b34c8b6e26a41f07dee48513714a534920f647cd48f299e9f28410a86d8a2cb4', Array.of(this.AddTransaction.value))
-                            .subscribe((response) => {
-                                this.showToast('bottom', 'New Record Successfully Added');
-                                this.navCtrl.push(AcceptedBunchesHistoryPage);
-
-                            }, (error) => {
-                                this.showToast('bottom', 'Failed to Submit');
-                            });
-                    }
-                }
-            ]
-        });
-        confirm.present();
-    }
-
-    //Todo: Make it Global
-    showToast(position: string, tostMessage: string) {
-        let toast = this.toastCtrl.create({
-            message: tostMessage,
-            duration: 2000,
-            position: position
-        });
-        toast.present(toast);
-    }
+  
 }
 
 

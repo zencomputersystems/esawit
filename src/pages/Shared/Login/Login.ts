@@ -1,7 +1,7 @@
 ﻿import { Component } from '@angular/core';
 import { NavController, Platform, ActionSheetController } from 'ionic-angular';
 import { HarvestBunchesPage } from '../../Mandor/HarvestBunches/HarvestBunches';
-import { MainMenu } from "../../../providers/MainMenu/MainMenu";
+import {SharedFunctions} from '../../../providers/Shared/Functions';
 import { SurveyorHomePage } from '../../Surveyor/SurveyorHome/SurveyorHome';
 import { FactoryHomePage } from '../../Factory/FactoryHome/FactoryHome';
 import { SettingsPage } from '../Settings/Settings';
@@ -13,7 +13,7 @@ import { SqLitePage } from '../SqLite/SqLite';
 })
 export class LoginPage {
         today: number = Date.now();
-    constructor(private mainMenu: MainMenu, public navCtrl: NavController, public platform: Platform, public actionsheetCtrl: ActionSheetController) {
+    constructor(private mainMenu: SharedFunctions, public navCtrl: NavController, public platform: Platform, public actionsheetCtrl: ActionSheetController) {
         var myDate = new Date();
         let options = {
             year: 'numeric', month: 'numeric', day: 'numeric',

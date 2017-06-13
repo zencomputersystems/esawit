@@ -2,7 +2,7 @@
 import { NavController, Platform, ActionSheetController } from 'ionic-angular';
 import { CountBunchesPage } from '../CountBunches/CountBunches';
 import { CountBunchesHistoryPage } from '../CountBunchesHistory/CountBunchesHistory';
-import { MainMenu } from "../../../providers/MainMenu/MainMenu";
+import {SharedFunctions} from '../../../providers/Shared/Functions';
 
 @Component({
     selector: 'page-home',

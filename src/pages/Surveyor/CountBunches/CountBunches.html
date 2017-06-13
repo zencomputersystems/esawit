@@ -12,33 +12,33 @@
   <!--<ion-list inset *ngFor="let label of labelsFromStorage">-->
   <ion-list>
     <h1>{{ "_ABOUT_BUNCHES_HEADER" | translate }}</h1>
-    <form [formGroup]="AddTransaction">
+    <!--<form [formGroup]="AddTransaction">-->
 
 
       <ion-item>
         <ion-label>{{ "_MONTH_LBL" | translate }}</ion-label>
-        <ion-select [formControl]="AddTransaction.controls['month']" [(ngModel)]="monthSelect" interface="popover" placeholder='{{"_SELECT_MONTH_HINT" | translate}}'>
+        <ion-select [(ngModel)]="monthSelect" interface="popover" placeholder='{{"_SELECT_MONTH_HINT" | translate}}'>
           <ion-option *ngFor="let month of monthsFromStorage" value={{month.value}}>{{ "_MONTH." + month.value | translate }}</ion-option>
         </ion-select>
       </ion-item>
 
       <ion-item>
         <ion-label>{{ "_LOCATION_LBL" | translate }}</ion-label>
-        <ion-select [formControl]="AddTransaction.controls['location_GUID']" [(ngModel)]="locationSelect" interface="popover" placeholder='{{"_SELECT_LOCATION_HINT" | translate}}'>
+        <ion-select [(ngModel)]="locationSelect" interface="popover" placeholder='{{"_SELECT_LOCATION_HINT" | translate}}'>
           <ion-option *ngFor="let item of locationListFromDb" value={{item.location_GUID}}>{{item.name}}</ion-option>
         </ion-select>
       </ion-item>
 
       <ion-item>
         <ion-label fixed>{{ "_TOTAL_BUNCHES_LBL" | translate }}</ion-label>
-        <ion-input [formControl]="AddTransaction.controls['bunch_count']" highlight-color="energized" type="text"></ion-input>
+        <ion-input [(ngModel)]="bunchCount"  highlight-color="energized" type="text"></ion-input>
       </ion-item>
 
 
       <ion-col>
-        <button ion-button full type="submit" (click)="submitCount()">{{ "_SUBMIT_BTN" | translate }}</button>
+        <button ion-button full type="submit" (click)="submitCount(monthSelect,locationSelect,bunchCount)">{{ "_SUBMIT_BTN" | translate }}</button>
       </ion-col>
 
-    </form>
+    <!--</form>-->
   </ion-list>
 </ion-content>

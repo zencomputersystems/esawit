@@ -1,7 +1,10 @@
-export class HarvestBunchesModel {
+export class AcceptBunchesModel {
 	constructor(
-		public location_GUID: string = "",
+		public user_GUID: string = "",
+		public loading_location_GUID: string = "",
 		public bunch_count: number = null,
+		public vehicle_GUID: string = "",
+		public driver_GUID: string = "",
 		public created_ts: Date = null,
 		public createdby_GUID: string = null,
 		public updatedby_GUID: string = null,
@@ -10,8 +13,11 @@ export class HarvestBunchesModel {
 
 	toJson(stringify?: boolean): any {
 		var doc = {
-			location_GUID: this.location_GUID,
+			user_GUID: this.user_GUID,
+			loading_location_GUID: this.loading_location_GUID,
 			bunch_count: this.bunch_count,
+			vehicle_GUID: this.vehicle_GUID,
+			driver_GUID: this.driver_GUID,
 			created_ts: this.created_ts,
 			createdby_GUID: this.createdby_GUID,
 			updatedby_GUID: this.updatedby_GUID,

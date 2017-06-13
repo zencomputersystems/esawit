@@ -2,7 +2,7 @@
 import { NavController, Platform, ActionSheetController } from 'ionic-angular';
 import { HarvestedHistoryPage } from '../HarvestedHistory/HarvestedHistory';
 import { HarvestBunchesPage } from '../HarvestBunches/HarvestBunches';
-import { MainMenu } from "../../../providers/MainMenu/MainMenu";
+import {SharedFunctions} from '../../../providers/Shared/Functions';
 
 @Component({
     selector: 'page-home',
@@ -10,7 +10,7 @@ import { MainMenu } from "../../../providers/MainMenu/MainMenu";
 })
 export class MandorHomePage {
 
-    constructor(private mainMenu: MainMenu, public navCtrl: NavController, public platform: Platform, public actionsheetCtrl: ActionSheetController) {
+    constructor(private mainMenu: SharedFunctions, public navCtrl: NavController, public platform: Platform, public actionsheetCtrl: ActionSheetController) {
 
     }
 

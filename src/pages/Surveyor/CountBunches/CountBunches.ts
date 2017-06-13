@@ -5,8 +5,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Storage } from '@ionic/storage';
 // import { MandorHomePage } from '../MandorHome/MandorHome';
 // import { SettingsPage } from '../../Shared/Settings/Settings';
-// import { MainMenu } from "../../../providers/MainMenu";
 import { CountBunchesHistoryPage } from '../CountBunchesHistory/CountBunchesHistory';
+import * as constants from '../../../config/constants';
+import {SharedFunctions} from '../../../providers/Shared/Functions';
+import {CountBunchesModel } from '../../../models/CountBunchesModel';
 
 @Component({
     selector: 'page-CountBunches',
@@ -14,29 +16,32 @@ import { CountBunchesHistoryPage } from '../CountBunchesHistory/CountBunchesHist
 })
 export class CountBunchesPage {
     locationListFromDb: any;
-    AddTransaction: FormGroup;
     labelsFromStorage: any;
     monthsFromStorage: any;
     currentYear: any;
-    // private mainMenu:MainMenu,
-    constructor(public actionsheetCtrl: ActionSheetController, private storage: Storage,
+        surveyModel: CountBunchesModel = new CountBunchesModel();
+    UIDFromMobile: string;
+    UserGUID: string;
+
+    constructor(public actionsheetCtrl: ActionSheetController, private storage: Storage,public global:SharedFunctions,
         public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public _form: FormBuilder, public navParams: NavParams, public alertCtrl: AlertController) {
-        //    this.getLanguage();
+
+ this.UIDFromMobile = "2";
+        var loggedInUserFromDB: any;
+        var url : string;
+        url = constants.DREAMFACTORY_TABLE_URL + "/user_imei/" + this.UIDFromMobile + "?id_field=user_IMEI&api_key=" + constants.DREAMFACTORY_API_KEY;
+        this.http.get(url).map(res => res.json()).subscribe(data => {
+            loggedInUserFromDB = data;
+            this.UserGUID = loggedInUserFromDB.user_GUID;
+            console.log(this.UserGUID);
+    });
         this.getMonths();
         this.currentYear = new Date().getFullYear();
-        var url = "http://api.zen.com.my/api/v2/esawitdb/_table/master_location?api_key=b34c8b6e26a41f07dee48513714a534920f647cd48f299e9f28410a86d8a2cb4";
+        var url = constants.DREAMFACTORY_TABLE_URL+ "/master_location?api_key="+constants.DREAMFACTORY_API_KEY;
         this.http.get(url).map(res => res.json()).subscribe(data => {
             this.locationListFromDb = data["resource"];
         });
-
-        this.AddTransaction = this._form.group({
-            "month": ["", Validators.required],
-            "location_GUID": ["", Validators.required],
-            "bunch_count": ["", Validators.required]
-
-        });
     }
-
 
     getMonths() {
         var url = "assets/Surveyor/Months.json";
@@ -49,57 +54,20 @@ export class CountBunchesPage {
     // this.mainMenu.openMenu();
     //     }
 
-
-
     onLink(url: string) {
         window.open(url);
     }
 
+    submitCount(month:number,location:string,bunchCount:number) {
+          this.surveyModel.location_GUID = location;
+          this.surveyModel.user_GUID = this.UserGUID;
+        this.surveyModel.bunch_count = bunchCount;
+        this.surveyModel.month = month
+        this.surveyModel.createdby_GUID = this.UserGUID;
+        this.surveyModel.updated_ts = this.surveyModel.created_ts = this.global.getTimeStamp();
+        this.surveyModel.updatedby_GUID = this.UserGUID;
+                this.global.showConfirm(constants.DREAMFACTORY_TABLE_URL + '/transact_survey', this.surveyModel.toJson(true));
 
-    submitCount() {
-        var queryHeaders = new Headers();
-        queryHeaders.append('Content-Type', 'application/json');
-        let options = new RequestOptions({ headers: queryHeaders });
-        this.showConfirm();
-    }
-    showConfirm() {
-        let confirm = this.alertCtrl.create({
-            title: 'Create New Count?',
-            message: 'Do you really want to add new count with given values?',
-            buttons: [
-                {
-                    text: 'Cancel',
-                    handler: () => {
-                        console.log('Cancel clicked');
-                    }
-                },
-                {
-                    text: 'Yes',
-                    handler: () => {
-                        this.http
-                            .post('http://api.zen.com.my/api/v2/esawitdb/_table/transact_survey?api_key=b34c8b6e26a41f07dee48513714a534920f647cd48f299e9f28410a86d8a2cb4', Array.of(this.AddTransaction.value))
-                            .subscribe((response) => {
-                                this.showToast('bottom', 'New Record Successfully Added');
-                                this.navCtrl.push(CountBunchesHistoryPage);
-
-                            }, (error) => {
-                                this.showToast('bottom', 'Failed to Submit');
-                            });
-                    }
-                }
-            ]
-        });
-        confirm.present();
-    }
-
-    showToast(position: string, tostMessage: string) {
-        let toast = this.toastCtrl.create({
-            message: tostMessage,
-            duration: 2000,
-            position: position
-        });
-
-        toast.present(toast);
     }
 }
 

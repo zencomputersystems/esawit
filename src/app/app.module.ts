@@ -25,7 +25,7 @@ import { FactoryHomePage } from '../pages/Factory/FactoryHome/FactoryHome';
 
 
 import { MyApp } from './app.component';
-import { MainMenu } from '../providers/MainMenu/MainMenu';
+import {SharedFunctions} from "../providers/Shared/Functions";
 
  import {  HttpModule,Http } from '@angular/http';
         import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -65,7 +65,7 @@ import { MainMenu } from '../providers/MainMenu/MainMenu';
     StatusBar,
     SplashScreen,Network,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    MainMenu
+    SharedFunctions
   ]
 })
 export class AppModule {}
