@@ -9,7 +9,7 @@
     1. Open node.js command prompt
     2. Change folder to location of project
     3. Issue command: 'npm link'
-    4. Install the plugins listed in package.json->cordova->plugins section manually, by issuing the command "ionic cordova plugin add {plugin-name}". e.g., ionic cordova plugin add cordova-plugin-device.
+    4. Install the plugins listed in package.json(if any error, install plugins before 'npm link')->cordova->plugins section manually, by issuing the command "ionic cordova plugin add {plugin-name}". e.g., ionic cordova plugin add cordova-plugin-device.
     5. Test with: 'ionic serve' or 'ionic serve -l'
 
 
