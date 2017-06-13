@@ -1,0 +1,74 @@
+import { BrowserModule } from '@angular/platform-browser';
+import { ErrorHandler, NgModule } from '@angular/core';
+import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+import { SplashScreen } from '@ionic-native/splash-screen';
+import { StatusBar } from '@ionic-native/status-bar';
+import {IonicStorageModule } from "@ionic/storage";
+import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
+ import { Network } from '@ionic-native/network';
+
+import { MandorHomePage } from '../pages/Mandor/MandorHome/MandorHome';
+import { HarvestedHistoryPage } from '../pages/Mandor/HarvestedHistory/HarvestedHistory';
+import { HarvestBunchesPage } from '../pages/Mandor/HarvestBunches/HarvestBunches';
+
+import {SettingsPage} from '../pages/Shared/Settings/Settings';
+import {LoginPage} from '../pages/Shared/Login/Login';
+import {SqLitePage} from '../pages/Shared/SqLite/SqLite';
+
+import { CountBunchesPage } from '../pages/Surveyor/CountBunches/CountBunches';
+import { CountBunchesHistoryPage } from '../pages/Surveyor/CountBunchesHistory/CountBunchesHistory';
+import { SurveyorHomePage } from '../pages/Surveyor/SurveyorHome/SurveyorHome';
+
+import { AcceptBunchesPage } from '../pages/Factory/AcceptBunches/AcceptBunches';
+import { AcceptedBunchesHistoryPage } from '../pages/Factory/AcceptedBunchesHistory/AcceptedBunchesHistory';
+import { FactoryHomePage } from '../pages/Factory/FactoryHome/FactoryHome';
+
+
+import { MyApp } from './app.component';
+import { MainMenu } from '../providers/MainMenu/MainMenu';
+
+ import {  HttpModule,Http } from '@angular/http';
+        import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+        import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
+@NgModule({
+  declarations: [
+    MyApp,
+      MandorHomePage, HarvestedHistoryPage, HarvestBunchesPage,
+      SettingsPage,LoginPage,SqLitePage,
+      SurveyorHomePage,CountBunchesPage,CountBunchesHistoryPage,
+      AcceptBunchesPage,AcceptedBunchesHistoryPage,FactoryHomePage
+  ],
+  imports: [
+    HttpModule,
+    BrowserModule,
+    IonicModule.forRoot(MyApp),
+     IonicStorageModule.forRoot(),
+                TranslateModule.forRoot({
+                loader: {
+                provide: TranslateLoader,
+                useFactory: (createTranslateLoader),
+                deps: [Http]
+                }
+            })
+  ],
+  bootstrap: [IonicApp],
+  entryComponents: [
+    MyApp,
+      MandorHomePage, HarvestedHistoryPage, HarvestBunchesPage,
+      SettingsPage,LoginPage,SqLitePage,
+      SurveyorHomePage,CountBunchesPage,CountBunchesHistoryPage,
+      AcceptBunchesPage,AcceptedBunchesHistoryPage,FactoryHomePage
+  ],
+  providers: [
+    SQLite,
+    StatusBar,
+    SplashScreen,Network,
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    MainMenu
+  ]
+})
+export class AppModule {}
+ export function createTranslateLoader(http: Http) {
+             return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+            }

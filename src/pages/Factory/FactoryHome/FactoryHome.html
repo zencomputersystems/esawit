@@ -1,0 +1,16 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{"_TITLE" | translate}}</ion-title>
+    <ion-buttons end>
+      <button ion-right ion-button icon-only (click)="openGlobalMenu()">
+        <ion-icon name='menu'></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+<ion-content padding>
+  <button ion-button icon-left color="dark" block (click)="NewAcceptance()">
+                <ion-icon name="cut" ></ion-icon>{{"_ACCEPT_BUNCHES_BTN" | translate}}</button>
+  <button ion-button icon-left color="dark" block (click)="GetHistory()">
+            <ion-icon name="bus" ></ion-icon>{{"_ACCEPTED_BUNCHES_HISTORY_BTN" | translate}}</button>
+</ion-content>

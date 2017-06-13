@@ -1,0 +1,39 @@
+﻿{
+  "LanguageData": [
+    {
+      "ProjectName": "eSAWIT",
+      "SurveyorModule": {
+                "CountBunches": {
+                            "lblHeader": "Kira Tandan",
+                            "lblMonth": "Bulan",
+                            "lblLocation": "Lokasi",
+                            "lblTotalBunches": "Bil. Tandan",
+                            "btnSubmit": "Hantar"
+                 },
+                 "BunchesHistory": {
+                            "lblHeader": "Sejarah Kira Tandan",
+                            "lblNo": "Bil.",
+                            "lblMonths": "Bulan",
+                            "lblLocation": "Lokasi",
+                            "lblTotalBunches": "Bil. Tandan"
+                 }
+      },
+      "MandorModule": {
+                "HarvestBunches": {
+                            "lblHeader": "Tandan Dituai",
+                            "lblDate": "Tarikh",
+                            "lblLocation": "Lokasi",
+                            "lblTotalBunches": "Bilangan Tandan",
+                            "btnSubmit": "Tuai"
+                 },
+                "BunchesTransported": {
+                            "lblHeader": "Tandan Diangkut",
+                            "lblNo": "Bil.",         
+                            "lblTransportNow": "Untuk Diangkut"
+                }
+      },
+      "Description": "Pengiraan sawit"
+    }
+   
+  ]
+}

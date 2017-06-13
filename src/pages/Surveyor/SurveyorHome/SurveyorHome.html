@@ -1,0 +1,16 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title> {{ "_TITLE" | translate }}</ion-title>
+    <ion-buttons end>
+      <button ion-right ion-button icon-only>
+        <ion-icon name='menu'></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+<ion-content padding>
+  <button ion-button icon-left color="dark" block (click)="NewCount()">
+                <ion-icon name="calculator" ></ion-icon>{{ "_COUNT_BUNCHES" | translate }}</button>
+  <button ion-button icon-left color="dark" block (click)="GetCountHistory()">
+            <ion-icon name="calendar" ></ion-icon>{{ "_COUNT_HISTORY" | translate }}</button>
+</ion-content>

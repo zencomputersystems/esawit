@@ -1,0 +1,36 @@
+{
+  "LanguageData": [
+    {
+      "ProjectName": "ESAWIT",
+      "SurveyorModule": {        "CountBunches": {          "lblHeader": "About Bunches",
+                                                                                        "lblMonth": "Month",
+                                                                                         "lblLocation": "Location",
+                                                                                         "lblTotalBunches": "Total Bunches",
+                                                                                         "btnSubmit": "Submit"
+                                                                               },
+                                               "BunchesHistory": {
+                                                                                         "lblHeader": "Buches Count History",
+                                                                                          "lblNo": "S.No.",
+                                                                                        "lblMonths": "Months",
+                                                                                         "lblLocation": "Location",
+                                                                                        "lblTotalBunches": "Total Bunches"
+                                                                              }
+                                    },
+      "MandorModule": {        "HarvestBunches": {
+                                                                                        "lblHeader": "Harvest Bunches",
+                                                                                       "lblDate": "Date",
+                                                                                       "lblLocation": "Location",
+                                                                                      "lblTotalBunches": "Total Bunches",
+                                                                                      "btnSubmit": "Submit"
+                                                                              },
+                                              "BunchesTransported": {
+                                                                                      "lblHeader": "Buches Transported",
+                                                                                      "lblNo": "S.No.",         
+                                                                                      "lblTransportNow": "Transport Now"
+                                                                                    }
+                                   },
+      "Description": "Palm Tree Count"
+    }
+   
+  ]
+}

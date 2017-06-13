@@ -1,0 +1,16 @@
+﻿<ion-header>
+  <ion-navbar>
+    <ion-title>{{"_TITLE" | translate}}</ion-title>
+    <ion-buttons end>
+      <button ion-right ion-button icon-only (click)="openGlobalMenu()">
+        <ion-icon name='menu'></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+<ion-content padding>
+  <button ion-button icon-left color="dark" block (click)="NewHarvest()">
+                <ion-icon name="cut" ></ion-icon>{{"_HARVEST_BTN" | translate}}</button>
+  <button ion-button icon-left color="dark" block (click)="GetHistory()">
+            <ion-icon name="bus" ></ion-icon>{{"_HARVEST_HISTORY_BTN" | translate}}</button>
+</ion-content>
