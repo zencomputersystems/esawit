@@ -27,7 +27,8 @@ export class SharedFunctions {
 
   getTimeStamp() {
     var myDate = new Date();
-    return new Date(myDate.getUTCFullYear(), myDate.getUTCMonth(), myDate.getUTCDate(), myDate.getUTCHours(), myDate.getUTCMinutes(), myDate.getSeconds());
+//    return new Date(myDate.getUTCFullYear(), myDate.getUTCMonth(), myDate.getUTCDate(), myDate.getUTCHours(), myDate.getUTCMinutes(), myDate.getSeconds());
+      return new Date(myDate.getTime());
   }
 
   showConfirm(url: string, myModel: any) {
