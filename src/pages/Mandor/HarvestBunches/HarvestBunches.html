@@ -1,28 +1,75 @@
 ﻿<ion-header>
   <ion-navbar>
-    <ion-title>{{ "_TITLE" | translate }}</ion-title>
+    <ion-title>{{ "_TITLE" | translate }} - {{ "_HARVEST_BUNCHES_HEADER" | translate }}</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
-  <h1>{{ "_HARVEST_BUNCHES_HEADER" | translate }}</h1>
-  <!--<ion-label [(ngModel)]='myDate' >   {{today | date:'y-M-d H:m:s'}}</ion-label>-->
-
   <ion-card class="cards-list-demo" *ngFor="let location of locationFromDB">
     <ion-card-header>
       {{ "_LOCATION_LBL" | translate }} : {{location.location_name}}
+      <ion-segment [(ngModel)]="locationBased" color="secondary">
+        <ion-segment-button value="seg_info">
+          {{"_INFO_LBL" | translate }}
+        </ion-segment-button>
+        <ion-segment-button value="seg_harvest">
+          {{"_HARVEST_LBL" | translate }}
+        </ion-segment-button>
+        <ion-segment-button value="seg_load">
+          {{"_LOAD_LBL" | translate }}
+        </ion-segment-button>
+      </ion-segment>
     </ion-card-header>
-
-    <ion-label>{{ "_TOTAL_HARVESTED_LBL" | translate }}: </ion-label>
-    <ion-label>{{ "_LOADED_LBL" | translate }} : </ion-label>
-    <ion-label>{{ "_BALANCE_LBL" | translate }} : </ion-label>
+    <div [ngSwitch]="locationBased">
+      <ion-card *ngSwitchDefault>
+        <ion-label>{{ "_TOTAL_HARVESTED_LBL" | translate }}: </ion-label>
+        <ion-label>{{ "_LOADED_LBL" | translate }} : </ion-label>
+        <ion-label>{{ "_BALANCE_LBL" | translate }} : </ion-label>
+      </ion-card>
+      <ion-card *ngSwitchCase="'seg_harvest'">
+        <ion-card-content>
+          <ion-item>
+            <ion-label fixed>{{ "_TOTAL_BUNCHES_LBL" | translate }}</ion-label>
+            <ion-input [(ngModel)]='count' highlight-color="energized" type="text" value=""></ion-input>
+          </ion-item>
+          <ion-col>
+            <button ion-button full type="submit" (click)="submitCount(location.location_GUID,count)">{{ "_SUBMIT_BTN" | translate }}</button>
+          </ion-col>
+        </ion-card-content>
+      </ion-card>
+      <ion-card *ngSwitchCase="'seg_load'">
+        <ion-card-content>
+          <ion-item>
+            <ion-label>{{"_VEHICLE_NO_LBL" | translate}}</ion-label>
+            <ion-select [(ngModel)]="vehicleSelect" interface="popover" placeholder='{{"_SELECT_VEHICLE_HINT" | translate}}'>
+              <ion-option *ngFor="let vehicle of vehicleFromDB" value={{vehicle.vehicle_GUID}}>{{vehicle.registration_no}}</ion-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-label>{{"_DRIVER_LBL" | translate}}</ion-label>
+            <ion-select [(ngModel)]="driverSelect" interface="popover" placeholder='{{"_SELECT_DRIVER_HINT" | translate}}'>
+              <ion-option *ngFor="let driver of driverFromDB" value={{driver.driver_GUID}}>{{driver.fullname}}</ion-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-label fixed>{{ "_TOTAL_BUNCHES_LBL" | translate }}</ion-label>
+            <ion-input [(ngModel)]='bunchCount' highlight-color="energized" type="text" value=""></ion-input>
+          </ion-item>
+          <ion-col>
+            <button ion-button full type="submit" (click)="loadBunches(location.location_GUID,vehicleSelect,driverSelect,bunchCount)">{{ "_SUBMIT_BTN" | translate }}</button>
+          </ion-col>
+        </ion-card-content>
+      </ion-card>
+    </div>
 
     <ion-list>
+<!--
       <ion-item>
         <button ion-left ion-button (click)="location.h1 = !location.h1">{{ "_HARVEST_BTN" | translate }}</button>
         <button ion-right ion-button (click)="location.h2 = !location.h2">{{ "_LOAD_BTN" | translate }}</button>
       </ion-item>
-
+-->
+      <!--
       <ion-card [hidden]="!location.h1">
         <ion-card-header>
           {{"_HARVEST_BUNCHES_HEADER" | translate}}
@@ -37,8 +84,8 @@
           </ion-col>
         </ion-card-content>
       </ion-card>
-
-
+-->
+      <!--
       <ion-card [hidden]="!location.h2">
         <ion-card-header>
           {{"_LOAD_HARVESTED_BUNCHES_HEADER" | translate}}
@@ -65,7 +112,7 @@
           </ion-col>
         </ion-card-content>
       </ion-card>
-
+-->
 
     </ion-list>
   </ion-card>

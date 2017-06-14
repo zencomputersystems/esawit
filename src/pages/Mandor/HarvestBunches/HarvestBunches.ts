@@ -75,6 +75,14 @@ export class HarvestBunchesPage {
         this.harvestModel.updatedby_GUID = this.UserGUID;
         this.global.showConfirm(constants.DREAMFACTORY_TABLE_URL + '/transact_harvest', this.harvestModel.toJson(true));
 
+console.log("---------------begin log--------------");
+console.log("this.global.getTimeStamp: "+this.global.getTimeStamp());
+console.log("this.harvestModel.updated_ts: "+this.harvestModel.updated_ts);
+console.log("JSON:")
+console.log(this.harvestModel.toJson(true));
+console.log("---------------end log ---------------");
+
+
         // let options = {
         //     year: 'numeric', month: 'numeric', day: 'numeric',
         //     hour: 'numeric', minute: 'numeric', second: 'numeric',

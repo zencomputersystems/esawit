@@ -15,6 +15,9 @@
   "_SUBMIT_BTN": "Submit",
   "_LOAD_BTN": "Load",
   "_SqLite_BTN": "SQLite Demo",
+  "_INFO_LBL": "INFO",
+  "_HARVEST_LBL": "HARVEST",
+  "_LOAD_LBL": "LOAD",
   
   "_HOME": "Home",
   "_SELECT_LANGUAGE_LBL": "Language Selection",
