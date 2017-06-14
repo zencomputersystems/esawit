@@ -54,12 +54,14 @@ export class HarvestBunchesPage {
         this.loadModel.location_GUID = selectedLocation;
         this.loadModel.vehicle_GUID = selectedVehicle;
         this.loadModel.driver_GUID = selectedDriver;
-        this.loadModel.user_GUID = selectedDriver;
+        this.loadModel.user_GUID = this.UserGUID;
+        console.log(this.UserGUID);
         this.loadModel.bunch_count = loadedCount;
         this.loadModel.createdby_GUID = this.loadModel.updatedby_GUID = this.UserGUID;
         this.loadModel.created_ts = this.loadModel.updated_ts = this.global.getTimeStamp();
         this.global.showConfirm(constants.DREAMFACTORY_TABLE_URL + '/transact_loading', this.loadModel.toJson(true));
-    }
+   
+ }
 
     onLocationSelect(selectedLocation: string) {
     }
