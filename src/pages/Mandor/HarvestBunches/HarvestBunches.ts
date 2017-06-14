@@ -53,13 +53,13 @@ export class HarvestBunchesPage {
     loadBunches(selectedLocation: string, selectedVehicle: string, selectedDriver, loadedCount: number) {
         this.loadModel.location_GUID = selectedLocation;
         this.loadModel.vehicle_GUID = selectedVehicle;
-        this.loadModel.driver_GUID = selectedDriver;
-        this.loadModel.user_GUID = selectedDriver;
+        this.loadModel.driver_GUID = selectedDriver;      
         this.loadModel.bunch_count = loadedCount;
-        this.loadModel.createdby_GUID = this.loadModel.updatedby_GUID = this.UserGUID;
+        this.loadModel.createdby_GUID = this.loadModel.updatedby_GUID =  this.loadModel.user_GUID = this.UserGUID;
         this.loadModel.created_ts = this.loadModel.updated_ts = this.global.getTimeStamp();
         this.global.showConfirm(constants.DREAMFACTORY_TABLE_URL + '/transact_loading', this.loadModel.toJson(true));
-    }
+   
+ }
 
     onLocationSelect(selectedLocation: string) {
     }
@@ -68,12 +68,11 @@ export class HarvestBunchesPage {
 
     submitCount(location: string, bunch_count: number) {
         this.harvestModel.location_GUID = location;
-        this.harvestModel.bunch_count = bunch_count;
-        this.harvestModel.createdby_GUID = this.UserGUID;
+        this.harvestModel.bunch_count = bunch_count;       
         this.harvestModel.updated_ts = this.harvestModel.created_ts = this.global.getTimeStamp();
         // this.harvestModel.updated_ts=     this.harvestModel.created_ts = new Date(myDate.getFullYear(),myDate.getMonth(),myDate.getDate(),myDate.getHours(),myDate.getMinutes(),myDate.getSeconds());
-        this.harvestModel.updatedby_GUID = this.UserGUID;
-        this.global.showConfirm(constants.DREAMFACTORY_TABLE_URL + '/transact_harvest', this.harvestModel.toJson(true));
+       this.harvestModel.user_GUID =  this.harvestModel.createdby_GUID =this.harvestModel.updatedby_GUID = this.UserGUID;
+       this.global.showConfirm(constants.DREAMFACTORY_TABLE_URL + '/transact_harvest', this.harvestModel.toJson(true));
 
 console.log("---------------begin log--------------");
 console.log("this.global.getTimeStamp: "+this.global.getTimeStamp());
