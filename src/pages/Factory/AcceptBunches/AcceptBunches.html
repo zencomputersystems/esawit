@@ -12,7 +12,6 @@
   <ion-list>
 
     <h1>{{ "_ACCEPT_BUNCHES_HEADER" | translate }}</h1>
-    <!--<form [formGroup]="AddTransaction">-->
       <ion-item>
         <ion-label>{{ "_LOCATION_LBL" | translate }}</ion-label>
         <ion-select [(ngModel)]="locationSelect" interface="popover"
@@ -40,11 +39,9 @@
         <ion-input [(ngModel)]="bunchCount"  highlight-color="energized" type="text"></ion-input>
       </ion-item>
 
-
       <ion-col>
         <button ion-button full type="submit" (click)="submitCount(locationSelect,vehicleSelect,driverSelect,bunchCount)">{{ "_SUBMIT_BTN" | translate }}</button>
       </ion-col>
 
-    <!--</form>-->
   </ion-list>
 </ion-content>
