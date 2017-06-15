@@ -9,36 +9,33 @@
   </ion-navbar>
 </ion-header>
 <ion-content>
-  <!--<ion-list inset *ngFor="let label of labelsFromStorage">-->
   <ion-list>
     <h1>{{ "_ABOUT_BUNCHES_HEADER" | translate }}</h1>
-    <!--<form [formGroup]="AddTransaction">-->
-
-
+    <form [formGroup]="authForm" (ngSubmit)="submitForm(authForm.value)">
       <ion-item>
         <ion-label>{{ "_MONTH_LBL" | translate }}</ion-label>
-        <ion-select [(ngModel)]="monthSelect" interface="popover" placeholder='{{"_SELECT_MONTH_HINT" | translate}}'>
+        <ion-select formControlName="monthSelect" interface="popover" placeholder='{{"_SELECT_MONTH_HINT" | translate}}'>
           <ion-option *ngFor="let month of monthsFromStorage" value={{month.value}}>{{ "_MONTH." + month.value | translate }}</ion-option>
         </ion-select>
       </ion-item>
 
       <ion-item>
         <ion-label>{{ "_LOCATION_LBL" | translate }}</ion-label>
-        <ion-select [(ngModel)]="locationSelect" interface="popover" placeholder='{{"_SELECT_LOCATION_HINT" | translate}}'>
+        <ion-select formControlName="locationSelect" interface="popover" placeholder='{{"_SELECT_LOCATION_HINT" | translate}}'>
           <ion-option *ngFor="let item of locationListFromDb" value={{item.location_GUID}}>{{item.name}}</ion-option>
         </ion-select>
       </ion-item>
 
       <ion-item>
         <ion-label fixed>{{ "_TOTAL_BUNCHES_LBL" | translate }}</ion-label>
-        <ion-input [(ngModel)]="bunchCount"  highlight-color="energized" type="text"></ion-input>
+        <ion-input formControlName="bunchCount" highlight-color="energized" type="text"></ion-input>
       </ion-item>
+      <button type="submit" ion-button full [disabled]="!authForm.valid">{{ "_SUBMIT_BTN" | translate }}</button>
+      <div class="error-box" *ngIf="authForm.controls['monthSelect'].hasError('required')">{{ "_MONTH_SELECT_VLD" | translate }}</div>
+      <div class="error-box" *ngIf="authForm.controls['locationSelect'].hasError('required')">{{ "_LOCATION_SELECT_VLD" | translate }}</div>
+      <div class="error-box" *ngIf="authForm.controls['bunchCount'].hasError('required')">{{ "_BUNCH_COUNT_VLD" | translate }}</div>
 
 
-      <ion-col>
-        <button ion-button full type="submit" (click)="submitCount(monthSelect,locationSelect,bunchCount)">{{ "_SUBMIT_BTN" | translate }}</button>
-      </ion-col>
-
-    <!--</form>-->
+    </form>
   </ion-list>
 </ion-content>

@@ -8,7 +8,7 @@
   <ion-card class="cards-list-demo" *ngFor="let location of locationFromDB">
     <ion-card-header>
       {{ "_LOCATION_LBL" | translate }} : {{location.location_name}}
-      <ion-segment [(ngModel)]="locationBased" color="secondary">
+      <ion-segment [(ngModel)]="location.h1" color="secondary">
         <ion-segment-button value="seg_info">
           {{"_INFO_LBL" | translate }}
         </ion-segment-button>
@@ -20,8 +20,7 @@
         </ion-segment-button>
       </ion-segment>
     </ion-card-header>
-
-    <div [ngSwitch]="locationBased">
+    <div [ngSwitch]="location.h1">
       <ion-card *ngSwitchDefault>
         <ion-label>{{ "_TOTAL_HARVESTED_LBL" | translate }}: </ion-label>
         <ion-label>{{ "_LOADED_LBL" | translate }} : </ion-label>
@@ -29,36 +28,42 @@
       </ion-card>
       <ion-card *ngSwitchCase="'seg_harvest'">
         <ion-card-content>
-          <ion-item>
-            <ion-label fixed>{{ "_TOTAL_BUNCHES_LBL" | translate }}</ion-label>
-            <ion-input [(ngModel)]='count' highlight-color="energized" type="text" value=""></ion-input>
-          </ion-item>
-          <ion-col>
-            <button ion-button full type="submit" (click)="submitCount(location.location_GUID,count)">{{ "_SUBMIT_BTN" | translate }}</button>
-          </ion-col>
+          <form [formGroup]="harvestAuthForm" (ngSubmit)="submitHarvestForm(harvestAuthForm.value,location.location_GUID)">
+            <ion-item>
+              <ion-label fixed>{{ "_TOTAL_BUNCHES_LBL" | translate }}</ion-label>
+              <ion-input formControlName="harvestedBunchCount" highlight-color="energized" type="text" value=""></ion-input>
+            </ion-item>
+            <div class="error-box" *ngIf="harvestAuthForm.controls['harvestedBunchCount'].hasError('required') ">{{ "_BUNCH_COUNT_VLD" | translate }}</div>
+            <button type="submit" ion-button full [disabled]="!harvestAuthForm.valid">{{ "_SUBMIT_BTN" | translate }}</button>
+          </form>
+
+
         </ion-card-content>
       </ion-card>
       <ion-card *ngSwitchCase="'seg_load'">
         <ion-card-content>
-          <ion-item>
-            <ion-label>{{"_VEHICLE_NO_LBL" | translate}}</ion-label>
-            <ion-select [(ngModel)]="vehicleSelect" interface="popover" placeholder='{{"_SELECT_VEHICLE_HINT" | translate}}'>
-              <ion-option *ngFor="let vehicle of vehicleFromDB" value={{vehicle.vehicle_GUID}}>{{vehicle.registration_no}}</ion-option>
-            </ion-select>
-          </ion-item>
-          <ion-item>
-            <ion-label>{{"_DRIVER_LBL" | translate}}</ion-label>
-            <ion-select [(ngModel)]="driverSelect" interface="popover" placeholder='{{"_SELECT_DRIVER_HINT" | translate}}'>
-              <ion-option *ngFor="let driver of driverFromDB" value={{driver.driver_GUID}}>{{driver.fullname}}</ion-option>
-            </ion-select>
-          </ion-item>
-          <ion-item>
-            <ion-label fixed>{{ "_TOTAL_BUNCHES_LBL" | translate }}</ion-label>
-            <ion-input [(ngModel)]='bunchCount' highlight-color="energized" type="text" value=""></ion-input>
-          </ion-item>
-          <ion-col>
-            <button ion-button full type="submit" (click)="loadBunches(location.location_GUID,vehicleSelect,driverSelect,bunchCount)">{{ "_SUBMIT_BTN" | translate }}</button>
-          </ion-col>
+          <form [formGroup]="loadAuthForm" (ngSubmit)="submitLoadForm(loadAuthForm.value,location.location_GUID)">
+            <ion-item>
+              <ion-label>{{"_VEHICLE_NO_LBL" | translate}}</ion-label>
+              <ion-select formControlName="vehicleSelect" [(ngModel)]="vehicleSelect" interface="popover" placeholder='{{"_SELECT_VEHICLE_HINT" | translate}}'>
+                <ion-option *ngFor="let vehicle of vehicleFromDB" value={{vehicle.vehicle_GUID}}>{{vehicle.registration_no}}</ion-option>
+              </ion-select>
+            </ion-item>
+            <ion-item>
+              <ion-label>{{"_DRIVER_LBL" | translate}}</ion-label>
+              <ion-select formControlName="driverSelect" [(ngModel)]="driverSelect" interface="popover" placeholder='{{"_SELECT_DRIVER_HINT" | translate}}'>
+                <ion-option *ngFor="let driver of driverFromDB" value={{driver.driver_GUID}}>{{driver.fullname}}</ion-option>
+              </ion-select>
+            </ion-item>
+            <ion-item>
+              <ion-label fixed>{{ "_TOTAL_BUNCHES_LBL" | translate }}</ion-label>
+              <ion-input formControlName="loadedBunchCount" highlight-color="energized" type="text" value=""></ion-input>
+            </ion-item>
+            <button type="submit" ion-button full [disabled]="!loadAuthForm.valid">{{ "_SUBMIT_BTN" | translate }}</button>
+            <div class="error-box" *ngIf="loadAuthForm.controls['vehicleSelect'].hasError('required') ">{{ "_VEHICLE_SELECT_VLD" | translate }}</div>
+            <div class="error-box" *ngIf="loadAuthForm.controls['driverSelect'].hasError('required') ">{{ "_DRIVER_SELECT_VLD" | translate }}</div>
+            <div class="error-box" *ngIf="loadAuthForm.controls['loadedBunchCount'].hasError('required') ">{{ "_BUNCH_COUNT_VLD" | translate }}</div>
+          </form>
         </ion-card-content>
       </ion-card>
     </div>

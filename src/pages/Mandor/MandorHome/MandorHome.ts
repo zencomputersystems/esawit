@@ -2,7 +2,7 @@
 import { NavController, Platform, ActionSheetController } from 'ionic-angular';
 import { HarvestedHistoryPage } from '../HarvestedHistory/HarvestedHistory';
 import { HarvestBunchesPage } from '../HarvestBunches/HarvestBunches';
-import {SharedFunctions} from '../../../providers/Shared/Functions';
+import { SharedFunctions } from '../../../providers/Shared/Functions';
 
 @Component({
     selector: 'page-home',

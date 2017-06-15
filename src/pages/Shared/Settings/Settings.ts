@@ -22,7 +22,7 @@ export class SettingsPage {
   // this.mainMenu.openMenu();
   //     }
 
-  
+
   onSelectChange(languageSelect) {
     this.setLanguage(languageSelect);
   }
