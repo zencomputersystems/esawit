@@ -59,8 +59,6 @@ export class HarvestBunchesPage {
         });
     }
 
-
-
     submitLoadForm(value: any, location_GUID: string) {
         this.loadModel.location_GUID = location_GUID;
         this.loadModel.vehicle_GUID = value.vehicleSelect;
@@ -69,7 +67,6 @@ export class HarvestBunchesPage {
         this.loadModel.createdby_GUID = this.loadModel.updatedby_GUID = this.loadModel.user_GUID = this.UserGUID;
         this.loadModel.created_ts = this.loadModel.updated_ts = this.global.getTimeStamp();
         this.global.showConfirm(constants.DREAMFACTORY_TABLE_URL + '/transact_loading', this.loadModel.toJson(true));
-
     }
 
     submitHarvestForm(value: any, location_GUID: string) {
@@ -78,41 +75,7 @@ export class HarvestBunchesPage {
         this.harvestModel.updated_ts = this.harvestModel.created_ts = this.global.getTimeStamp();
         this.harvestModel.user_GUID = this.harvestModel.createdby_GUID = this.harvestModel.updatedby_GUID = this.UserGUID;
         this.global.showConfirm(constants.DREAMFACTORY_TABLE_URL + '/transact_harvest', this.harvestModel.toJson(true));
-
     }
-
-    submitCount(location: string, bunch_count: number) {
-
-        console.log("---------------begin log--------------");
-        console.log("this.global.getTimeStamp: " + this.global.getTimeStamp());
-        console.log("this.harvestModel.updated_ts: " + this.harvestModel.updated_ts);
-        console.log("JSON:")
-        console.log(this.harvestModel.toJson(true));
-        console.log("---------------end log ---------------");
-
-
-        // let options = {
-        //     year: 'numeric', month: 'numeric', day: 'numeric',
-        //     hour: 'numeric', minute: 'numeric', second: 'numeric',
-        //     hour12: false
-        // };
-        // this.harvestModel.updated_ts = 
-        // this.harvestModel.created_ts = new Date(new Date().toLocaleDateString("en-GB", options));
-        // console.log(myDate.getDate()+"/"+myDate.getMonth()+"/"+myDate.getFullYear()+" "+myDate.getHours()+":"+myDate.getMinutes()+":"+myDate.getSeconds());
-        //    new Date(myDate.getFullYear(),myDate.getMonth(),myDate.getDate(),myDate.getHours(),myDate.getMinutes(),myDate.getSeconds());
-        // this.harvestModel.updated_ts = new Date(myDate.getFullYear(),myDate.getMonth(),myDate.getDate(),myDate.getUTCHours(),myDate.getMinutes(),myDate.getSeconds());
-        // myDate.getDate()+"/"+myDate.getMonth()+"/"+myDate.getFullYear()+" "+myDate.getHours()+":"+myDate.getMinutes()+":"+myDate.getSeconds();
-        // var queryHeaders = new Headers();
-        // queryHeaders.append('Content-Type', 'application/json');
-        // let options = new RequestOptions({ headers: queryHeaders });
-        // console.log(location);
-    }
-
-    //     openGlobalMenu(){
-    // this.mainMenu.openMenu();
-    //     }
-
-
 
     onLink(url: string) {
         window.open(url);
