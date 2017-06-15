@@ -4,7 +4,7 @@ export class LoadBunchesModel {
 		public vehicle_GUID: string = "",
 		public location_GUID: string = "",
 		public driver_GUID: string = "",
-		public bunch_count: number = null, 
+		public bunch_count: number = null,
 		public created_ts: Date = null,
 		public createdby_GUID: string = null,
 		public updatedby_GUID: string = null,

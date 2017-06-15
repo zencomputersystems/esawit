@@ -1,19 +1,19 @@
 ﻿import { Component } from '@angular/core';
 import { NavController, NavParams, Platform, AlertController, ActionSheetController, ToastController } from 'ionic-angular';
 import { Http, Headers, RequestOptions } from '@angular/http';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HarvestBunchesModel } from '../../../models/HarvestBunchesModel';
 import { LoadBunchesModel } from '../../../models/LoadBunchesModel';
 import * as constants from '../../../config/constants';
-import {SharedFunctions} from '../../../providers/Shared/Functions';
+import { SharedFunctions } from '../../../providers/Shared/Functions';
 
 @Component({
     selector: 'page-HarvestBunches',
     templateUrl: 'HarvestBunches.html'
 })
 export class HarvestBunchesPage {
-    // today: number = Date.now();
-
+    harvestAuthForm: FormGroup;
+    loadAuthForm: FormGroup;
     locationFromDB: any;
     vehicleFromDB: any;
     driverFromDB: any;
@@ -23,10 +23,19 @@ export class HarvestBunchesPage {
     loadModel: LoadBunchesModel = new LoadBunchesModel();
 
     constructor(public actionsheetCtrl: ActionSheetController, public global: SharedFunctions,
-        public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public _form: FormBuilder, public navParams: NavParams, public alertCtrl: AlertController) {
+        public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public fb: FormBuilder, public navParams: NavParams, public alertCtrl: AlertController) {
+        this.harvestAuthForm = fb.group({
+            'harvestedBunchCount': [null, Validators.compose([Validators.required])]
+        });
+        this.loadAuthForm = fb.group({
+            'loadedBunchCount': [null, Validators.compose([Validators.required])],
+            'driverSelect': [null, Validators.compose([Validators.required])],
+            'vehicleSelect': [null, Validators.compose([Validators.required])]
+        });
+
         this.UIDFromMobile = "1";
         var loggedInUserFromDB: any;
-        var url : string;
+        var url: string;
 
         url = constants.DREAMFACTORY_TABLE_URL + "/user_imei/" + this.UIDFromMobile + "?id_field=user_IMEI&api_key=" + constants.DREAMFACTORY_API_KEY;
         this.http.get(url).map(res => res.json()).subscribe(data => {
@@ -50,36 +59,36 @@ export class HarvestBunchesPage {
         });
     }
 
-    loadBunches(selectedLocation: string, selectedVehicle: string, selectedDriver, loadedCount: number) {
-        this.loadModel.location_GUID = selectedLocation;
-        this.loadModel.vehicle_GUID = selectedVehicle;
-        this.loadModel.driver_GUID = selectedDriver;      
-        this.loadModel.bunch_count = loadedCount;
-        this.loadModel.createdby_GUID = this.loadModel.updatedby_GUID =  this.loadModel.user_GUID = this.UserGUID;
+
+
+    submitLoadForm(value: any, location_GUID: string) {
+        this.loadModel.location_GUID = location_GUID;
+        this.loadModel.vehicle_GUID = value.vehicleSelect;
+        this.loadModel.driver_GUID = value.driverSelect;
+        this.loadModel.bunch_count = value.loadedBunchCount;
+        this.loadModel.createdby_GUID = this.loadModel.updatedby_GUID = this.loadModel.user_GUID = this.UserGUID;
         this.loadModel.created_ts = this.loadModel.updated_ts = this.global.getTimeStamp();
         this.global.showConfirm(constants.DREAMFACTORY_TABLE_URL + '/transact_loading', this.loadModel.toJson(true));
-   
- }
 
-    onLocationSelect(selectedLocation: string) {
     }
 
+    submitHarvestForm(value: any, location_GUID: string) {
+        this.harvestModel.location_GUID = location_GUID;
+        this.harvestModel.bunch_count = value.harvestedBunchCount;
+        this.harvestModel.updated_ts = this.harvestModel.created_ts = this.global.getTimeStamp();
+        this.harvestModel.user_GUID = this.harvestModel.createdby_GUID = this.harvestModel.updatedby_GUID = this.UserGUID;
+        this.global.showConfirm(constants.DREAMFACTORY_TABLE_URL + '/transact_harvest', this.harvestModel.toJson(true));
 
+    }
 
     submitCount(location: string, bunch_count: number) {
-        this.harvestModel.location_GUID = location;
-        this.harvestModel.bunch_count = bunch_count;       
-        this.harvestModel.updated_ts = this.harvestModel.created_ts = this.global.getTimeStamp();
-        // this.harvestModel.updated_ts=     this.harvestModel.created_ts = new Date(myDate.getFullYear(),myDate.getMonth(),myDate.getDate(),myDate.getHours(),myDate.getMinutes(),myDate.getSeconds());
-       this.harvestModel.user_GUID =  this.harvestModel.createdby_GUID =this.harvestModel.updatedby_GUID = this.UserGUID;
-       this.global.showConfirm(constants.DREAMFACTORY_TABLE_URL + '/transact_harvest', this.harvestModel.toJson(true));
 
-console.log("---------------begin log--------------");
-console.log("this.global.getTimeStamp: "+this.global.getTimeStamp());
-console.log("this.harvestModel.updated_ts: "+this.harvestModel.updated_ts);
-console.log("JSON:")
-console.log(this.harvestModel.toJson(true));
-console.log("---------------end log ---------------");
+        console.log("---------------begin log--------------");
+        console.log("this.global.getTimeStamp: " + this.global.getTimeStamp());
+        console.log("this.harvestModel.updated_ts: " + this.harvestModel.updated_ts);
+        console.log("JSON:")
+        console.log(this.harvestModel.toJson(true));
+        console.log("---------------end log ---------------");
 
 
         // let options = {

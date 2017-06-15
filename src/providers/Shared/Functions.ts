@@ -32,18 +32,25 @@ export class SharedFunctions {
   }
 
   showConfirm(url: string, myModel: any) {
+        let confirmTitle = this.translate.get("_CONFIRMATION_TITLE")["value"];
+        let confirmMessage = this.translate.get("_CONFIRMATION_MESSAGE_LBL")["value"];
+        let cancelButton = this.translate.get("_CANCEL_BTN")["value"];
+        let acceptButton = this.translate.get("_ACCEPT_BTN")["value"];
+        let successToast = this.translate.get("_SUCCESS_TOAST_LBL")["value"];
+        let failedToast = this.translate.get("_FAILED_TOAST_LBL")["value"];
+
     let confirm = this.alertCtrl.create({
-      title: 'Create New Count?',
-      message: 'Do you really want to add new count with given values?',
+      title: confirmTitle,
+      message:confirmMessage,
       buttons: [
         {
-          text: 'Cancel',
+          text:cancelButton,
           handler: () => {
-            console.log('Cancel clicked');
+            // console.log('Cancel clicked');
           }
         },
         {
-          text: 'Yes',
+          text: acceptButton,
           handler: () => {
 
             var queryHeaders = new Headers();
@@ -56,11 +63,11 @@ export class SharedFunctions {
               .post(url, myModel, options)
               .subscribe((response) => {
                 console.log(response);
-                this.showToast('bottom', 'New Record Successfully Added');
+                this.showToast('bottom',successToast);
                 // this.navCtrl.push(HarvestedHistoryPage);
 
               }, (error) => {
-                this.showToast('bottom', 'Failed to Submit');
+                this.showToast('bottom',failedToast);
               });
           }
         }

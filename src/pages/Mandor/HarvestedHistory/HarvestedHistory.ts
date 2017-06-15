@@ -1,5 +1,5 @@
 ﻿import { Component } from '@angular/core';
-import { NavController, NavParams,  ViewController, Platform, ActionSheetController } from 'ionic-angular';
+import { NavController, NavParams, ViewController, Platform, ActionSheetController } from 'ionic-angular';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
@@ -15,7 +15,7 @@ export class HarvestedHistoryPage {
     harvestedHistoryData: any;
     // private storage: Storage, private mainMenu: MainMenu,
     constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, public http: Http, public platform: Platform, public actionsheetCtrl: ActionSheetController) {
-        var url = constants.DREAMFACTORY_TABLE_URL+ "/transact_harvest_view?api_key="+constants.DREAMFACTORY_API_KEY;
+        var url = constants.DREAMFACTORY_TABLE_URL + "/transact_harvest_view?api_key=" + constants.DREAMFACTORY_API_KEY;
         this.http.get(url).map(res => res.json()).subscribe(data => {
             this.harvestedHistoryData = data["resource"];
 
