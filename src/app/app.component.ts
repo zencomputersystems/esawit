@@ -6,6 +6,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { SharedFunctions } from "../providers/Shared/Functions";
 
 import { LoginPage } from '../pages/Shared/Login/Login';
+import { SqLitePage } from '../pages/Shared/SqLite/SqLite';
 
 // Translation Service:
 import { TranslateService } from '@ngx-translate/core';
@@ -15,7 +16,7 @@ import { TranslateService } from '@ngx-translate/core';
   providers: [SharedFunctions]
 })
 export class MyApp {
-  rootPage: any = LoginPage;
+  rootPage: any = SqLitePage;
 
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, 
   translate: TranslateService) {
