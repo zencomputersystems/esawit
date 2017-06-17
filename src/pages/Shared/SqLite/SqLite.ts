@@ -24,7 +24,7 @@ constructor(private network: Network,private httpService: BaseHttpService,
 public navCtrl: NavController,private platform: Platform,
 private sqlite: SQLite,private github: UserService,) 
 {
-  this.github.isOffline();
+  // this.github.isOffline();
   this.GenerateToken() ;
   var token = localStorage.getItem('session_token');
         if (token =='') 
@@ -54,18 +54,18 @@ private sqlite: SQLite,private github: UserService,)
 
 
 
-savesample()
-{
-  for(var i = 0; i < 2; i++) 
-      {
+// savesample()
+// {
+//   for(var i = 0; i < 2; i++) 
+//       {
      
-      this.User.Id=91+i;
-      this.User.FullName="QWERTYU";
-      this.User.Name="SDFGH";
-      this.User.IcNo=1111;
-      this.github.save(this.User).subscribe((response) => { console.log(response)}); 
-      }    
-}
+//       this.User.Id=91+i;
+//       this.User.FullName="QWERTYU";
+//       this.User.Name="SDFGH";
+//       this.User.IcNo=1111;
+//       this.github.save(this.User).subscribe((response) => { console.log(response)}); 
+//       }    
+// }
 getList() 
 {
         let self = this;
@@ -75,21 +75,21 @@ getList()
         console.log(self.users);
 }
   
-savedata()
-{
-    var resource = [];
-    for (let i = 1; i < 2; i++)
-    {
-          let newName = {Name:"KUMAR","FullName":"Sampath Kumar","IcNo":23456};          
-          resource.push(newName);
-          // alert(JSON.stringify({ user }));
-          this.User.Id=77;
-          this.User.FullName="QWERTYU";
-          this.User.Name="SDFGH";
-          this.User.IcNo=1111;
-          this.github.save(this.User).subscribe((response) => { console.log(response)});
-    }    
-}
+// savedata()
+// {
+//     var resource = [];
+//     for (let i = 1; i < 2; i++)
+//     {
+//           let newName = {Name:"KUMAR","FullName":"Sampath Kumar","IcNo":23456};          
+//           resource.push(newName);
+//           // alert(JSON.stringify({ user }));
+//           this.User.Id=77;
+//           this.User.FullName="QWERTYU";
+//           this.User.Name="SDFGH";
+//           this.User.IcNo=1111;
+//           this.github.save(this.User).subscribe((response) => { console.log(response)});
+//     }    
+// }
 private storeToken(data){localStorage.setItem('session_token', data.session_token);}
 
 GenerateToken() 
@@ -112,13 +112,13 @@ save()
     {
         
         //data insert section
-        db.executeSql('CREATE TABLE IF NOT EXISTS usernameList(id INTEGER PRIMARY KEY AUTOINCREMENT,name)', {})
+        db.executeSql('CREATE TABLE IF NOT EXISTS usernameList(id INTEGER PRIMARY KEY AUTOINCREMENT,name  text)', {})
         .then(() => alert('usernameList Executed SQL')).catch(e => console.log(e));
         
-        db.executeSql('CREATE TABLE IF NOT EXISTS usernameListLocal(Name,FullName,IcNo,Created)', {})
-        .then(() => alert('usernameListLocal Executed SQL')).catch(e => console.log(e));
+        // db.executeSql('CREATE TABLE IF NOT EXISTS usernameListLocal(Name,FullName,IcNo,Created)', {})
+        // .then(() => alert('usernameListLocal Executed SQL')).catch(e => console.log(e));
         
-        db.executeSql('DELETE FROM usernameList',null);
+        // db.executeSql('DELETE FROM usernameList',null);
         
         //data insert section
         db.executeSql('INSERT INTO usernameList(name) VALUES(?)', [this.username])
@@ -148,8 +148,8 @@ save()
           alert('Unable to execute sql: '+JSON.stringify(err));
         });
         }).catch(e => alert("Error "+JSON.stringify(e)));
-
-alert(this.username);this.savesample();this.getList();
+alert(this.username);
+//this.savesample();
+this.getList();
 }
-
 }
