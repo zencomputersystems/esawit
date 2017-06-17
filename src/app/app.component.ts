@@ -17,12 +17,14 @@ import { TranslateService } from '@ngx-translate/core';
 export class MyApp {
   rootPage: any = LoginPage;
 
-  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, translate: TranslateService) {
+  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, 
+  translate: TranslateService) {
     translate.setDefaultLang('en');
     platform.ready().then(() => {
 
       statusBar.styleDefault();
       splashScreen.hide();
+      
     });
   }
 }
