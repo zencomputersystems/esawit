@@ -5,33 +5,23 @@
     </ion-title>
   </ion-navbar>
 </ion-header>
-
-
-
 <ion-content padding>
-
-
-<ion-item>
+<!--<ion-item>
 <ion-input type="text" [(ngModel)]="username" placeholder="Enter Username"></ion-input>
-</ion-item>
+</ion-item>-->
 
 <button ion-button color="danger" (click)="save()" > Save </button>
-
- <ion-card *ngFor="let user of users">
-        
+<h1>From Cloud</h1>
+ <ion-card *ngFor="let location of masterLocationList">      
         <ion-card-content>
-            {{ user.FullName}}
-           
-           
+            {{ location.Id }} => {{location.location_GUID}}           =>{{location.name}}    
         </ion-card-content>
     </ion-card>
 
-<ion-list>
-
-<ion-item href="#" *ngFor="let x of items" >
-{{x.name}}
-</ion-item>
-
-</ion-list>
-
+<h1>From Storage</h1>
+ <ion-card *ngFor="let location of storageLocationItems">        
+        <ion-card-content>
+            {{ location.Id }} => {{location.location_GUID}}           =>{{location.name}}    
+        </ion-card-content>
+    </ion-card>
 </ion-content>
