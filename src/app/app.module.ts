@@ -6,6 +6,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { IonicStorageModule } from "@ionic/storage";
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { Network } from '@ionic-native/network';
+import { BaseHttpService } from '../services/base-http';
 
 import { MandorHomePage } from '../pages/Mandor/MandorHome/MandorHome';
 import { HarvestedHistoryPage } from '../pages/Mandor/HarvestedHistory/HarvestedHistory';
@@ -66,7 +67,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
     StatusBar,
     SplashScreen, Network,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
-    SharedFunctions,Sqlite
+    SharedFunctions,Sqlite,BaseHttpService
   ]
 })
 export class AppModule { }

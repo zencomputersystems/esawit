@@ -14,14 +14,14 @@
 <h1>From Cloud</h1>
  <ion-card *ngFor="let location of masterLocationList">      
         <ion-card-content>
-            {{ location.Id }} => {{location.location_GUID}}           =>{{location.name}}    
+            {{ location.Id }} => {{location.location_GUID}}           =>{{location.location_name}}    
         </ion-card-content>
     </ion-card>
 
 <h1>From Storage</h1>
  <ion-card *ngFor="let location of storageLocationItems">        
         <ion-card-content>
-            {{ location.Id }} => {{location.location_GUID}}           =>{{location.name}}    
+            {{ location.id }} => {{location.location_GUID}}           =>{{location.name}}    
         </ion-card-content>
     </ion-card>
 </ion-content>

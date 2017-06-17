@@ -20,91 +20,77 @@ storageLocationItems = [];
 
 constructor(private network: Network,private httpService: BaseHttpService,
 public navCtrl: NavController,private platform: Platform,
-private sqlite: SQLite,private myCloud: StorageService,) 
+private sqlite: SQLite,private myCloud: StorageService) 
 {
-   this.GenerateToken() ; 
-  var token = localStorage.getItem('session_token'); 
-        if (token =='')  
-        { 
-           alert('Please Login');
-        } 
-        else 
-        { 
-          console.log(token); 
-          this.getLocationListFromCloud();
-this.syncMasterLocation();
-        } 
+//   this.myCloud.GenerateToken() ; 
+//   var token = localStorage.getItem('session_token'); 
+//         if (token =='')  
+//         { 
+//            alert('Please Login');
+//         } 
+//         else 
+//         { 
+//           console.log(token); 
+//           this.myCloud.getLocationListFromCloud();
+// this.syncMasterLocation();
+//         } 
 }
 
-syncMasterLocation(){
-    this.sqlite.create({name: 'esawit.db',location: 'default'}).then((db: SQLiteObject) => 
-    {        
-        db.executeSql('CREATE TABLE IF NOT EXISTS master_location(id INTEGER PRIMARY KEY AUTOINCREMENT,location_GUID TEXT,name  TEXT)', {})
-        .then(()=>  db.executeSql('DELETE FROM master_location',null) )        
-        .then(() => 
-        {
-          // alert('Master Location Table Created');
+// syncMasterLocation(){
+//     this.sqlite.create({name: 'esawit.db',location: 'default'}).then((db: SQLiteObject) => 
+//     {        
+//         db.executeSql('CREATE TABLE IF NOT EXISTS master_location(id INTEGER PRIMARY KEY AUTOINCREMENT,location_GUID TEXT,name  TEXT)', {})
+//         .then(()=>  db.executeSql('DELETE FROM master_location',null) )        
+//         .then(() => 
+//         {
+//           // alert('Master Location Table Created');
 
-           if(this.masterLocationList.length > 0) 
-            {
-              this.masterLocationList.forEach(locationRec => {
-                alert('Record'+locationRec.Id+" :"+locationRec.Id+"."+locationRec.location_GUID+"=>"+locationRec.name);
-                  db.executeSql('INSERT INTO master_location(location_GUID,name) VALUES(?,?)', [locationRec.location_GUID,locationRec.name])
-        .then(() => {
-        // alert('Record Inserted'+locationRec.Id)
+//            if(this.masterLocationList.length > 0) 
+//             {
+//               this.masterLocationList.forEach(locationRec => {
+//                 // alert('Record'+locationRec.Id+" :"+locationRec.Id+"."+locationRec.location_GUID+"=>"+locationRec.name);
+//                   db.executeSql('INSERT INTO master_location(location_GUID,name) VALUES(?,?)', [locationRec.location_GUID,locationRec.name])
+//         .then(() => {
+//         // alert('Record Inserted'+locationRec.Id)
 
-        db.executeSql('select * from master_location', {}).then((data) => 
-        {
-            this.storageLocationItems = [];
-            // alert('Selecting Inserted list from Sqlite');
-            if(data.rows.length > 0) 
-            {
-              for(var i = 0; i < data.rows.length; i++) 
-              {
-                // alert('Record '+(i+1)+" :"+data.rows.item(i).name.toString());
-                this.storageLocationItems.push({name: data.rows.item(i).name});              
-                // alert('Before Saving to Cloud');
-              }   
-           }   
-        }, (err) => 
-        {
-          alert('Unable to execute sql: '+JSON.stringify(err));
-        });
+//         // db.executeSql('select * from master_location', {}).then((data) => 
+//         // {
+//         //     this.storageLocationItems = [];
+//         //     // alert('Selecting Inserted list from Sqlite');
+//         //     if(data.rows.length > 0) 
+//         //     {
+//         //       for(var i = 0; i < data.rows.length; i++) 
+//         //       {
+//         //         // alert('Record '+(i+1)+" :"+data.rows.item(i).name.toString());
+//         //         this.storageLocationItems.push({id:data.rows.item(i).id,name: data.rows.item(i).name,location_GUID:data.rows.item(i).location_GUID});              
+//         //         // alert('Before Saving to Cloud');
+//         //       }   
+//         //    }   
+//         // }, (err) => 
+//         // {
+//         //   alert('Unable to execute sql: '+JSON.stringify(err));
+//         // });
 
-        }
-        ).catch(e => console.log(e));
+//         }
+//         ).catch(e => console.log(e));
 
+//               });             
+//            }
+//         }).catch(e => console.log(e));     
+//                }).catch(e => alert("Error "+JSON.stringify(e)));
+// }
+
+// getLocationListFromCloud() 
+// {
+//   // alert('Getting Locations From Cloud. Inside Mediator');
+//         let params = new URLSearchParams();
+//         params.set('order', 'name+ASC');
+//         this.myCloud.query(params).subscribe((masterLocationsFromCloud: MasterLocationModel[]) => {this.masterLocationList = masterLocationsFromCloud});
+//         // console.table(this.masterLocationList);
+// 		return this.masterLocationList;
+// }
  
 
-              });             
-           }
-        }).catch(e => console.log(e));      
-       
-
-        }).catch(e => alert("Error "+JSON.stringify(e)));
-}
-
-getLocationListFromCloud() 
-{
-  // alert('Getting Locations From Cloud. Inside Mediator');
-        let params = new URLSearchParams();
-        params.set('order', 'name+ASC');
-        this.myCloud.query(params).subscribe((masterLocationsFromCloud: MasterLocationModel[]) => {this.masterLocationList = masterLocationsFromCloud});
-        console.table(this.masterLocationList);
-}
-private storeToken(data){localStorage.setItem('session_token', data.session_token);}
- 
-GenerateToken()  
-{ 
-  var queryHeaders = new Headers(); 
-  queryHeaders.append('Content-Type', 'application/json'); 
-  let options = new RequestOptions({ headers: queryHeaders }); 
-      var url = "http://api.zen.com.my/api/v2/user/session";
-  this.httpService.http.post(url, '{"email":"sampath415@gmail.com","password":"sampath415"}',options)
-  .subscribe((data) => {this.storeToken(data.json());}, (error) => { 
-    console.log('Error'); 
-                }); 
-}
  
 // save()
 // {

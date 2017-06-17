@@ -22,7 +22,7 @@
       <ion-item>
         <ion-label>{{ "_LOCATION_LBL" | translate }}</ion-label>
         <ion-select formControlName="locationSelect" interface="popover" placeholder='{{"_SELECT_LOCATION_HINT" | translate}}'>
-          <ion-option *ngFor="let item of locationListFromDb" value={{item.location_GUID}}>{{item.name}}</ion-option>
+          <ion-option *ngFor="let item of locationListFromDb" value={{item.location_GUID}}>{{item.location_name}}</ion-option>
         </ion-select>
       </ion-item>
 

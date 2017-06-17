@@ -3,7 +3,7 @@ export class MasterLocationModel
 {
 	constructor(
 		public Id: number = null,
-		public name: string = null,
+		public location_name: string = null,
         public location_GUID: string = null,
 	) { }
 
@@ -13,7 +13,7 @@ export class MasterLocationModel
 
 		return new MasterLocationModel(
 			json.Id,
-			json.name,
+			json.location_name,
 			json.location_GUID
 		);
 	}
@@ -22,7 +22,7 @@ export class MasterLocationModel
 	toJson(stringify?: boolean): any {
 		var doc = {
 			Id: this.Id,
-			Name: this.name,
+			Name: this.location_name,
             FullName: this.location_GUID
 		};
 
