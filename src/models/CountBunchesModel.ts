@@ -3,6 +3,7 @@ export class CountBunchesModel {
 		public user_GUID: string = "",
 		public location_GUID: string = "",
 		public bunch_count: number = null,
+		public year: number = null,
 		public month: number = null,
 		public created_ts: Date = null,
 		public createdby_GUID: string = null,
@@ -13,6 +14,7 @@ export class CountBunchesModel {
 	toJson(stringify?: boolean): any {
 		var doc = {
 			user_GUID: this.user_GUID,
+			year: this.user_GUID,
 			location_GUID: this.location_GUID,
 			bunch_count: this.bunch_count,
 			month: this.month,

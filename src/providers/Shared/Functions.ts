@@ -27,24 +27,25 @@ export class SharedFunctions {
 
   getTimeStamp() {
     var myDate = new Date();
-//    return new Date(myDate.getUTCFullYear(), myDate.getUTCMonth(), myDate.getUTCDate(), myDate.getUTCHours(), myDate.getUTCMinutes(), myDate.getSeconds());
-      return new Date(myDate.getTime());
+    //    return new Date(myDate.getUTCFullYear(), myDate.getUTCMonth(), myDate.getUTCDate(), myDate.getUTCHours(), myDate.getUTCMinutes(), myDate.getSeconds());
+    return new Date(myDate.getTime());
   }
 
+
   showConfirm(url: string, myModel: any) {
-        let confirmTitle = this.translate.get("_CONFIRMATION_TITLE")["value"];
-        let confirmMessage = this.translate.get("_CONFIRMATION_MESSAGE_LBL")["value"];
-        let cancelButton = this.translate.get("_CANCEL_BTN")["value"];
-        let acceptButton = this.translate.get("_ACCEPT_BTN")["value"];
-        let successToast = this.translate.get("_SUCCESS_TOAST_LBL")["value"];
-        let failedToast = this.translate.get("_FAILED_TOAST_LBL")["value"];
+    let confirmTitle = this.translate.get("_CONFIRMATION_TITLE")["value"];
+    let confirmMessage = this.translate.get("_CONFIRMATION_MESSAGE_LBL")["value"];
+    let cancelButton = this.translate.get("_CANCEL_BTN")["value"];
+    let acceptButton = this.translate.get("_ACCEPT_BTN")["value"];
+    let successToast = this.translate.get("_SUCCESS_TOAST_LBL")["value"];
+    let failedToast = this.translate.get("_FAILED_TOAST_LBL")["value"];
 
     let confirm = this.alertCtrl.create({
       title: confirmTitle,
-      message:confirmMessage,
+      message: confirmMessage,
       buttons: [
         {
-          text:cancelButton,
+          text: cancelButton,
           handler: () => {
             // console.log('Cancel clicked');
           }
@@ -63,11 +64,11 @@ export class SharedFunctions {
               .post(url, myModel, options)
               .subscribe((response) => {
                 console.log(response);
-                this.showToast('bottom',successToast);
+                this.showToast('bottom', successToast);
                 // this.navCtrl.push(HarvestedHistoryPage);
 
               }, (error) => {
-                this.showToast('bottom',failedToast);
+                this.showToast('bottom', failedToast);
               });
           }
         }
