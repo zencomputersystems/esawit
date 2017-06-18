@@ -7,6 +7,7 @@ import { SharedFunctions } from "../providers/Shared/Functions";
 import { LoginPage } from '../pages/Shared/Login/Login';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { StorageService } from '../providers/Db/StorageFunctions';
+import { SurveyHistoryModel } from '../models/SurveyHistoryModel'
 
 // Translation Service:
 import { TranslateService } from '@ngx-translate/core';
@@ -25,11 +26,19 @@ export class MyApp {
     translate.setDefaultLang('en');
     platform.ready().then(() => { statusBar.styleDefault(); splashScreen.hide(); });
 
-      this.UIDFromMobile = "2";
-      var locationListFromCloud = this.myCloud.getLocationListFromCloud(this.UIDFromMobile);
-    //  console.log('in app. Before table');
-    //   console.table(locationListFromCloud);
-      this.myCloud.syncMasterLocation(locationListFromCloud);
+    //Manually Set the UserGUID. Need to set dynamically.
+    this.UIDFromMobile = "2";
+    //Get locations based on user_GUID from Cloud.
+    var locationListFromCloud = this.myCloud.getLocationListFromCloud(this.UIDFromMobile);
+    //  console.log('--------------------in app. Before table');
+    //   console.table('-----------------'+locationListFromCloud);
+    //Sync the locationList from cloud to SQLite
+    this.myCloud.syncMasterLocation(locationListFromCloud);
+
+    //--------------------------Survey History----------------------
+
+            //--------------------------Survey History----------------------
+
 
   }
 }

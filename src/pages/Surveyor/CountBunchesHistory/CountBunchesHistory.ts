@@ -4,6 +4,8 @@ import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { SharedFunctions } from '../../../providers/Shared/Functions';
+import { StorageService } from '../../../providers/Db/StorageFunctions';
+import { SurveyHistoryModel } from '../../../models/SurveyHistoryModel'
 import * as constants from '../../../config/constants';
 
 @Component({
@@ -12,12 +14,22 @@ import * as constants from '../../../config/constants';
 })
 export class CountBunchesHistoryPage {
     labelsFromStorage: any;
-    countHistoryData: any;
-    constructor(private mainMenu: SharedFunctions, public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, public http: Http, public platform: Platform, public actionsheetCtrl: ActionSheetController) {
-             var     url = constants.DREAMFACTORY_TABLE_URL + "/transact_survey_view?filter=user_GUID=" +       localStorage.getItem('loggedIn_user_GUID') + "&api_key=" + constants.DREAMFACTORY_API_KEY;
-        this.http.get(url).map(res => res.json()).subscribe(data => {
-            this.countHistoryData = data["resource"];
+    countHistoryData: any;    surveyHistoryList: SurveyHistoryModel[] = [];
 
+    constructor(public sqlite: StorageService, private mainMenu: SharedFunctions, public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, public http: Http, public platform: Platform, public actionsheetCtrl: ActionSheetController) {
+    var url = constants.DREAMFACTORY_TABLE_URL + "/transact_survey_view?filter=user_GUID=" + localStorage.getItem('loggedIn_user_GUID') + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+        this.http.get(url).map(res => res.json()).subscribe(data => {
+            var modelFromCloud = data["resource"];
+            modelFromCloud.forEach(cloudItem => {
+
+                var surveyHistory: SurveyHistoryModel = new SurveyHistoryModel();
+                surveyHistory.location_name = cloudItem.location_name;
+                surveyHistory.bunch_count = cloudItem.bunch_count;
+                surveyHistory.month = cloudItem.month;
+                this.surveyHistoryList.push(surveyHistory);
+            });
+            this.sqlite.syncSurveyHistory(this.surveyHistoryList);
+                    this.countHistoryData = this.sqlite.getSurveyHistoryFromSQLite();
         });
     }
 

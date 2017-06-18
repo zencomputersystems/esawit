@@ -55,7 +55,7 @@ export class AcceptBunchesPage {
         this.factoryModel.user_GUID = this.factoryModel.createdby_GUID = this.factoryModel.updatedby_GUID = this.UserGUID;
         this.factoryModel.bunch_count = value.bunchCount;
         this.factoryModel.updated_ts = this.factoryModel.created_ts = this.global.getTimeStamp();
-        this.global.showConfirm(constants.DREAMFACTORY_TABLE_URL + '/transact_unloading', this.factoryModel.toJson(true));
+        this.global.showConfirm('cloud',constants.DREAMFACTORY_TABLE_URL + '/transact_unloading', this.factoryModel.toJson(true));
     }
     onLocationSelect(locationSelected: any) {
 

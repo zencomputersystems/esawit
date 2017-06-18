@@ -19,7 +19,7 @@ export class CountBunchesPage {
     authForm: FormGroup;
     locationListFromDb: any;
     monthsFromStorage: any;
-    currentYear: any;
+    currentYear: number;
     surveyModel: CountBunchesModel = new CountBunchesModel();
     UIDFromMobile: string;
     UserGUID: string;
@@ -57,10 +57,13 @@ export class CountBunchesPage {
         this.surveyModel.bunch_count = value.bunchCount;
         this.surveyModel.month = value.monthSelect;
         this.surveyModel.year = this.currentYear;
-        this.surveyModel.updated_ts = this.surveyModel.created_ts = this.global.getTimeStamp();
-        this.global.showConfirm(constants.DREAMFACTORY_TABLE_URL + '/transact_survey', this.surveyModel.toJson(true));
+        this.surveyModel.updated_ts = this.surveyModel.created_ts = this.global.getStringTimeStamp();
+        this.global.showConfirm('sqlite','n', this.surveyModel);
+        this.myCloud.saveSurveyToCloudFromSQLite();
+        //  this.global.showConfirm('cloud',constants.DREAMFACTORY_TABLE_URL + '/transact_survey', this.surveyModel.toJson(true));
 
     }
+
 
 
 }

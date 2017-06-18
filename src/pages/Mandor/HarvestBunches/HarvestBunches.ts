@@ -111,7 +111,7 @@ export class HarvestBunchesPage {
 
         this.loadModel.created_ts = this.loadModel.updated_ts = this.global.getTimeStamp();
 
-        this.global.showConfirm(constants.DREAMFACTORY_TABLE_URL + '/transact_loading', this.loadModel.toJson(true));
+        this.global.showConfirm('cloud',constants.DREAMFACTORY_TABLE_URL + '/transact_loading', this.loadModel.toJson(true));
 
         console.log("---------------------loadBunches Log BEGIN--------------------");
 
@@ -133,7 +133,7 @@ export class HarvestBunchesPage {
 
         this.harvestModel.user_GUID = this.harvestModel.createdby_GUID = this.harvestModel.updatedby_GUID = this.UserGUID;
 
-        this.global.showConfirm(constants.DREAMFACTORY_TABLE_URL + '/transact_harvest', this.harvestModel.toJson(true));
+        this.global.showConfirm('cloud',constants.DREAMFACTORY_TABLE_URL + '/transact_harvest', this.harvestModel.toJson(true));
 
 
 
