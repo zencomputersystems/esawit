@@ -5,7 +5,6 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import * as constants from '../config/constants';
 import { SharedFunctions } from "../providers/Shared/Functions";
 import { LoginPage } from '../pages/Shared/Login/Login';
-import { SqLitePage } from '../pages/Shared/SqLite/SqLite';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { StorageService } from '../providers/Db/StorageFunctions';
 
@@ -17,7 +16,6 @@ import { TranslateService } from '@ngx-translate/core';
   providers: [SharedFunctions, StorageService]
 })
 export class MyApp {
-  // rootPage: any = SqLitePage;
   rootPage: any = LoginPage;
   UIDFromMobile: string;
   UserGUID: string;
@@ -27,18 +25,12 @@ export class MyApp {
     translate.setDefaultLang('en');
     platform.ready().then(() => { statusBar.styleDefault(); splashScreen.hide(); });
 
-    this.myCloud.GenerateToken();
-    var token = localStorage.getItem('session_token');
-    if (token == '') {
-      alert('Please Login');
-    }
-    else {
       this.UIDFromMobile = "2";
       var locationListFromCloud = this.myCloud.getLocationListFromCloud(this.UIDFromMobile);
       console.table(locationListFromCloud);
 
       this.myCloud.syncMasterLocation(locationListFromCloud);
-    }
+
   }
 }
 

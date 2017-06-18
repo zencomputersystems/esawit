@@ -5,9 +5,6 @@ import { SharedFunctions } from '../../../providers/Shared/Functions';
 import { SurveyorHomePage } from '../../Surveyor/SurveyorHome/SurveyorHome';
 import { FactoryHomePage } from '../../Factory/FactoryHome/FactoryHome';
 import { SettingsPage } from '../Settings/Settings';
-import { SqLitePage } from '../SqLite/SqLite';
-import { MySqlitePage } from '../MySqlite/MySqlite';
-
 
 @Component({
     selector: 'page-login',
@@ -41,12 +38,6 @@ export class LoginPage {
     }
     public loginFactory() {
         this.navCtrl.setRoot(FactoryHomePage);
-    }
-     public SQLiteTestLab() {
-        this.navCtrl.push(MySqlitePage);
-    }
-    public SqLiteDemo() {
-        this.navCtrl.push(SqLitePage);
     }
     public Settings() {
         this.navCtrl.push(SettingsPage, {});

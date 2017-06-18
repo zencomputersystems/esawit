@@ -6,7 +6,6 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { IonicStorageModule } from "@ionic/storage";
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { Network } from '@ionic-native/network';
-import { BaseHttpService } from '../services/base-http';
 
 import { MandorHomePage } from '../pages/Mandor/MandorHome/MandorHome';
 import { HarvestedHistoryPage } from '../pages/Mandor/HarvestedHistory/HarvestedHistory';
@@ -14,8 +13,6 @@ import { HarvestBunchesPage } from '../pages/Mandor/HarvestBunches/HarvestBunche
 
 import { SettingsPage } from '../pages/Shared/Settings/Settings';
 import { LoginPage } from '../pages/Shared/Login/Login';
-import { SqLitePage } from '../pages/Shared/SqLite/SqLite';
-import { MySqlitePage } from '../pages/Shared/MySqlite/MySqlite';
 
 import { CountBunchesPage } from '../pages/Surveyor/CountBunches/CountBunches';
 import { CountBunchesHistoryPage } from '../pages/Surveyor/CountBunchesHistory/CountBunchesHistory';
@@ -28,7 +25,6 @@ import { FactoryHomePage } from '../pages/Factory/FactoryHome/FactoryHome';
 
 import { MyApp } from './app.component';
 import { SharedFunctions } from "../providers/Shared/Functions";
-import { Sqlite } from '../providers/Db/sqlite'
 import { HttpModule, Http } from '@angular/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -37,7 +33,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
   declarations: [
     MyApp,
     MandorHomePage, HarvestedHistoryPage, HarvestBunchesPage,
-    SettingsPage, LoginPage, SqLitePage, MySqlitePage,
+    SettingsPage, LoginPage,
     SurveyorHomePage, CountBunchesPage, CountBunchesHistoryPage,
     AcceptBunchesPage, AcceptedBunchesHistoryPage, FactoryHomePage
   ],
@@ -58,7 +54,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
   entryComponents: [
     MyApp,
     MandorHomePage, HarvestedHistoryPage, HarvestBunchesPage,
-    SettingsPage, LoginPage, SqLitePage, MySqlitePage,
+    SettingsPage, LoginPage, 
     SurveyorHomePage, CountBunchesPage, CountBunchesHistoryPage,
     AcceptBunchesPage, AcceptedBunchesHistoryPage, FactoryHomePage
   ],
@@ -67,7 +63,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
     StatusBar,
     SplashScreen, Network,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
-    SharedFunctions, Sqlite, BaseHttpService
+    SharedFunctions
   ]
 })
 export class AppModule { }

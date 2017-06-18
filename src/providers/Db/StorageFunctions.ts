@@ -4,7 +4,6 @@ import { MasterLocationModel } from '../../models/SQLiteSync/MasterLocation';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import { BaseHttpService } from '../../services/base-http';
 import * as constants from '../../config/constants';
 import { Network } from '@ionic-native/network';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
@@ -18,7 +17,7 @@ class ServerResponse {
 export class StorageService {
 	data: any;
 	public masterLocationList: MasterLocationModel[] = [];
-	constructor(private sqlite: SQLite, private http: Http, private httpService: BaseHttpService, private network: Network) {
+	constructor(private sqlite: SQLite, private http: Http,  private network: Network) {
 	}
 
 	updateRecord(url: string, myModel: any) {
@@ -117,17 +116,17 @@ export class StorageService {
 		return this.masterLocationList;
 	}
 
-	private storeToken(data) { localStorage.setItem('session_token', data.session_token); }
-	GenerateToken() {
-		var queryHeaders = new Headers();
-		queryHeaders.append('Content-Type', 'application/json');
-		let options = new RequestOptions({ headers: queryHeaders });
-		var url = "http://api.zen.com.my/api/v2/user/session";
-		this.httpService.http.post(url, '{"email":"sampath415@gmail.com","password":"sampath415"}', options)
-			.subscribe((data) => { this.storeToken(data.json()); }, (error) => {
-				console.log('Error');
-			});
-	}
+	// private storeToken(data) { localStorage.setItem('session_token', data.session_token); }
+	// GenerateToken() {
+	// 	var queryHeaders = new Headers();
+	// 	queryHeaders.append('Content-Type', 'application/json');
+	// 	let options = new RequestOptions({ headers: queryHeaders });
+	// 	var url = "http://api.zen.com.my/api/v2/user/session";
+	// 	this.httpService.http.post(url, '{"email":"sampath415@gmail.com","password":"sampath415"}', options)
+	// 		.subscribe((data) => { this.storeToken(data.json()); }, (error) => {
+	// 			console.log('Error');
+	// 		});
+	// }
 	waste() {
 		// save (user: MasterLocationModel) 
 		// {
