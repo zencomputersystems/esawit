@@ -18,14 +18,12 @@ import { StorageService } from '../../../providers/Db/StorageFunctions';
 export class CountBunchesPage {
     authForm: FormGroup;
     locationListFromDb: any;
-    labelsFromStorage: any;
     monthsFromStorage: any;
     currentYear: any;
     surveyModel: CountBunchesModel = new CountBunchesModel();
     UIDFromMobile: string;
     UserGUID: string;
-
-    constructor(private myCloud: StorageService,public actionsheetCtrl: ActionSheetController, private storage: Storage, public global: SharedFunctions,
+    constructor(private myCloud: StorageService, public actionsheetCtrl: ActionSheetController, private storage: Storage, public global: SharedFunctions,
         public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public fb: FormBuilder, public navParams: NavParams, public alertCtrl: AlertController) {
 
         this.authForm = fb.group({
@@ -33,24 +31,11 @@ export class CountBunchesPage {
             'monthSelect': [null, Validators.compose([Validators.required])],
             'locationSelect': [null, Validators.compose([Validators.required])],
         })
-
-        this.UIDFromMobile = "2";
-//         var loggedInUserFromDB: any;
-
-//         var url: string;
-//         url = constants.DREAMFACTORY_TABLE_URL + "/user_imei/" + this.UIDFromMobile + "?id_field=user_IMEI&api_key=" + constants.DREAMFACTORY_API_KEY;
-//         this.http.get(url).map(res => res.json()).subscribe(data => {
-//             loggedInUserFromDB = data;
-//             this.UserGUID = loggedInUserFromDB.user_GUID;
-//    url = constants.DREAMFACTORY_TABLE_URL + "/active_users_location_view?filter=user_GUID=" + this.UserGUID + "&api_key=" + constants.DREAMFACTORY_API_KEY;
-//             this.http.get(url).map(res => res.json()).subscribe(data => {
-//                 this.locationListFromDb = data["resource"];
-//             });
-//         });
-//    this.locationListFromDb=   this.myCloud.getLocationListFromCloud(this.UIDFromMobile);
-this.locationListFromDb = this.myCloud.getFromLite();
+        this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
+        // console.log(this.UserGUID);
+        this.locationListFromDb = this.myCloud.getLocationsFromSQLite();
         this.getMonths();
-        this.currentYear = new Date().getFullYear();       
+        this.currentYear = new Date().getFullYear();
     }
 
     getMonths() {
@@ -66,11 +51,12 @@ this.locationListFromDb = this.myCloud.getFromLite();
     }
 
     submitForm(value: any) {
-        console.log(value);
+        // console.log(value);
         this.surveyModel.location_GUID = value.locationSelect;
         this.surveyModel.user_GUID = this.surveyModel.createdby_GUID = this.surveyModel.updatedby_GUID = this.UserGUID;
         this.surveyModel.bunch_count = value.bunchCount;
         this.surveyModel.month = value.monthSelect;
+        this.surveyModel.year = this.currentYear;
         this.surveyModel.updated_ts = this.surveyModel.created_ts = this.global.getTimeStamp();
         this.global.showConfirm(constants.DREAMFACTORY_TABLE_URL + '/transact_survey', this.surveyModel.toJson(true));
 

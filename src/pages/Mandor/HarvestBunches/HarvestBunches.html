@@ -15,7 +15,7 @@
         <ion-segment-button value="seg_harvest">
           {{"_HARVEST_LBL" | translate }}
         </ion-segment-button>
-        <ion-segment-button value="seg_load" >
+        <ion-segment-button value="seg_load">
           {{"_LOAD_LBL" | translate }}
         </ion-segment-button>
       </ion-segment>
@@ -34,7 +34,7 @@
               <ion-input formControlName="harvestedBunchCount" highlight-color="energized" type="text" value=""></ion-input>
             </ion-item>
             <button type="submit" ion-button full [disabled]="!harvestAuthForm.valid">{{ "_SUBMIT_BTN" | translate }}</button>
-                    <div class="error-box" *ngIf="harvestAuthForm.controls['harvestedBunchCount'].hasError('required') ">{{ "_BUNCH_COUNT_VLD" | translate }}</div>
+            <div class="error-box" *ngIf="harvestAuthForm.controls['harvestedBunchCount'].hasError('required') ">{{ "_BUNCH_COUNT_VLD" | translate }}</div>
           </form>
 
 

@@ -14,7 +14,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   templateUrl: 'app.html',
-  providers: [SharedFunctions,StorageService]
+  providers: [SharedFunctions, StorageService]
 })
 export class MyApp {
   // rootPage: any = SqLitePage;
@@ -34,9 +34,11 @@ export class MyApp {
     }
     else {
       this.UIDFromMobile = "2";
-  var locationListFromCloud=   this.myCloud.getLocationListFromCloud(this.UIDFromMobile);
-  this.myCloud.syncMasterLocation(locationListFromCloud);
-  }
+      var locationListFromCloud = this.myCloud.getLocationListFromCloud(this.UIDFromMobile);
+      console.table(locationListFromCloud);
+
+      this.myCloud.syncMasterLocation(locationListFromCloud);
+    }
   }
 }
 

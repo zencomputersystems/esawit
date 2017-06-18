@@ -29,20 +29,20 @@ export class Sqlite {
   getAll() {
     let sql = 'SELECT * FROM transact_survey';
     alert('Inside Get All');
-     this.sqlite.create({
+    this.sqlite.create({
       name: 'esawit.db',
       location: 'default'
     })
       .then((db: SQLiteObject) => {
         return db.executeSql(sql, []).then((data) => {
           var count = data.rows.length;
-              alert('Rows Length'+count);
+          alert('Rows Length' + count);
 
           if (count > 0) {
-                          alert('In If');
-            for (var i = 0; i <=count; i++) {
-                            alert('in for'+i);
-              alert('Get'+data.rows.item(i).location_GUID);
+            alert('In If');
+            for (var i = 0; i <= count; i++) {
+              alert('in for' + i);
+              alert('Get' + data.rows.item(i).location_GUID);
               this.survey.Id = data.rows.item(i).id;
               this.survey.location_GUID = data.rows.item(i).location_GUID;
               this.survey.bunch_count = data.rows.item(i).bunch_count;
@@ -51,20 +51,20 @@ export class Sqlite {
             }
           }
         }, (err) => {
-            alert('Unable to execute sql: ' + JSON.stringify(err));
-          });
+          alert('Unable to execute sql: ' + JSON.stringify(err));
+        });
       }).catch(e => alert("Error " + JSON.stringify(e)));
-          return this.surveyList;
+    return this.surveyList;
 
   }
 
   addRecord(survey: any) {
     let sql = 'INSERT INTO transact_survey(location_GUID, bunch_count) VALUES (?, ?)';
-     this.sqlite.create({
+    this.sqlite.create({
       name: 'esawit.db',
       location: 'default'
     }).then((db: SQLiteObject) => {
-      alert('Before insert'+survey.location_GUID);
+      alert('Before insert' + survey.location_GUID);
       db.executeSql(sql, [survey.location_GUID, survey.bunch_count])
         .then(() => {
           alert("Data Inserted");

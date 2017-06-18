@@ -28,7 +28,7 @@ import { FactoryHomePage } from '../pages/Factory/FactoryHome/FactoryHome';
 
 import { MyApp } from './app.component';
 import { SharedFunctions } from "../providers/Shared/Functions";
-import {Sqlite} from '../providers/Db/sqlite'
+import { Sqlite } from '../providers/Db/sqlite'
 import { HttpModule, Http } from '@angular/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -37,7 +37,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
   declarations: [
     MyApp,
     MandorHomePage, HarvestedHistoryPage, HarvestBunchesPage,
-    SettingsPage, LoginPage, SqLitePage,MySqlitePage,
+    SettingsPage, LoginPage, SqLitePage, MySqlitePage,
     SurveyorHomePage, CountBunchesPage, CountBunchesHistoryPage,
     AcceptBunchesPage, AcceptedBunchesHistoryPage, FactoryHomePage
   ],
@@ -58,7 +58,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
   entryComponents: [
     MyApp,
     MandorHomePage, HarvestedHistoryPage, HarvestBunchesPage,
-    SettingsPage, LoginPage, SqLitePage,MySqlitePage,
+    SettingsPage, LoginPage, SqLitePage, MySqlitePage,
     SurveyorHomePage, CountBunchesPage, CountBunchesHistoryPage,
     AcceptBunchesPage, AcceptedBunchesHistoryPage, FactoryHomePage
   ],
@@ -67,7 +67,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
     StatusBar,
     SplashScreen, Network,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
-    SharedFunctions,Sqlite,BaseHttpService
+    SharedFunctions, Sqlite, BaseHttpService
   ]
 })
 export class AppModule { }
