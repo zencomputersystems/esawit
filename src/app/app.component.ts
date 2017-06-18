@@ -27,8 +27,8 @@ export class MyApp {
 
       this.UIDFromMobile = "2";
       var locationListFromCloud = this.myCloud.getLocationListFromCloud(this.UIDFromMobile);
-      console.table(locationListFromCloud);
-
+    //  console.log('in app. Before table');
+    //   console.table(locationListFromCloud);
       this.myCloud.syncMasterLocation(locationListFromCloud);
 
   }

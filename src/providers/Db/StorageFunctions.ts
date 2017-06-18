@@ -17,27 +17,27 @@ class ServerResponse {
 export class StorageService {
 	data: any;
 	public masterLocationList: MasterLocationModel[] = [];
-	constructor(private sqlite: SQLite, private http: Http,  private network: Network) {
+	constructor(private sqlite: SQLite, private http: Http, private network: Network) {
 	}
 
 	updateRecord(url: string, myModel: any) {
-		alert('in update with error ha');
+		// alert('in update with error ha');
 
-		var queryHeaders = new Headers();
-		queryHeaders.append('Content-Type', 'application/json');
-		queryHeaders.append('X-Dreamfactory-API-Key', constants.DREAMFACTORY_API_KEY);
+		// var queryHeaders = new Headers();
+		// queryHeaders.append('Content-Type', 'application/json');
+		// queryHeaders.append('X-Dreamfactory-API-Key', constants.DREAMFACTORY_API_KEY);
 
-		let options = new RequestOptions({ headers: queryHeaders });
+		// let options = new RequestOptions({ headers: queryHeaders });
 
-		this.http
-			.patch(url, myModel.toJson(true), options)
-			.subscribe((response) => {
-				alert(response);
-				// this.navCtrl.push(HarvestedHistoryPage);
+		// this.http
+		// 	.patch(url, myModel.toJson(true), options)
+		// 	.subscribe((response) => {
+		// 		alert(response);
+		// 		// this.navCtrl.push(HarvestedHistoryPage);
 
-			}, (error) => {
-				alert(error);
-			});
+		// 	}, (error) => {
+		// 		alert(error);
+		// 	});
 	}
 
 
@@ -62,33 +62,31 @@ export class StorageService {
 	}
 
 	syncMasterLocation(masterLocationList: MasterLocationModel[]) {
-		alert('In Sync Function');
-
+		// alert('In Sync Function');
 		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
 			db.executeSql('CREATE TABLE IF NOT EXISTS master_location(id INTEGER  ,location_GUID TEXT,location_name  TEXT)', {})
 				.then(() =>
-				// db.executeSql('DELETE FROM master_location', null))				.then(() =>
-				{
-					console.table(this.masterLocationList);
-					alert(masterLocationList.length);
-					if (masterLocationList.length > 0) {
-						masterLocationList.forEach(locationRec => {
-							// alert('Record'+locationRec.Id+" :"+locationRec.Id+"."+locationRec.location_GUID+"=>"+locationRec.location_name);
-							db.executeSql('INSERT INTO master_location(id,location_GUID,location_name) VALUES(?,?,?)', [locationRec.Id, locationRec.location_GUID, locationRec.location_name])
-								.then(() => {
-									// alert('Record Inserted' + locationRec.location_name);	
-									locationRec.is_synced = 1;
-									this.updateRecord(constants.DREAMFACTORY_TABLE_URL + '/users_location?ids=' + locationRec.Id, locationRec);
-								}
-								).catch(e => console.log(e));
-						});
-					}
-				}).catch(e => console.log(e));
+					db.executeSql('DELETE FROM master_location', null)).then(() => {
+						// alert('Table Deleted');
+								// alert('Locations Count' + masterLocationList.length);
+						if (masterLocationList.length > 0) {
+							masterLocationList.forEach(locationRec => {
+								// alert('Record'+locationRec.Id+" :"+locationRec.Id+"."+locationRec.location_GUID+"=>"+locationRec.location_name);
+								db.executeSql('INSERT INTO master_location(id,location_GUID,location_name) VALUES(?,?,?)', [locationRec.Id, locationRec.location_GUID, locationRec.location_name])
+									.then(() => {
+										// alert('Record Inserted' + locationRec.location_name);	
+										// locationRec.is_synced = 1;
+										// this.updateRecord(constants.DREAMFACTORY_TABLE_URL + '/users_location?ids=' + locationRec.Id, locationRec);
+									}
+									).catch(e => console.log(e));
+							});
+						}
+					}).catch(e => console.log(e));
 		}).catch(e => alert("Error " + JSON.stringify(e)));
 	}
 
 	getLocationListFromCloud(userIMEI: string) {
-		alert('In cloud');
+		// alert('In cloud');
 		var loggedInUserFromDB: any;
 		var url = constants.DREAMFACTORY_TABLE_URL + "/user_imei/" + userIMEI + "?id_field=user_IMEI&api_key=" + constants.DREAMFACTORY_API_KEY;
 		this.http.get(url).map(res => res.json()).subscribe(data => {
