@@ -10,6 +10,8 @@ import * as constants from '../../../config/constants';
 import { SharedFunctions } from '../../../providers/Shared/Functions';
 import { CountBunchesModel } from '../../../models/CountBunchesModel';
 import { StorageService } from '../../../providers/Db/StorageFunctions';
+import { Network } from '@ionic-native/network';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'page-CountBunches',
@@ -22,8 +24,11 @@ export class CountBunchesPage {
     currentYear: number;
     surveyModel: CountBunchesModel = new CountBunchesModel();
     UIDFromMobile: string;
-    UserGUID: string;
-    constructor(private myCloud: StorageService, public actionsheetCtrl: ActionSheetController, private storage: Storage, public global: SharedFunctions,
+    UserGUID: string;  
+    ifConnect: Subscription;
+  ifDisconnect: Subscription;
+
+    constructor(private myCloud: StorageService,private network:Network, public actionsheetCtrl: ActionSheetController, private storage: Storage, public global: SharedFunctions,
         public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public fb: FormBuilder, public navParams: NavParams, public alertCtrl: AlertController) {
 
         this.authForm = fb.group({
@@ -38,6 +43,23 @@ export class CountBunchesPage {
         this.currentYear = new Date().getFullYear();
     }
 
+ ionViewDidEnter() {
+    this.ifConnect = this.network.onConnect().subscribe(data => {
+                    alert('Network exists. Saving data to Cloud');
+                this.myCloud.saveSurveyToCloudFromSQLite();
+    // alert(data.type);
+    }, error => console.error(error));
+
+    // this.ifDisconnect = this.network.onDisconnect().subscribe(data => {
+    // // alert(data.type);
+    // }, error => console.error(error));
+  }
+
+  ionViewWillLeave() {
+    this.ifConnect.unsubscribe();
+    this.ifDisconnect.unsubscribe();
+  }
+
     getMonths() {
         var url = "assets/Surveyor/Months.json";
         console.log(url);
@@ -51,16 +73,21 @@ export class CountBunchesPage {
     }
 
     submitForm(value: any) {
-        // console.log(value);
         this.surveyModel.location_GUID = value.locationSelect;
         this.surveyModel.user_GUID = this.surveyModel.createdby_GUID = this.surveyModel.updatedby_GUID = this.UserGUID;
         this.surveyModel.bunch_count = value.bunchCount;
         this.surveyModel.month = value.monthSelect;
         this.surveyModel.year = this.currentYear;
         this.surveyModel.updated_ts = this.surveyModel.created_ts = this.global.getStringTimeStamp();
-        this.global.showConfirm('sqlite','n', this.surveyModel);
-        this.myCloud.saveSurveyToCloudFromSQLite();
-        //  this.global.showConfirm('cloud',constants.DREAMFACTORY_TABLE_URL + '/transact_survey', this.surveyModel.toJson(true));
+        if(this.network.type=="none"){
+            alert('No Network. Saving data to SQLite');
+                    this.global.showConfirm('sqlite','n', this.surveyModel);
+        }
+        else{
+            alert('Network exists. Saving data to SQLite');
+                     this.global.showConfirm('cloud',constants.DREAMFACTORY_TABLE_URL + '/transact_survey', this.surveyModel.toJson(true));
+
+        }       
 
     }
 

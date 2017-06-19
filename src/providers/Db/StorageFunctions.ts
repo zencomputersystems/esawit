@@ -23,7 +23,8 @@ class ServerResponse {
 
 @Injectable()
 export class StorageService {
-	data: any; successToast = this.translate.get("_SUCCESS_TOAST_LBL")["value"];
+	data: any; 
+	successToast = this.translate.get("_SUCCESS_TOAST_LBL")["value"];
 	failedToast = this.translate.get("_FAILED_TOAST_LBL")["value"];
 
 	public masterLocationList: MasterLocationModel[] = [];
@@ -131,11 +132,11 @@ export class StorageService {
 		alert('Inside Survey save to Cloud');
 		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
 			db.executeSql('select * from transact_survey', {}).then((data) => {
-				alert('Selected Inserted list from Sqlite');
+				// alert('Selected Inserted list from Sqlite');
 				if (data.rows.length > 0) {
-					alert(data.rows.length);
+					// alert(data.rows.length);
 					for (var i = 0; i < data.rows.length; i++) {
-						alert('Record '+(i+1)+" :"+data.rows.item(i).bunch_count);
+						alert('Record ' + (i + 1) + " :" + data.rows.item(i).bunch_count);
 						var survey: CountBunchesModel = new CountBunchesModel();
 						survey.user_GUID = data.rows.item(i).user_GUID;
 						survey.location_GUID = data.rows.item(i).location_GUID;
@@ -150,6 +151,9 @@ export class StorageService {
 						this.saveToCloud(constants.DREAMFACTORY_TABLE_URL + '/transact_survey', survey.toJson(true));
 					}
 				}
+				db.executeSql('DELETE FROM transact_survey', null).then(() => {
+					alert('Survey Table Deleted');
+				});
 			}, (err) => {
 				// alert('Unable to execute sql: ' + JSON.stringify(err));
 			});
@@ -207,7 +211,7 @@ export class StorageService {
 
 	saveToCloud(url: string, myModel: any) {
 		alert('In Save Cloud');
-			var queryHeaders = new Headers();
+		var queryHeaders = new Headers();
 		queryHeaders.append('Content-Type', 'application/json');
 		queryHeaders.append('X-Dreamfactory-API-Key', constants.DREAMFACTORY_API_KEY);
 		let options = new RequestOptions({ headers: queryHeaders });
@@ -216,11 +220,13 @@ export class StorageService {
 		this.http
 			.post(url, myModel, options)
 			.subscribe((response) => {
-				 alert(response);
-				this.showToast('bottom', this.successToast);
+				alert(response);
+				// this.showToast('bottom', this.successToast);
+								this.showToast('bottom', 'Saved Successfully');
+
 			}, (error) => {
-				 alert(error);
-				this.showToast('bottom', this.failedToast);
+				alert(error);
+				this.showToast('bottom', 'Failed to Save');
 			});
 	}
 

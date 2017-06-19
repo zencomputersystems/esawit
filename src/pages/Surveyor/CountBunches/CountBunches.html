@@ -18,6 +18,7 @@
           <ion-option *ngFor="let month of monthsFromStorage" value={{month.value}}>{{ "_MONTH." + month.value | translate }}</ion-option>
         </ion-select>
       </ion-item>
+      <div class="error-box" *ngIf="authForm.controls['monthSelect'].hasError('required')">{{ "_MONTH_SELECT_VLD" | translate }}</div>
 
       <ion-item>
         <ion-label>{{ "_LOCATION_LBL" | translate }}</ion-label>
@@ -25,15 +26,15 @@
           <ion-option *ngFor="let item of locationListFromDb" value={{item.location_GUID}}>{{item.location_name}}</ion-option>
         </ion-select>
       </ion-item>
+      <div class="error-box" *ngIf="authForm.controls['locationSelect'].hasError('required')">{{ "_LOCATION_SELECT_VLD" | translate }}</div>
 
       <ion-item>
         <ion-label fixed>{{ "_TOTAL_BUNCHES_LBL" | translate }}</ion-label>
         <ion-input formControlName="bunchCount" highlight-color="energized" type="text"></ion-input>
       </ion-item>
-      <button type="submit" ion-button full [disabled]="!authForm.valid">{{ "_SUBMIT_BTN" | translate }}</button>
-      <div class="error-box" *ngIf="authForm.controls['monthSelect'].hasError('required')">{{ "_MONTH_SELECT_VLD" | translate }}</div>
-      <div class="error-box" *ngIf="authForm.controls['locationSelect'].hasError('required')">{{ "_LOCATION_SELECT_VLD" | translate }}</div>
       <div class="error-box" *ngIf="authForm.controls['bunchCount'].hasError('required')">{{ "_BUNCH_COUNT_VLD" | translate }}</div>
+
+      <button type="submit" ion-button full [disabled]="!authForm.valid">{{ "_SUBMIT_BTN" | translate }}</button>
 
 
     </form>
