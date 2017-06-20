@@ -1,0 +1,7 @@
+C:\Users\khairulnizam\AppData\Roaming\npm
++-- @angular/core@4.2.2 
+| `-- tslib@1.7.1 
++-- @ngx-translate/core@6.0.0 
++-- UNMET PEER DEPENDENCY rxjs@^5.0.1
+`-- UNMET PEER DEPENDENCY zone.js@^0.8.4
+
