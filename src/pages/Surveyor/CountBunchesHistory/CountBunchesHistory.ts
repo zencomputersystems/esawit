@@ -15,55 +15,58 @@ import { Subscription } from 'rxjs/Subscription';
     templateUrl: 'CountBunchesHistory.html'
 })
 export class CountBunchesHistoryPage {
-    labelsFromStorage: any;
-    countHistoryData: any; surveyHistoryList: SurveyHistoryModel[] = [];
+    countHistoryData: any;
     ifConnect: Subscription;
-    ifDisconnect: Subscription;
 
-    constructor(public global: SharedFunctions, private myCloud: StorageService, private network: Network, public sqlite: StorageService, public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, public http: Http, public platform: Platform, public actionsheetCtrl: ActionSheetController) {
+    constructor(public global: SharedFunctions, private myCloud: StorageService, private network: Network, public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, public http: Http, public platform: Platform, public actionsheetCtrl: ActionSheetController) {
+        //-----------------------Offline Sync---------------------------
+        this.historyDataInitializer();
+        //-----------------------End Offline Sync---------------------------
 
-
+    }
+    //-----------------------Offline Sync---------------------------
+    historyDataInitializer() {
         if (this.network.type == "none") {
             alert('No Network. Getting data from SQLite');
-            this.countHistoryData = this.sqlite.getSurveyHistoryFromSQLite();
+            this.countHistoryData = this.myCloud.getSurveyHistoryFromSQLite();
         }
         else {
             alert('Network exists. Getting data from Cloud');
+            this.myCloud.syncHistoryCloudToSQLite();
+
             var url = constants.DREAMFACTORY_TABLE_URL + "/transact_survey_view?filter=user_GUID=" + localStorage.getItem('loggedIn_user_GUID') + "&api_key=" + constants.DREAMFACTORY_API_KEY;
             this.http.get(url).map(res => res.json()).subscribe(data => {
                 this.countHistoryData = data["resource"];
             });
         }
     }
-
     ionViewDidEnter() {
         this.ifConnect = this.network.onConnect().subscribe(data => {
-            alert('Network exists. Saving data to SQLite');
-            var url = constants.DREAMFACTORY_TABLE_URL + "/transact_survey_view?filter=user_GUID=" + localStorage.getItem('loggedIn_user_GUID') + "&api_key=" + constants.DREAMFACTORY_API_KEY;
-            this.http.get(url).map(res => res.json()).subscribe(data => {
-                var modelFromCloud = data["resource"];
-                modelFromCloud.forEach(cloudItem => {
-                    var surveyHistory: SurveyHistoryModel = new SurveyHistoryModel();
-                    surveyHistory.location_name = cloudItem.location_name;
-                    surveyHistory.bunch_count = cloudItem.bunch_count;
-                    surveyHistory.month = cloudItem.month;
-                    this.surveyHistoryList.push(surveyHistory);
-                });
-                this.sqlite.syncSurveyHistory(this.surveyHistoryList);
-            });
-
-            // alert(data.type);
-        }, error => console.error(error));
-
-        // this.ifDisconnect = this.network.onDisconnect().subscribe(data => {
-        //     // alert(data.type);
-        // }, error => console.error(error));
+            this.myCloud.syncHistoryCloudToSQLite();
+        }, error => alert('Error In SurveyorHistory :' + error));
     }
-
     ionViewWillLeave() {
         this.ifConnect.unsubscribe();
-        this.ifDisconnect.unsubscribe();
     }
+    // syncHistoryCloudToSQLite() {
+    //     alert('Network exists. Saving data to SQLite');
+    //     var url = constants.DREAMFACTORY_TABLE_URL + "/transact_survey_view?filter=user_GUID=" + localStorage.getItem('loggedIn_user_GUID') + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+    //     this.http.get(url).map(res => res.json()).subscribe(data => {
+    //         var modelFromCloud = data["resource"];
+    //         var surveyHistoryList: SurveyHistoryModel[] = [];
+    //         modelFromCloud.forEach(cloudItem => {
+    //             var surveyHistory: SurveyHistoryModel = new SurveyHistoryModel();
+    //             surveyHistory.location_name = cloudItem.location_name;
+    //             surveyHistory.bunch_count = cloudItem.bunch_count;
+    //             surveyHistory.month = cloudItem.month;
+    //             surveyHistoryList.push(surveyHistory);
+    //         });
+    //         this.myCloud.syncSurveyHistoryCloudToSQLite(surveyHistoryList);
+    //     });
+    // }
+    //-----------------------End Offline Sync---------------------------
+
+
 
     itemSelected(item: string) {
         console.log("Selected Item", item);

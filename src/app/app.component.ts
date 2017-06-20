@@ -20,46 +20,28 @@ import { TranslateService } from '@ngx-translate/core';
   providers: [SharedFunctions, StorageService]
 })
 export class MyApp {
-  rootPage: any ;
+  rootPage: any;
   UIDFromMobile: string;
-  UserGUID: string;
   locationListFromDb: any;
-  constructor(private myCloud: StorageService, public http: Http, platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, translate: TranslateService) {
+  constructor(public http: Http, platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, translate: TranslateService) {
     translate.setDefaultLang('en');
     platform.ready().then(() => { statusBar.styleDefault(); splashScreen.hide(); });
 
     //Manually Set the UserGUID. Need to set dynamically.
-    this.UIDFromMobile = "3";
-    	var url = constants.DREAMFACTORY_TABLE_URL + "/user_imei/" + this.UIDFromMobile + "?id_field=user_IMEI&api_key=" + constants.DREAMFACTORY_API_KEY;
-		this.http.get(url).map(res => res.json()).subscribe(data => {
-	var		loggedInUserFromDB = data;
-			localStorage.setItem('loggedIn_user_GUID', loggedInUserFromDB.user_GUID);
-			localStorage.setItem('selected_module', loggedInUserFromDB.module_id);
-module = loggedInUserFromDB.module_id;
-    console.log(module)
-          switch(module)
-          {
-            case 1:this.rootPage=SurveyorHomePage;break;
-            case 2:this.rootPage=MandorHomePage;break;
-            case 3:this.rootPage=FactoryHomePage;break;            
-          }
+    this.UIDFromMobile = "1";
+    var url = constants.DREAMFACTORY_TABLE_URL + "/user_imei/" + this.UIDFromMobile + "?id_field=user_IMEI&api_key=" + constants.DREAMFACTORY_API_KEY;
+    this.http.get(url).map(res => res.json()).subscribe(data => {
+      var loggedInUserFromDB = data;
+      
+      localStorage.setItem('loggedIn_user_GUID', loggedInUserFromDB.user_GUID);
+      localStorage.setItem('selected_module', loggedInUserFromDB.module_id);
+  var    module = loggedInUserFromDB.module_id;
+      switch (module) {
+        case 1: this.rootPage = SurveyorHomePage; break;
+        case 2: this.rootPage = MandorHomePage; break;
+        case 3: this.rootPage = FactoryHomePage; break;
+      }
     });
-    //Get locations based on user_GUID from Cloud.
-    var locationListFromCloud = this.myCloud.getLocationListFromCloud(this.UIDFromMobile);
-    //  console.log('--------------------in app. Before table');
-    //   console.table('-----------------'+locationListFromCloud);
-    //Sync the locationList from cloud to SQLite
-    this.myCloud.syncMasterLocation(locationListFromCloud);
-    var module = this.myCloud.module;
-
-
-
-
-    //--------------------------Survey History----------------------
-
-            //--------------------------Survey History----------------------
-
-
   }
 }
 

@@ -26,7 +26,7 @@ export class StorageService {
 	data: any;
 	successToast = this.translate.get("_SUCCESS_TOAST_LBL")["value"];
 	failedToast = this.translate.get("_FAILED_TOAST_LBL")["value"];
-module:any;
+	module: any;
 	public masterLocationList: MasterLocationModel[] = [];
 	constructor(public toastCtrl: ToastController, public translate: TranslateService, private sqlite: SQLite, private http: Http, private network: Network) {
 	}
@@ -52,8 +52,7 @@ module:any;
 		}).catch(e => alert("Error " + JSON.stringify(e)));
 		return storageLocationItems;
 	}
-
-	syncMasterLocation(masterLocationList: MasterLocationModel[]) {
+	syncMasterLocationToSQLite(masterLocationList: MasterLocationModel[]) {
 		// alert('In Sync Function');
 		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
 			db.executeSql('CREATE TABLE IF NOT EXISTS master_location(id INTEGER  ,location_GUID TEXT,location_name  TEXT)', {})
@@ -67,8 +66,6 @@ module:any;
 								db.executeSql('INSERT INTO master_location(id,location_GUID,location_name) VALUES(?,?,?)', [locationRec.Id, locationRec.location_GUID, locationRec.location_name])
 									.then(() => {
 										// alert('Record Inserted' + locationRec.location_name);	
-										// locationRec.is_synced = 1;
-										// this.updateRecord(constants.DREAMFACTORY_TABLE_URL + '/users_location?ids=' + locationRec.Id, locationRec);
 									}
 									).catch(e => console.log(e));
 							});
@@ -76,34 +73,37 @@ module:any;
 					}).catch(e => console.log(e));
 		}).catch(e => alert("Error " + JSON.stringify(e)));
 	}
-
-	getLocationListFromCloud(userIMEI: string) {
+	getLocationListFromCloud() {
+		// getLocationListFromCloud(userIMEI: string) {
 		// alert('In cloud');
-		var loggedInUserFromDB: any;
-		var url = constants.DREAMFACTORY_TABLE_URL + "/user_imei/" + userIMEI + "?id_field=user_IMEI&api_key=" + constants.DREAMFACTORY_API_KEY;
+		// var loggedInUserFromDB: any;
+		// var url = constants.DREAMFACTORY_TABLE_URL + "/user_imei/" + userIMEI + "?id_field=user_IMEI&api_key=" + constants.DREAMFACTORY_API_KEY;
+		// this.http.get(url).map(res => res.json()).subscribe(data => {
+
+		// loggedInUserFromDB = data;
+		// 			localStorage.setItem('loggedIn_user_GUID', loggedInUserFromDB.user_GUID);
+		// 			localStorage.setItem('selected_module', loggedInUserFromDB.module_id);
+		// this.module = loggedInUserFromDB.module_id;
+
+		var UserGUID = localStorage.getItem('loggedIn_user_GUID');
+		// alert(UserGUID)
+		var url = constants.DREAMFACTORY_TABLE_URL + "/active_users_location_view?filter=user_GUID=" + UserGUID + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+
 		this.http.get(url).map(res => res.json()).subscribe(data => {
-
-			loggedInUserFromDB = data;
-			localStorage.setItem('loggedIn_user_GUID', loggedInUserFromDB.user_GUID);
-			localStorage.setItem('selected_module', loggedInUserFromDB.module_id);
-this.module = loggedInUserFromDB.module_id;
-			url = constants.DREAMFACTORY_TABLE_URL + "/active_users_location_view?filter=user_GUID=" + loggedInUserFromDB.user_GUID + "&api_key=" + constants.DREAMFACTORY_API_KEY;
-
-			this.http.get(url).map(res => res.json()).subscribe(data => {
-				var locationListFromDb = data["resource"];
-				locationListFromDb.forEach(element => {
-					var masterLocation: MasterLocationModel = new MasterLocationModel();
-					masterLocation.Id = element.h1;
-					masterLocation.location_GUID = element.location_GUID;
-					masterLocation.location_name = element.location_name;
-					this.masterLocationList.push(masterLocation);
-				});
-				// console.table(this.masterLocationList);
-				return this.masterLocationList;
-
+			var locationListFromDb = data["resource"];
+			locationListFromDb.forEach(element => {
+				var masterLocation: MasterLocationModel = new MasterLocationModel();
+				masterLocation.Id = element.h1;
+				masterLocation.location_GUID = element.location_GUID;
+				masterLocation.location_name = element.location_name;
+				this.masterLocationList.push(masterLocation);
 			});
+			// console.table(this.masterLocationList);
+			return this.masterLocationList;
+
 		});
-		console.table(this.masterLocationList);
+		// });
+		// console.table(this.masterLocationList);
 		return this.masterLocationList;
 	}
 	//-------------------------End Master Location data based on user_GUID-------------------------
@@ -165,7 +165,8 @@ this.module = loggedInUserFromDB.module_id;
 		}).catch(e => alert("Error " + JSON.stringify(e)));
 	}
 
-	syncSurveyHistory(SurveyHistoryList: SurveyHistoryModel[]) {
+	//-----------------------------Locally Used-------------------
+	syncSurveyHistoryCloudToSQLite(SurveyHistoryList: SurveyHistoryModel[]) {
 		// alert('In Sync Function');
 		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
 			db.executeSql('CREATE TABLE IF NOT EXISTS survey_history(location_name TEXT,bunch_count  INTEGER,month INTEGER)', {})
@@ -185,11 +186,12 @@ this.module = loggedInUserFromDB.module_id;
 									).catch(e => console.log(e));
 							});
 						}
-						this.showToast('bottom', 'Data Synced to Cloud Successfully');
+						this.showToast('bottom', 'Data Synced to SQLite Successfully');
 
 					}).catch(e => console.log(e));
 		}).catch(e => alert("Error " + JSON.stringify(e)));
 	}
+	//-----------------------------End Locally Used-------------------
 
 	getSurveyHistoryFromSQLite() {
 		// alert('Inside Get From Lite Function');
@@ -213,6 +215,23 @@ this.module = loggedInUserFromDB.module_id;
 			});
 		}).catch(e => alert("Error " + JSON.stringify(e)));
 		return surveyItems;
+	}
+
+	syncHistoryCloudToSQLite() {
+		alert('Network exists. Saving data to SQLite');
+		var url = constants.DREAMFACTORY_TABLE_URL + "/transact_survey_view?filter=user_GUID=" + localStorage.getItem('loggedIn_user_GUID') + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+		this.http.get(url).map(res => res.json()).subscribe(data => {
+			var modelFromCloud = data["resource"];
+			var surveyHistoryList: SurveyHistoryModel[] = [];
+			modelFromCloud.forEach(cloudItem => {
+				var surveyHistory: SurveyHistoryModel = new SurveyHistoryModel();
+				surveyHistory.location_name = cloudItem.location_name;
+				surveyHistory.bunch_count = cloudItem.bunch_count;
+				surveyHistory.month = cloudItem.month;
+				surveyHistoryList.push(surveyHistory);
+			});
+			this.syncSurveyHistoryCloudToSQLite(surveyHistoryList);
+		});
 	}
 	//--------------------------End Surveyor Module------------------------------
 
@@ -253,6 +272,7 @@ this.module = loggedInUserFromDB.module_id;
 		});
 		toast.present(toast);
 	}
+
 
 
 	//----------------------Obsolete Functions------------------------
