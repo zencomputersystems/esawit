@@ -23,10 +23,10 @@ class ServerResponse {
 
 @Injectable()
 export class StorageService {
-	data: any; 
+	data: any;
 	successToast = this.translate.get("_SUCCESS_TOAST_LBL")["value"];
 	failedToast = this.translate.get("_FAILED_TOAST_LBL")["value"];
-
+module:any;
 	public masterLocationList: MasterLocationModel[] = [];
 	constructor(public toastCtrl: ToastController, public translate: TranslateService, private sqlite: SQLite, private http: Http, private network: Network) {
 	}
@@ -85,7 +85,8 @@ export class StorageService {
 
 			loggedInUserFromDB = data;
 			localStorage.setItem('loggedIn_user_GUID', loggedInUserFromDB.user_GUID);
-
+			localStorage.setItem('selected_module', loggedInUserFromDB.module_id);
+this.module = loggedInUserFromDB.module_id;
 			url = constants.DREAMFACTORY_TABLE_URL + "/active_users_location_view?filter=user_GUID=" + loggedInUserFromDB.user_GUID + "&api_key=" + constants.DREAMFACTORY_API_KEY;
 
 			this.http.get(url).map(res => res.json()).subscribe(data => {
@@ -97,7 +98,7 @@ export class StorageService {
 					masterLocation.location_name = element.location_name;
 					this.masterLocationList.push(masterLocation);
 				});
-				console.table(this.masterLocationList);
+				// console.table(this.masterLocationList);
 				return this.masterLocationList;
 
 			});
@@ -105,7 +106,7 @@ export class StorageService {
 		console.table(this.masterLocationList);
 		return this.masterLocationList;
 	}
-	//-------------------------Master Location data based on user_GUID-------------------------
+	//-------------------------End Master Location data based on user_GUID-------------------------
 
 	//--------------------------Surveyor Module------------------------------
 	saveToSQLite(query: string, myModel: any) {
@@ -119,7 +120,9 @@ export class StorageService {
 
 					db.executeSql('INSERT INTO transact_survey(user_GUID,location_GUID,bunch_count,year,month,created_ts,createdby_GUID,updatedby_GUID,updated_ts) VALUES(?,?,?,?,?,?,?,?,?)', [myModel.user_GUID, myModel.location_GUID, myModel.bunch_count, myModel.year, myModel.month, myModel.created_ts, myModel.createdby_GUID, myModel.updatedby_GUID, myModel.updated_ts])
 						.then(() => {
-							alert('Record Inserted to SQLite' + myModel.bunch_count);
+							this.showToast('bottom', 'Saved Successfully');
+
+							// alert('Record Inserted to SQLite' + myModel.bunch_count);
 							// locationRec.is_synced = 1;
 							// this.updateRecord(constants.DREAMFACTORY_TABLE_URL + '/users_location?ids=' + locationRec.Id, locationRec);
 						}
@@ -129,14 +132,14 @@ export class StorageService {
 	}
 
 	saveSurveyToCloudFromSQLite() {
-		alert('Inside Survey save to Cloud');
+		// alert('Inside Survey save to Cloud');
 		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
 			db.executeSql('select * from transact_survey', {}).then((data) => {
 				// alert('Selected Inserted list from Sqlite');
 				if (data.rows.length > 0) {
 					// alert(data.rows.length);
 					for (var i = 0; i < data.rows.length; i++) {
-						alert('Record ' + (i + 1) + " :" + data.rows.item(i).bunch_count);
+						// alert('Record ' + (i + 1) + " :" + data.rows.item(i).bunch_count);
 						var survey: CountBunchesModel = new CountBunchesModel();
 						survey.user_GUID = data.rows.item(i).user_GUID;
 						survey.location_GUID = data.rows.item(i).location_GUID;
@@ -152,7 +155,9 @@ export class StorageService {
 					}
 				}
 				db.executeSql('DELETE FROM transact_survey', null).then(() => {
-					alert('Survey Table Deleted');
+					this.showToast('bottom', 'Data Synced to Cloud Successfully');
+
+					// alert('Survey Table Deleted');
 				});
 			}, (err) => {
 				// alert('Unable to execute sql: ' + JSON.stringify(err));
@@ -180,6 +185,8 @@ export class StorageService {
 									).catch(e => console.log(e));
 							});
 						}
+						this.showToast('bottom', 'Data Synced to Cloud Successfully');
+
 					}).catch(e => console.log(e));
 		}).catch(e => alert("Error " + JSON.stringify(e)));
 	}
@@ -207,22 +214,30 @@ export class StorageService {
 		}).catch(e => alert("Error " + JSON.stringify(e)));
 		return surveyItems;
 	}
-	//--------------------------Surveyor Module------------------------------
+	//--------------------------End Surveyor Module------------------------------
+
+
+	//--------------------------Factory Module-------------------------------------
+
+
+	//--------------------------End Factory Module--------------------------------
+
+
 
 	saveToCloud(url: string, myModel: any) {
-		alert('In Save Cloud');
+		// alert('In Save Cloud');
 		var queryHeaders = new Headers();
 		queryHeaders.append('Content-Type', 'application/json');
 		queryHeaders.append('X-Dreamfactory-API-Key', constants.DREAMFACTORY_API_KEY);
 		let options = new RequestOptions({ headers: queryHeaders });
-		alert(url);
-		alert(myModel);
+		// alert(url);
+		// alert(myModel);
 		this.http
 			.post(url, myModel, options)
 			.subscribe((response) => {
-				alert(response);
+				// alert(response);
 				// this.showToast('bottom', this.successToast);
-								this.showToast('bottom', 'Saved Successfully');
+				this.showToast('bottom', 'Saved Successfully');
 
 			}, (error) => {
 				alert(error);
@@ -316,6 +331,6 @@ export class StorageService {
 		// 		alert(error);
 		// 	});
 	}
-	//----------------------Obsolete Functions-----------------------
+	//----------------------End Obsolete Functions-----------------------
 
 }

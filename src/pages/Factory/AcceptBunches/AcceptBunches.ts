@@ -34,13 +34,13 @@ export class AcceptBunchesPage {
         this.UIDFromMobile = "3";
         var loggedInUserFromDB: any;
         var url: string;
-        url = constants.DREAMFACTORY_TABLE_URL + "/user_imei/" + this.UIDFromMobile + "?id_field=user_IMEI&api_key=" + constants.DREAMFACTORY_API_KEY;
-        this.http.get(url).map(res => res.json()).subscribe(data => {
-            loggedInUserFromDB = data;
-            this.UserGUID = loggedInUserFromDB.user_GUID;
-            console.log(this.UserGUID);
-        });
-
+        // url = constants.DREAMFACTORY_TABLE_URL + "/user_imei/" + this.UIDFromMobile + "?id_field=user_IMEI&api_key=" + constants.DREAMFACTORY_API_KEY;
+        // this.http.get(url).map(res => res.json()).subscribe(data => {
+        //     loggedInUserFromDB = data;
+        //     this.UserGUID = loggedInUserFromDB.user_GUID;
+        //     console.log(this.UserGUID);
+        // });
+                this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
         //Todo: Inject into a global function
         var url = constants.DREAMFACTORY_TABLE_URL + "/master_location?api_key=" + constants.DREAMFACTORY_API_KEY;
         this.http.get(url).map(res => res.json()).subscribe(data => {
@@ -54,7 +54,7 @@ export class AcceptBunchesPage {
         this.factoryModel.driver_GUID = value.driverSelect;
         this.factoryModel.user_GUID = this.factoryModel.createdby_GUID = this.factoryModel.updatedby_GUID = this.UserGUID;
         this.factoryModel.bunch_count = value.bunchCount;
-        this.factoryModel.updated_ts = this.factoryModel.created_ts = this.global.getTimeStamp();
+        this.factoryModel.updated_ts = this.factoryModel.created_ts = this.global.getStringTimeStamp();
         this.global.showConfirm('cloud',constants.DREAMFACTORY_TABLE_URL + '/transact_unloading', this.factoryModel.toJson(true));
     }
     onLocationSelect(locationSelected: any) {

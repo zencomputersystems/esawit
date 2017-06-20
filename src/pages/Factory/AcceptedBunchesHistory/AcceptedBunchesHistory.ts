@@ -13,15 +13,23 @@ import * as constants from '../../../config/constants';
     templateUrl: 'AcceptedBunchesHistory.html'
 })
 export class AcceptedBunchesHistoryPage {
-    labelsFromStorage: any;
+    labelsFromStorage: any;UserGUID:any;
     acceptedBunchesHistoryData: any;
     //  private mainMenu: MainMenu,
     constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, public http: Http, public platform: Platform, public actionsheetCtrl: ActionSheetController) {
-        var url = constants.DREAMFACTORY_TABLE_URL+ "/transact_unloading?api_key="+constants.DREAMFACTORY_API_KEY;
+               this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
+
+         var     url = constants.DREAMFACTORY_TABLE_URL + "/transact_unloading_view?filter=user_GUID=" + this.UserGUID + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+
         this.http.get(url).map(res => res.json()).subscribe(data => {
             this.acceptedBunchesHistoryData = data["resource"];
-
         });
+
+
+        // var url = constants.DREAMFACTORY_TABLE_URL+ "/transact_unloading?api_key="+constants.DREAMFACTORY_API_KEY;
+        // this.http.get(url).map(res => res.json()).subscribe(data => {
+        //     this.acceptedBunchesHistoryData = data["resource"];
+        // });
     }
 
     // openGlobalMenu() {

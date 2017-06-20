@@ -21,7 +21,7 @@ export class LoginPage {
         };
         var secondDate = new Date().toLocaleDateString("en-GB", options);
         //     console.log(secondDate);
-            // console.log( myDate.getDate()+"/"+myDate.getMonth()+"/"+myDate.getFullYear()+" "+myDate.getHours()+":"+myDate.getMinutes()+":"+myDate.getSeconds());
+            console.log( myDate.getDate()+"/"+myDate.getMonth()+"/"+myDate.getFullYear()+" "+myDate.getHours()+":"+myDate.getMinutes()+":"+myDate.getSeconds());
         //    console.log(new Date(new Date().toLocaleDateString("en-GB", options)));
     }
     onLink(url: string) {

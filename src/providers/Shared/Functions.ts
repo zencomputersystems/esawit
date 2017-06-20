@@ -36,6 +36,18 @@ export class SharedFunctions {
     return        ( myDate.getDate()+"-"+(myDate.getMonth()+1)+"-"+myDate.getFullYear()+" "+myDate.getHours()+":"+myDate.getMinutes()+":"+myDate.getSeconds());
 
   }
+
+  getStringDate() {
+    var myDate = new Date();
+    var day:string=null;
+    var month:string=null;
+ var temp = myDate.getDate();
+ if(temp<10){day="0"+temp;}else{day=temp+"";}
+ temp = (myDate.getMonth()+1);
+ if(temp<10){month = "0"+temp;}else{month=temp+"";}
+    return        ( myDate.getFullYear()+"-"+month+"-"+day);
+
+  }
     getTimeStamp() {
     var myDate = new Date();
        return new Date(myDate.getUTCFullYear(), myDate.getUTCMonth(), myDate.getUTCDate(), myDate.getUTCHours(), myDate.getUTCMinutes(), myDate.getSeconds());

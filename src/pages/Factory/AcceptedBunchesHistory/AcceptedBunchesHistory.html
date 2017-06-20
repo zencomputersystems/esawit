@@ -22,9 +22,14 @@
       <ion-avatar item-left>
         <button ion-button color="light"> {{i+1}} </button>
       </ion-avatar>
-      <h2>{{ history.vehicle_GUID }}</h2>
-      <h2>{{history .loading_location_GUID}}</h2>
-      <h2>{{history .bunch_count}}</h2>
+            <ion-avatar item-left>
+
+      <h2>{{ history.registration_no }}</h2>      </ion-avatar>
+      <ion-avatar item-left>
+      <h2>{{history .location_name}}</h2>      </ion-avatar>
+      <ion-avatar item-right>
+      <h2>{{history .bunch_count}}</h2>      </ion-avatar>
+
     </ion-item>
   </ion-list>
 </ion-content>

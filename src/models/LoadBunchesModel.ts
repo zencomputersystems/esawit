@@ -5,10 +5,10 @@ export class LoadBunchesModel {
 		public location_GUID: string = "",
 		public driver_GUID: string = "",
 		public bunch_count: number = null,
-		public created_ts: Date = null,
+		public created_ts: string = null,
 		public createdby_GUID: string = null,
 		public updatedby_GUID: string = null,
-		public updated_ts: Date = null
+		public updated_ts: string = null
 	) { }
 
 	toJson(stringify?: boolean): any {
