@@ -48,13 +48,13 @@ export class SharedFunctions {
     return        ( myDate.getFullYear()+"-"+month+"-"+day);
 
   }
-    getTimeStamp() {
-    var myDate = new Date();
-       return new Date(myDate.getUTCFullYear(), myDate.getUTCMonth(), myDate.getUTCDate(), myDate.getUTCHours(), myDate.getUTCMinutes(), myDate.getSeconds());
-    // return new Date(myDate.getTime());
-    // return        ( myDate.getDate()+"-"+myDate.getMonth()+"-"+myDate.getFullYear()+" "+myDate.getHours()+":"+myDate.getMinutes()+":"+myDate.getSeconds());
+  //   getTimeStamp() {
+  //   var myDate = new Date();
+  //      return new Date(myDate.getUTCFullYear(), myDate.getUTCMonth(), myDate.getUTCDate(), myDate.getUTCHours(), myDate.getUTCMinutes(), myDate.getSeconds());
+  //   // return new Date(myDate.getTime());
+  //   // return        ( myDate.getDate()+"-"+myDate.getMonth()+"-"+myDate.getFullYear()+" "+myDate.getHours()+":"+myDate.getMinutes()+":"+myDate.getSeconds());
 
-  }
+  // }
 
   showConfirm(saveType: string, saveInstruction: string, myModel: any) {
     let confirmTitle = this.translate.get("_CONFIRMATION_TITLE")["value"];

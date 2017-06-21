@@ -2,8 +2,8 @@
 import { NavController, NavParams, ModalController, ViewController, Platform, AlertController, ActionSheetController, ToastController } from 'ionic-angular';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AcceptedBunchesHistoryPage } from '../AcceptedBunchesHistory/AcceptedBunchesHistory';
-import { Observable } from 'rxjs/Observable';
+// import { AcceptedBunchesHistoryPage } from '../AcceptedBunchesHistory/AcceptedBunchesHistory';
+// import { Observable } from 'rxjs/Observable';
 import * as constants from '../../../config/constants';
 import { AcceptBunchesModel } from '../../../models/AcceptBunchesModel';
 import { SharedFunctions } from '../../../providers/Shared/Functions';
@@ -25,14 +25,14 @@ export class AcceptBunchesPage {
     constructor(public actionsheetCtrl: ActionSheetController, public global: SharedFunctions,
         public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public fb: FormBuilder, public navParams: NavParams, public alertCtrl: AlertController) {
         this.authForm = fb.group({
-            'bunchCount': [null, Validators.compose([Validators.required])],
+            'bunchCount': [null, Validators.compose([Validators.pattern('[0-9]*'), Validators.required])],
             'driverSelect': [null, Validators.compose([Validators.required])],
             'vehicleSelect': [null, Validators.compose([Validators.required])],
             'locationSelect': [null, Validators.compose([Validators.required])],
         })
 
         this.UIDFromMobile = "3";
-        var loggedInUserFromDB: any;
+        // var loggedInUserFromDB: any;
         var url: string;
         // url = constants.DREAMFACTORY_TABLE_URL + "/user_imei/" + this.UIDFromMobile + "?id_field=user_IMEI&api_key=" + constants.DREAMFACTORY_API_KEY;
         // this.http.get(url).map(res => res.json()).subscribe(data => {
@@ -42,7 +42,7 @@ export class AcceptBunchesPage {
         // });
                 this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
         //Todo: Inject into a global function
-        var url = constants.DREAMFACTORY_TABLE_URL + "/master_location?api_key=" + constants.DREAMFACTORY_API_KEY;
+        url = constants.DREAMFACTORY_TABLE_URL + "/master_location?api_key=" + constants.DREAMFACTORY_API_KEY;
         this.http.get(url).map(res => res.json()).subscribe(data => {
             this.locationFromDb = data["resource"];
         });

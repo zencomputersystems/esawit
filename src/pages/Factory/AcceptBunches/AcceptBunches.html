@@ -40,10 +40,6 @@
         <ion-input formControlName="bunchCount" highlight-color="energized" type="text"></ion-input>
       </ion-item>
       <button type="submit" ion-button full [disabled]="!authForm.valid">{{ "_SUBMIT_BTN" | translate }}</button>
-      <div class="error-box" *ngIf="authForm.controls['locationSelect'].hasError('required')">{{ "_LOCATION_SELECT_VLD" | translate }}</div>
-      <div class="error-box" *ngIf="authForm.controls['vehicleSelect'].hasError('required')">{{ "_VEHICLE_SELECT_VLD" | translate }}</div>
-      <div class="error-box" *ngIf="authForm.controls['driverSelect'].hasError('required')">{{ "_DRIVER_SELECT_VLD" | translate }}</div>
-      <div class="error-box" *ngIf="authForm.controls['bunchCount'].hasError('required')">{{ "_BUNCH_COUNT_VLD" | translate }}</div>
 
     </form> 
 

@@ -47,11 +47,12 @@ export class StorageService {
 					}
 				}
 			}, (err) => {
-				// alert('Unable to execute sql: ' + JSON.stringify(err));
+				alert('getLocationsFromSQLite :' + JSON.stringify(err));
 			});
-		}).catch(e => alert("Error " + JSON.stringify(e)));
+		}).catch(e => alert("getLocationsFromSQLite :" + JSON.stringify(e)));
 		return storageLocationItems;
 	}
+
 	syncMasterLocationToSQLite(masterLocationList: MasterLocationModel[]) {
 		// alert('In Sync Function');
 		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
@@ -66,25 +67,14 @@ export class StorageService {
 								db.executeSql('INSERT INTO master_location(id,location_GUID,location_name) VALUES(?,?,?)', [locationRec.Id, locationRec.location_GUID, locationRec.location_name])
 									.then(() => {
 										// alert('Record Inserted' + locationRec.location_name);	
-									}
-									).catch(e => console.log(e));
+									}).catch(e => alert('syncMasterLocationToSQLite :' + JSON.stringify(e)));
 							});
 						}
-					}).catch(e => console.log(e));
-		}).catch(e => alert("Error " + JSON.stringify(e)));
+					}).catch(e => alert('syncMasterLocationToSQLite :' + JSON.stringify(e)));
+		}).catch(e => alert('syncMasterLocationToSQLite :' + JSON.stringify(e)));
 	}
+
 	getLocationListFromCloud() {
-		// getLocationListFromCloud(userIMEI: string) {
-		// alert('In cloud');
-		// var loggedInUserFromDB: any;
-		// var url = constants.DREAMFACTORY_TABLE_URL + "/user_imei/" + userIMEI + "?id_field=user_IMEI&api_key=" + constants.DREAMFACTORY_API_KEY;
-		// this.http.get(url).map(res => res.json()).subscribe(data => {
-
-		// loggedInUserFromDB = data;
-		// 			localStorage.setItem('loggedIn_user_GUID', loggedInUserFromDB.user_GUID);
-		// 			localStorage.setItem('selected_module', loggedInUserFromDB.module_id);
-		// this.module = loggedInUserFromDB.module_id;
-
 		var UserGUID = localStorage.getItem('loggedIn_user_GUID');
 		// alert(UserGUID)
 		var url = constants.DREAMFACTORY_TABLE_URL + "/active_users_location_view?filter=user_GUID=" + UserGUID + "&api_key=" + constants.DREAMFACTORY_API_KEY;
@@ -100,7 +90,6 @@ export class StorageService {
 			});
 			// console.table(this.masterLocationList);
 			return this.masterLocationList;
-
 		});
 		// });
 		// console.table(this.masterLocationList);
@@ -113,22 +102,12 @@ export class StorageService {
 		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
 			db.executeSql('CREATE TABLE IF NOT EXISTS transact_survey(user_GUID TEXT,location_GUID TEXT,bunch_count INTEGER,year INTEGER,month INTEGER,created_ts  TEXT,createdby_GUID TEXT,updatedby_GUID TEXT,updated_ts TEXT)', {})
 				.then(() =>
-					// db.executeSql('DELETE FROM master_location', null)).then(() => {
-					// alert('Table Deleted');
-					// alert('Locations Count' + masterLocationList.length);
-					// alert('Record'+locationRec.Id+" :"+locationRec.Id+"."+locationRec.location_GUID+"=>"+locationRec.location_name);
-
 					db.executeSql('INSERT INTO transact_survey(user_GUID,location_GUID,bunch_count,year,month,created_ts,createdby_GUID,updatedby_GUID,updated_ts) VALUES(?,?,?,?,?,?,?,?,?)', [myModel.user_GUID, myModel.location_GUID, myModel.bunch_count, myModel.year, myModel.month, myModel.created_ts, myModel.createdby_GUID, myModel.updatedby_GUID, myModel.updated_ts])
 						.then(() => {
 							this.showToast('bottom', 'Saved Successfully');
-
 							// alert('Record Inserted to SQLite' + myModel.bunch_count);
-							// locationRec.is_synced = 1;
-							// this.updateRecord(constants.DREAMFACTORY_TABLE_URL + '/users_location?ids=' + locationRec.Id, locationRec);
-						}
-						).catch(e => console.log(e)));
-			// }).catch(e => console.log(e));
-		}).catch(e => alert("Error " + JSON.stringify(e)));
+						}).catch(e => alert('saveToSQLite :' + JSON.stringify(e))));
+		}).catch(e => alert("saveToSQLite :" + JSON.stringify(e)));
 	}
 
 	saveSurveyToCloudFromSQLite() {
@@ -160,9 +139,9 @@ export class StorageService {
 					// alert('Survey Table Deleted');
 				});
 			}, (err) => {
-				// alert('Unable to execute sql: ' + JSON.stringify(err));
+				alert('saveSurveyToCloudFromSQLite: ' + JSON.stringify(err));
 			});
-		}).catch(e => alert("Error " + JSON.stringify(e)));
+		}).catch(e => alert("saveSurveyToCloudFromSQLite :" + JSON.stringify(e)));
 	}
 
 	//-----------------------------Locally Used-------------------
@@ -180,16 +159,14 @@ export class StorageService {
 								db.executeSql('INSERT INTO survey_history(location_name,bunch_count,month) VALUES(?,?,?)', [surveyRec.location_name, surveyRec.bunch_count, surveyRec.month])
 									.then(() => {
 										// alert('Record Inserted' + surveyRec.location_name);	
-										// locationRec.is_synced = 1;
-										// this.updateRecord(constants.DREAMFACTORY_TABLE_URL + '/users_location?ids=' + locationRec.Id, locationRec);
 									}
-									).catch(e => console.log(e));
+									).catch(e => alert('syncSurveyHistoryCloudToSQLite: ' + JSON.stringify(e)));
 							});
 						}
 						this.showToast('bottom', 'Data Synced to SQLite Successfully');
 
-					}).catch(e => console.log(e));
-		}).catch(e => alert("Error " + JSON.stringify(e)));
+					}).catch(e => alert('syncSurveyHistoryCloudToSQLite: ' + JSON.stringify(e)));
+		}).catch(e => alert("syncSurveyHistoryCloudToSQLite: " + JSON.stringify(e)));
 	}
 	//-----------------------------End Locally Used-------------------
 
@@ -211,9 +188,9 @@ export class StorageService {
 					}
 				}
 			}, (err) => {
-				// alert('Unable to execute sql: ' + JSON.stringify(err));
+				alert('getSurveyHistoryFromSQLite: ' + JSON.stringify(err));
 			});
-		}).catch(e => alert("Error " + JSON.stringify(e)));
+		}).catch(e => alert("getSurveyHistoryFromSQLite: " + JSON.stringify(e)));
 		return surveyItems;
 	}
 

@@ -8,7 +8,7 @@ import { LoginPage } from '../pages/Shared/Login/Login';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { StorageService } from '../providers/Db/StorageFunctions';
 import { SurveyHistoryModel } from '../models/SurveyHistoryModel'
-import { MandorHomePage } from '../pages/Mandor/MandorHome/MandorHome';
+import { HarvestBunchesPage } from '../pages/Mandor/HarvestBunches/HarvestBunches';
 import { FactoryHomePage } from '../pages/Factory/FactoryHome/FactoryHome';
 import { SurveyorHomePage } from '../pages/Surveyor/SurveyorHome/SurveyorHome';
 
@@ -38,7 +38,7 @@ export class MyApp {
   var    module = loggedInUserFromDB.module_id;
       switch (module) {
         case 1: this.rootPage = SurveyorHomePage; break;
-        case 2: this.rootPage = MandorHomePage; break;
+        case 2: this.rootPage = HarvestBunchesPage; break;
         case 3: this.rootPage = FactoryHomePage; break;
       }
     });
