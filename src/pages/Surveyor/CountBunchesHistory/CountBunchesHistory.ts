@@ -48,22 +48,6 @@ export class CountBunchesHistoryPage {
     ionViewWillLeave() {
         this.ifConnect.unsubscribe();
     }
-    // syncHistoryCloudToSQLite() {
-    //     alert('Network exists. Saving data to SQLite');
-    //     var url = constants.DREAMFACTORY_TABLE_URL + "/transact_survey_view?filter=user_GUID=" + localStorage.getItem('loggedIn_user_GUID') + "&api_key=" + constants.DREAMFACTORY_API_KEY;
-    //     this.http.get(url).map(res => res.json()).subscribe(data => {
-    //         var modelFromCloud = data["resource"];
-    //         var surveyHistoryList: SurveyHistoryModel[] = [];
-    //         modelFromCloud.forEach(cloudItem => {
-    //             var surveyHistory: SurveyHistoryModel = new SurveyHistoryModel();
-    //             surveyHistory.location_name = cloudItem.location_name;
-    //             surveyHistory.bunch_count = cloudItem.bunch_count;
-    //             surveyHistory.month = cloudItem.month;
-    //             surveyHistoryList.push(surveyHistory);
-    //         });
-    //         this.myCloud.syncSurveyHistoryCloudToSQLite(surveyHistoryList);
-    //     });
-    // }
     //-----------------------End Offline Sync---------------------------
 
 

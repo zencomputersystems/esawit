@@ -17,10 +17,8 @@ export class SurveyorHomePage {
     constructor(private network: Network, private myCloud: StorageService, public navCtrl: NavController, public platform: Platform, public actionsheetCtrl: ActionSheetController) {
         //   alert('Modified');
         //-----------------------Offline Sync---------------------------
-        //Get locations based on user_GUID from Cloud. It will be used in CountBunches Module.
-        var locationListFromCloud = this.myCloud.getLocationListFromCloud();
-        //Sync the locationList from cloud to SQLite
-        this.myCloud.syncMasterLocationToSQLite(locationListFromCloud);
+        this.myCloud.getUserLocationListFromCloud();
+        this.myCloud.syncHistoryCloudToSQLite();
         //-----------------------End Offline Sync---------------------------
 
     }
@@ -28,6 +26,7 @@ export class SurveyorHomePage {
     //-----------------------Offline Sync---------------------------
     ionViewDidEnter() {
         this.ifConnect = this.network.onConnect().subscribe(data => {
+            // this.myCloud.getUserLocationListFromCloud();
             //Sync the Count Bunches Page
             this.myCloud.saveSurveyToCloudFromSQLite();
             //Sync the History Page

@@ -6,6 +6,9 @@ import { HarvestBunchesModel } from '../../../models/HarvestBunchesModel';
 import { LoadBunchesModel } from '../../../models/LoadBunchesModel';
 import * as constants from '../../../config/constants';
 import { SharedFunctions } from '../../../providers/Shared/Functions';
+import { StorageService } from '../../../providers/Db/StorageFunctions';
+import { Network } from '@ionic-native/network';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component
     ({
@@ -25,8 +28,9 @@ export class HarvestBunchesPage {
     harvestModel: HarvestBunchesModel = new HarvestBunchesModel();
     loadModel: LoadBunchesModel = new LoadBunchesModel();
     harvestedHistoryData: any;
+    ifConnect: Subscription;
 
-    constructor(public actionsheetCtrl: ActionSheetController, public global: SharedFunctions,
+    constructor(private myCloud: StorageService, private network: Network, public actionsheetCtrl: ActionSheetController, public global: SharedFunctions,
         public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public fb: FormBuilder, public navParams: NavParams, public alertCtrl: AlertController) {
         this.harvestAuthForm = fb.group({
             'harvestedBunchCount': [null, Validators.compose([Validators.pattern('[0-9]*'), Validators.required])]
@@ -36,76 +40,93 @@ export class HarvestBunchesPage {
             'driverSelect': [null, Validators.compose([Validators.required])],
             'vehicleSelect': [null, Validators.compose([Validators.required])]
         });
-    
-        var url: string;
+        // this.myCloud.getUserLocationListFromCloud();
+        // this.myCloud.getVehicleLocationListFromCloud();
+        // this.myCloud.getDriverLocationListFromCloud();
+        // this.myCloud.syncHarvestHistoryCloudToSQLite();
+        // this.myCloud.syncLoadHistoryCloudToSQLite();
+
         this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
-        url = constants.DREAMFACTORY_TABLE_URL + "/active_users_location_view?filter=user_GUID=" + this.UserGUID + "&api_key=" + constants.DREAMFACTORY_API_KEY;
-        this.http.get(url).map(res => res.json()).subscribe(data => {
-            this.locationFromDB = data["resource"];
-        });         
+        //   var  url = constants.DREAMFACTORY_TABLE_URL + "/active_users_location_view?filter=user_GUID=" + this.UserGUID + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+        //     this.http.get(url).map(res => res.json()).subscribe(data => {
+        //         this.locationFromDB = data["resource"];
+        //     });    
+        this.locationFromDB = this.myCloud.getUserLocationsFromSQLite();
     }
 
-getHarvestedHistory(locationSelected: any) {  
-      var url = constants.DREAMFACTORY_TABLE_URL + "/transact_harvest_view?filter=(location_name=" + locationSelected + ")AND(user_GUID=" + this.UserGUID +  ")&api_key=" + constants.DREAMFACTORY_API_KEY;
-        this.http.get(url).map(res => res.json()).subscribe(data => {
-           this.harvestedHistoryData= data["resource"]
-        });
-}
+    //-----------------------Offline Sync---------------------------
+    ionViewDidEnter() {
+        this.ifConnect = this.network.onConnect().subscribe(data => {
+            this.myCloud.saveHarvestToCloudFromSQLite();
+            this.myCloud.syncHarvestHistoryCloudToSQLite();
 
-getLoadedHistory(locationSelected: any) {  
-      var url = constants.DREAMFACTORY_TABLE_URL + "/transact_loading_view?filter=(location_name=" + locationSelected + ")AND(user_GUID=" + this.UserGUID +  ")&api_key=" + constants.DREAMFACTORY_API_KEY;
-        this.http.get(url).map(res => res.json()).subscribe(data => {
-           this.harvestedHistoryData= data["resource"]
-        });
-}
+            this.myCloud.saveLoadToCloudFromSQLite();
+            this.myCloud.syncLoadHistoryCloudToSQLite();
 
-    getSummaryByLocation(locationSelected: any) {  
-        //Todo: Inject into a global function
-        var url = constants.DREAMFACTORY_TABLE_URL + "/harvested_count_loc_date_view?filter=(location_GUID=" + locationSelected + ")AND(user_GUID=" + this.UserGUID + ")AND(harvested_date=" + this.global.getStringDate() + ")&api_key=" + constants.DREAMFACTORY_API_KEY;
-        this.http.get(url).map(res => res.json()).subscribe(data => {
-            var cloudData = data["resource"];
-            if (cloudData.length == 0) {
-                this.totalHarvested = "0"
-            }
-            else {
-                this.totalHarvested = cloudData[0].total_bunches
-            }
-        });
+        }, error => alert('Error In SurveyorHistory :' + error));
+    }
+    ionViewWillLeave() {
+        this.ifConnect.unsubscribe();
+    }
+    //-----------------------End Offline Sync---------------------------
 
-        url = constants.DREAMFACTORY_TABLE_URL + "/loaded_count_loc_date_view?filter=(location_GUID=" + locationSelected + ")AND(user_GUID=" + this.UserGUID + ")AND(loaded_date=" + this.global.getStringDate() + ")&api_key=" + constants.DREAMFACTORY_API_KEY;
-        this.http.get(url).map(res => res.json()).subscribe(data => {
-            var cloudData = data["resource"];
-            if (cloudData.length == 0) {
-                this.totalLoaded = "0"
-            }
-            else {
-                this.totalLoaded = cloudData[0].total_bunches
-            }
-            this.balanceHarvested = (Number(this.totalHarvested) - Number(this.totalLoaded));
-        });
+
+
+    getHarvestedHistory(locationSelected: any) {
+        this.harvestedHistoryData = this.myCloud.getHarvestHistoryFromSQLite(locationSelected);
+
+        // var url = constants.DREAMFACTORY_TABLE_URL + "/transact_harvest_view?filter=(location_name=" + locationSelected + ")AND(user_GUID=" + this.UserGUID + ")&api_key=" + constants.DREAMFACTORY_API_KEY;
+        // this.http.get(url).map(res => res.json()).subscribe(data => {
+        //     this.harvestedHistoryData = data["resource"]
+        // });
+    }
+
+    getLoadedHistory(locationSelected: any) {
+        this.harvestedHistoryData = this.myCloud.getLoadHistoryFromSQLite(locationSelected);
+
+        // var url = constants.DREAMFACTORY_TABLE_URL + "/transact_loading_view?filter=(location_name=" + locationSelected + ")AND(user_GUID=" + this.UserGUID + ")&api_key=" + constants.DREAMFACTORY_API_KEY;
+        // this.http.get(url).map(res => res.json()).subscribe(data => {
+        //     this.harvestedHistoryData = data["resource"]
+        // });
+    }
+
+    getSummaryByLocation(locationSelected: any) {
+                //    balanceHarvested = (Number(totalHarvested) - Number(totalLoaded));
+// this.myCloud.syncMandorInfoCloudToSQLite(this.UserGUID,locationSelected,this.global.getStringDate());
+
     }
 
     getDataByLocation(locationSelected: any) {
+        this.driverFromDB = this.myCloud.getDriverLocationsFromSQLite(locationSelected);
+        this.vehicleFromDB = this.myCloud.getVehicleLocationsFromSQLite(locationSelected);
+
         //Todo: Inject into a global function
-        var url = constants.DREAMFACTORY_TABLE_URL +
-            "/active_vehicle_location_view?filter=location_GUID=" + locationSelected + "&api_key=" + constants.DREAMFACTORY_API_KEY;
-        this.http.get(url).map(res => res.json()).subscribe(data => {
-            this.vehicleFromDB = data["resource"];
-        });
+        // var url = constants.DREAMFACTORY_TABLE_URL +
+        //     "/active_vehicle_location_view?filter=location_GUID=" + locationSelected + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+        // this.http.get(url).map(res => res.json()).subscribe(data => {
+        //     this.vehicleFromDB = data["resource"];
+        // });
         //Todo: Inject into a global function
-        url = constants.DREAMFACTORY_TABLE_URL +
-            "/active_driver_location_view?filter=location_GUID=" + locationSelected + "&api_key=" + constants.DREAMFACTORY_API_KEY;
-        this.http.get(url).map(res => res.json()).subscribe(data => {
-            this.driverFromDB = data["resource"];
-        });
+        // url = constants.DREAMFACTORY_TABLE_URL +
+        //     "/active_driver_location_view?filter=location_GUID=" + locationSelected + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+        // this.http.get(url).map(res => res.json()).subscribe(data => {
+        //     this.driverFromDB = data["resource"];
+        // });
     }
 
-    submitHarvestForm(value: any, location_GUID: string,location_name:string) {
+    submitHarvestForm(value: any, location_GUID: string, location_name: string) {
         this.harvestModel.location_GUID = location_GUID;
         this.harvestModel.bunch_count = value.harvestedBunchCount;
         this.harvestModel.updated_ts = this.harvestModel.created_ts = this.global.getStringTimeStamp();
         this.harvestModel.user_GUID = this.harvestModel.createdby_GUID = this.harvestModel.updatedby_GUID = this.UserGUID;
-        this.global.showConfirm('cloud', constants.DREAMFACTORY_TABLE_URL + '/transact_harvest', this.harvestModel.toJson(true));
+        if (this.network.type == "none") {
+            alert('No Network. Saving data to SQLite');
+            this.global.showConfirm('sqlite', '2', this.harvestModel);
+        }
+        else {
+            alert('Network exists. Saving data to Cloud');
+            this.global.showConfirm('cloud', constants.DREAMFACTORY_TABLE_URL + '/transact_harvest', this.harvestModel.toJson(true));
+        }
     }
 
     submitLoadForm(value: any, location_GUID: string) {
@@ -115,7 +136,14 @@ getLoadedHistory(locationSelected: any) {
         this.loadModel.bunch_count = value.loadedBunchCount;
         this.loadModel.createdby_GUID = this.loadModel.updatedby_GUID = this.loadModel.user_GUID = this.UserGUID;
         this.loadModel.created_ts = this.loadModel.updated_ts = this.global.getStringTimeStamp();
-        this.global.showConfirm('cloud', constants.DREAMFACTORY_TABLE_URL + '/transact_loading', this.loadModel.toJson(true));
+        if (this.network.type == "none") {
+            alert('No Network. Saving data to SQLite');
+            this.global.showConfirm('sqlite', '3', this.loadModel);
+        }
+        else {
+            alert('Network exists. Saving data to Cloud');
+            this.global.showConfirm('cloud', constants.DREAMFACTORY_TABLE_URL + '/transact_loading', this.loadModel.toJson(true));
+        }
     }
 
     onLink(url: string) {

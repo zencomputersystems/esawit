@@ -7,12 +7,17 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import * as constants from '../../../config/constants';
 import { AcceptBunchesModel } from '../../../models/AcceptBunchesModel';
 import { SharedFunctions } from '../../../providers/Shared/Functions';
+import { StorageService } from '../../../providers/Db/StorageFunctions';
+import { Network } from '@ionic-native/network';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'page-AcceptBunches',
     templateUrl: 'AcceptBunches.html'
 })
 export class AcceptBunchesPage {
+    ifConnect: Subscription;
+    ifDisconnect: Subscription;
 
     authForm: FormGroup;
     locationFromDb: any;
@@ -21,8 +26,9 @@ export class AcceptBunchesPage {
     UIDFromMobile: string;
     UserGUID: string;
     factoryModel: AcceptBunchesModel = new AcceptBunchesModel();
+    locationListFromDb: any;
 
-    constructor(public actionsheetCtrl: ActionSheetController, public global: SharedFunctions,
+    constructor(private myCloud: StorageService, private network: Network,public actionsheetCtrl: ActionSheetController, public global: SharedFunctions,
         public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public fb: FormBuilder, public navParams: NavParams, public alertCtrl: AlertController) {
         this.authForm = fb.group({
             'bunchCount': [null, Validators.compose([Validators.pattern('[0-9]*'), Validators.required])],
@@ -30,23 +36,8 @@ export class AcceptBunchesPage {
             'vehicleSelect': [null, Validators.compose([Validators.required])],
             'locationSelect': [null, Validators.compose([Validators.required])],
         })
-
-        this.UIDFromMobile = "3";
-        // var loggedInUserFromDB: any;
-        var url: string;
-        // url = constants.DREAMFACTORY_TABLE_URL + "/user_imei/" + this.UIDFromMobile + "?id_field=user_IMEI&api_key=" + constants.DREAMFACTORY_API_KEY;
-        // this.http.get(url).map(res => res.json()).subscribe(data => {
-        //     loggedInUserFromDB = data;
-        //     this.UserGUID = loggedInUserFromDB.user_GUID;
-        //     console.log(this.UserGUID);
-        // });
                 this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
-        //Todo: Inject into a global function
-        url = constants.DREAMFACTORY_TABLE_URL + "/master_location?api_key=" + constants.DREAMFACTORY_API_KEY;
-        this.http.get(url).map(res => res.json()).subscribe(data => {
-            this.locationFromDb = data["resource"];
-        });
-
+              this.locationFromDb = this.myCloud.getSQLiteMasterLocations();
     }
     submitForm(value: any) {
         this.factoryModel.loading_location_GUID = value.locationSelect;
@@ -55,20 +46,43 @@ export class AcceptBunchesPage {
         this.factoryModel.user_GUID = this.factoryModel.createdby_GUID = this.factoryModel.updatedby_GUID = this.UserGUID;
         this.factoryModel.bunch_count = value.bunchCount;
         this.factoryModel.updated_ts = this.factoryModel.created_ts = this.global.getStringTimeStamp();
+            if (this.network.type == "none") {
+            alert('No Network. Saving data to SQLite');
+            this.global.showConfirm('sqlite', '4', this.factoryModel);
+        }
+        else {
+            alert('Network exists. Saving data to Cloud');
         this.global.showConfirm('cloud',constants.DREAMFACTORY_TABLE_URL + '/transact_unloading', this.factoryModel.toJson(true));
-    }
-    onLocationSelect(locationSelected: any) {
+        }  
+}
 
+    ionViewDidEnter() {
+        this.ifConnect = this.network.onConnect().subscribe(data => {
+            alert('Network exists. Saving data to Cloud');
+            this.myCloud.saveUnloadToCloudFromSQLite();
+            // alert(data.type);
+        }, error => console.error(error));
+        }
+
+    ionViewWillLeave() {
+        this.ifConnect.unsubscribe();
+        this.ifDisconnect.unsubscribe();
+    }
+
+    onLocationSelect(locationSelected: string) {
+// locationSelected='Ampang';
+this.driverFromDb= this.myCloud.getDriverLocationsFromSQLite(locationSelected);
+this.vehicleFromDb = this.myCloud.getVehicleLocationsFromSQLite(locationSelected);
         //Todo: Inject into a global function
-        var url = constants.DREAMFACTORY_TABLE_URL + "/active_vehicle_location_view?filter=location_GUID=" + locationSelected + "&api_key=" + constants.DREAMFACTORY_API_KEY;
-        this.http.get(url).map(res => res.json()).subscribe(data => {
-            this.vehicleFromDb = data["resource"];
-        });
-        //Todo: Inject into a global function
-        url = constants.DREAMFACTORY_TABLE_URL + "/active_driver_location_view?filter=location_GUID=" + locationSelected + "&api_key=" + constants.DREAMFACTORY_API_KEY;
-        this.http.get(url).map(res => res.json()).subscribe(data => {
-            this.driverFromDb = data["resource"];
-        });
+        // var url = constants.DREAMFACTORY_TABLE_URL + "/active_vehicle_location_view?filter=location_GUID=" + locationSelected + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+        // this.http.get(url).map(res => res.json()).subscribe(data => {
+        //     this.vehicleFromDb = data["resource"];
+        // });
+        // //Todo: Inject into a global function
+        // url = constants.DREAMFACTORY_TABLE_URL + "/active_driver_location_view?filter=location_GUID=" + locationSelected + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+        // this.http.get(url).map(res => res.json()).subscribe(data => {
+        //     this.driverFromDb = data["resource"];
+        // });
     }
 
     //     openGlobalMenu(){

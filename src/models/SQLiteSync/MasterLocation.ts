@@ -3,8 +3,7 @@ export class MasterLocationModel {
 	constructor(
 		public Id: number = null,
 		public location_name: string = null,
-		public location_GUID: string = null,
-		public is_synced: number = null
+		public location_GUID: string = null
 	) { }
 
 
@@ -14,8 +13,7 @@ export class MasterLocationModel {
 		return new MasterLocationModel(
 			json.Id,
 			json.location_name,
-			json.location_GUID,
-			json.is_synced
+			json.location_GUID
 		);
 	}
 
@@ -24,8 +22,7 @@ export class MasterLocationModel {
 		var doc = {
 			Id: this.Id,
 			location_name: this.location_name,
-			location_GUID: this.location_GUID,
-			is_synced: this.is_synced
+			location_GUID: this.location_GUID
 		};
 
 		return stringify ? JSON.stringify({ resource: [doc] }) : doc;

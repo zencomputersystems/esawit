@@ -71,13 +71,13 @@
             <ion-item>
               <ion-label>{{"_VEHICLE_NO_LBL" | translate}}</ion-label>
               <ion-select formControlName="vehicleSelect" [(ngModel)]="vehicleSelect" interface="popover" placeholder='{{"_SELECT_VEHICLE_HINT" | translate}}'>
-                <ion-option *ngFor="let vehicle of vehicleFromDB" value={{vehicle.vehicle_GUID}}>{{vehicle.registration_no}}</ion-option>
+                <ion-option *ngFor="let vehicle of vehicleFromDB" value={{vehicle.vehicle_GUID}}>{{vehicle.vehicle_no}}</ion-option>
               </ion-select>
             </ion-item>
             <ion-item>
               <ion-label>{{"_DRIVER_LBL" | translate}}</ion-label>
               <ion-select formControlName="driverSelect" [(ngModel)]="driverSelect" interface="popover" placeholder='{{"_SELECT_DRIVER_HINT" | translate}}'>
-                <ion-option *ngFor="let driver of driverFromDB" value={{driver.driver_GUID}}>{{driver.fullname}}</ion-option>
+                <ion-option *ngFor="let driver of driverFromDB" value={{driver.driver_GUID}}>{{driver.driver_name}}</ion-option>
               </ion-select>
             </ion-item>
             <ion-item>

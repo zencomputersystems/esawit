@@ -10,7 +10,7 @@ import { App, Platform, ActionSheetController, ToastController, AlertController 
 // import { SurveyorHomePage } from '../pages/Surveyor/SurveyorHome/SurveyorHome';
 import * as constants from '../../config/constants';
 import 'rxjs/add/operator/map';
-import {StorageService} from '../Db/StorageFunctions'
+import { StorageService } from '../Db/StorageFunctions'
 
 // Translation Service:
 import { TranslateService } from '@ngx-translate/core';
@@ -23,7 +23,7 @@ export class SharedFunctions {
   successToast = this.translate.get("_SUCCESS_TOAST_LBL")["value"];
   failedToast = this.translate.get("_FAILED_TOAST_LBL")["value"];
 
-  constructor(public storageSurvice:StorageService,public toastCtrl: ToastController, public alertCtrl: AlertController, public app: App, public http: Http, public actionsheetCtrl: ActionSheetController, public translate: TranslateService) {
+  constructor(public storageSurvice: StorageService, public toastCtrl: ToastController, public alertCtrl: AlertController, public app: App, public http: Http, public actionsheetCtrl: ActionSheetController, public translate: TranslateService) {
     //    translate.setDefaultLang('en');
     this.navCtrl = this.app.getActiveNav();
     console.log('Hello ActionSheet Provider');
@@ -33,19 +33,19 @@ export class SharedFunctions {
     var myDate = new Date();
     //    return new Date(myDate.getUTCFullYear(), myDate.getUTCMonth(), myDate.getUTCDate(), myDate.getUTCHours(), myDate.getUTCMinutes(), myDate.getSeconds());
     // return new Date(myDate.getTime());
-    return        ( myDate.getDate()+"-"+(myDate.getMonth()+1)+"-"+myDate.getFullYear()+" "+myDate.getHours()+":"+myDate.getMinutes()+":"+myDate.getSeconds());
+    return (myDate.getDate() + "-" + (myDate.getMonth() + 1) + "-" + myDate.getFullYear() + " " + myDate.getHours() + ":" + myDate.getMinutes() + ":" + myDate.getSeconds());
 
   }
 
   getStringDate() {
     var myDate = new Date();
-    var day:string=null;
-    var month:string=null;
- var temp = myDate.getDate();
- if(temp<10){day="0"+temp;}else{day=temp+"";}
- temp = (myDate.getMonth()+1);
- if(temp<10){month = "0"+temp;}else{month=temp+"";}
-    return        ( myDate.getFullYear()+"-"+month+"-"+day);
+    var day: string = null;
+    var month: string = null;
+    var temp = myDate.getDate();
+    if (temp < 10) { day = "0" + temp; } else { day = temp + ""; }
+    temp = (myDate.getMonth() + 1);
+    if (temp < 10) { month = "0" + temp; } else { month = temp + ""; }
+    return (myDate.getFullYear() + "-" + month + "-" + day);
 
   }
   //   getTimeStamp() {
@@ -78,7 +78,13 @@ export class SharedFunctions {
             if (saveType == 'cloud') {
               this.storageSurvice.saveToCloud(saveInstruction, myModel);
             } else if (saveType == 'sqlite') {
-              this.storageSurvice.saveToSQLite(saveInstruction, myModel);
+              switch (saveInstruction) {
+                case '1': this.storageSurvice.saveSurveyToSQLite(saveInstruction, myModel);
+                  break;
+                case '2': this.storageSurvice.saveHarvestToSQLite(myModel); break;
+                case '3': this.storageSurvice.saveLoadToSQLite(myModel); break;
+                case '4': this.storageSurvice.saveUnloadToSQLite(myModel); break;
+              }
             }
 
           }
@@ -88,7 +94,7 @@ export class SharedFunctions {
     confirm.present();
   }
 
-  
+
 
 
 
