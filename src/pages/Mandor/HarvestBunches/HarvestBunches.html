@@ -12,10 +12,10 @@
         <ion-segment-button value="seg_info" (click)="getSummaryByLocation(location.location_GUID)">
           {{"_INFO_LBL" | translate }}
         </ion-segment-button>
-        <ion-segment-button value="seg_harvest">
+        <ion-segment-button value="seg_harvest" (click)="getHarvestedHistory(location.location_name)">
           {{"_HARVEST_LBL" | translate }}
         </ion-segment-button>
-        <ion-segment-button value="seg_load" (click)="getDataByLocation(location.location_GUID)">
+        <ion-segment-button value="seg_load" (click)="getDataByLocation(location.location_GUID);getLoadedHistory(location.location_name)">
           {{"_LOAD_LBL" | translate }}
         </ion-segment-button>
       </ion-segment>
@@ -104,7 +104,7 @@
                 <ion-avatar item-left>
                   <button ion-button color="light"> {{i+1}} </button>
                 </ion-avatar>
-                <ion-avatar item-left>{{history .vehicle_no}} </ion-avatar>
+                <ion-avatar item-left>{{history .registration_no}} </ion-avatar>
                 <ion-avatar item-left>{{history .bunch_count}} </ion-avatar>
                 <!--<ion-avatar item-right>{{history .created_ts}}</ion-avatar>-->
               </ion-item>

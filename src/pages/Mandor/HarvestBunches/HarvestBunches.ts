@@ -34,8 +34,8 @@ export class HarvestBunchesPage {
 
     constructor(private myCloud: StorageService, private sqlite: SQLite, private network: Network, public actionsheetCtrl: ActionSheetController, public global: SharedFunctions,
         public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public fb: FormBuilder, public navParams: NavParams, public alertCtrl: AlertController) {
-          
-       this.harvestAuthForm = fb.group({
+
+        this.harvestAuthForm = fb.group({
             'harvestedBunchCount': [null, Validators.compose([Validators.pattern('[0-9]*'), Validators.required])]
         });
         this.loadAuthForm = fb.group({
@@ -43,10 +43,9 @@ export class HarvestBunchesPage {
             'driverSelect': [null, Validators.compose([Validators.required])],
             'vehicleSelect': [null, Validators.compose([Validators.required])]
         });
-        this.UserGUID = localStorage.getItem('loggedIn_user_GUID');    
+        this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
         this.locationFromDB = this.myCloud.getUserLocationsFromSQLite();
         this.myCloud.syncMandorInfoCloudToSQLite(this.UserGUID, this.global.getStringDate());
-
     }
 
     //-----------------------Offline Sync---------------------------
@@ -67,58 +66,88 @@ export class HarvestBunchesPage {
     }
     //-----------------------End Offline Sync---------------------------
 
-
-
     getHarvestedHistory(locationSelected: any) {
-        this.harvestedHistoryData = this.myCloud.getHarvestHistoryFromSQLite(locationSelected);
+        if (this.network.type == "none") {
 
-        // var url = constants.DREAMFACTORY_TABLE_URL + "/transact_harvest_view?filter=(location_name=" + locationSelected + ")AND(user_GUID=" + this.UserGUID + ")&api_key=" + constants.DREAMFACTORY_API_KEY;
-        // this.http.get(url).map(res => res.json()).subscribe(data => {
-        //     this.harvestedHistoryData = data["resource"]
-        // });
+            this.harvestedHistoryData = this.myCloud.getHarvestHistoryFromSQLite(locationSelected);
+        } else {
+            var url = constants.DREAMFACTORY_TABLE_URL + "/transact_harvest_view?filter=(location_name=" + locationSelected + ")AND(user_GUID=" + this.UserGUID + ")&api_key=" + constants.DREAMFACTORY_API_KEY;
+            this.http.get(url).map(res => res.json()).subscribe(data => {
+                this.harvestedHistoryData = data["resource"]
+            });
+        }
     }
 
     getLoadedHistory(locationSelected: any) {
-        this.harvestedHistoryData = this.myCloud.getLoadHistoryFromSQLite(locationSelected);
+        if (this.network.type == "none") {
+            this.harvestedHistoryData = this.myCloud.getLoadHistoryFromSQLite(locationSelected);
+        }
+        else {
+            var url = constants.DREAMFACTORY_TABLE_URL + "/transact_loading_view?filter=(location_name=" + locationSelected + ")AND(user_GUID=" + this.UserGUID + ")&api_key=" + constants.DREAMFACTORY_API_KEY;
+            this.http.get(url).map(res => res.json()).subscribe(data => {
+                this.harvestedHistoryData = data["resource"]
+            });
+        }
 
-        // var url = constants.DREAMFACTORY_TABLE_URL + "/transact_loading_view?filter=(location_name=" + locationSelected + ")AND(user_GUID=" + this.UserGUID + ")&api_key=" + constants.DREAMFACTORY_API_KEY;
-        // this.http.get(url).map(res => res.json()).subscribe(data => {
-        //     this.harvestedHistoryData = data["resource"]
-        // });
     }
 
     getSummaryByLocation(locationSelected: any) {
-
-        this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
-            this.totalHarvested = 0;
-            this.totalLoaded = 0;
-            var query = "select * from mandor_harvested_info where location_GUID='" + locationSelected + "'";
-            // alert(query)
-            db.executeSql(query, {}).then((data) => {
-                // alert('Selecting Inserted list from Sqlite');		
-                // alert('push :' + data.rows.item(0).total_harvested)
-                this.totalHarvested = data.rows.item(0).total_harvested;
-                this.balanceHarvested = this.totalHarvested - this.totalLoaded
-                query = "select * from mandor_loaded_info where location_GUID='" + locationSelected + "'";
+        if (this.network.type == "none") {
+            this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
+                this.totalHarvested = 0;
+                this.totalLoaded = 0;
+                var query = "select * from mandor_harvested_info where location_GUID='" + locationSelected + "'";
                 // alert(query)
                 db.executeSql(query, {}).then((data) => {
-                    // alert('Selecting Inserted list from Sqlite');	
-                    // alert('push :' + data.rows.item(0).total_loaded)
-                    this.totalLoaded = data.rows.item(0).total_loaded;
+                    // alert('Selecting Inserted list from Sqlite');		
+                    // alert('push :' + data.rows.item(0).total_harvested)
+                    this.totalHarvested = data.rows.item(0).total_harvested;
                     this.balanceHarvested = this.totalHarvested - this.totalLoaded
+                    query = "select * from mandor_loaded_info where location_GUID='" + locationSelected + "'";
+                    // alert(query)
+                    db.executeSql(query, {}).then((data) => {
+                        // alert('Selecting Inserted list from Sqlite');	
+                        // alert('push :' + data.rows.item(0).total_loaded)
+                        this.totalLoaded = data.rows.item(0).total_loaded;
+                        this.balanceHarvested = this.totalHarvested - this.totalLoaded
+                    }, (err) => {
+                        alert('getMandorInfoFromSQLite: ' + JSON.stringify(err));
+                    });
                 }, (err) => {
                     alert('getMandorInfoFromSQLite: ' + JSON.stringify(err));
                 });
-
-            }, (err) => {
-                alert('getMandorInfoFromSQLite: ' + JSON.stringify(err));
+                // alert('Harvest'+this.totalHarvested); alert('Loaded'+this.totalLoaded)
+                this.balanceHarvested = this.totalHarvested - this.totalLoaded
+                // alert('balance'+this.balanceHarvested)
+            }).catch(e => alert("getMandorInfoFromSQLite: " + JSON.stringify(e)));
+        }
+        else {
+            this.totalHarvested = 0;
+            this.totalLoaded = 0;
+            var url = constants.DREAMFACTORY_TABLE_URL + "/harvested_count_loc_date_view?filter=(location_GUID=" + locationSelected + ")AND(user_GUID=" + this.UserGUID + ")AND(harvested_date=" + this.global.getStringDate() + ")&api_key=" + constants.DREAMFACTORY_API_KEY;
+            this.http.get(url).map(res => res.json()).subscribe(data => {
+                var cloudData = data["resource"];
+                if (cloudData.length == 0) {
+                    this.totalHarvested = 0
+                }
+                else {
+                    this.totalHarvested = cloudData[0].total_bunches
+                    this.balanceHarvested = this.totalHarvested - this.totalLoaded
+                }
             });
-            // alert('Harvest'+this.totalHarvested); alert('Loaded'+this.totalLoaded)
+            url = constants.DREAMFACTORY_TABLE_URL + "/loaded_count_loc_date_view?filter=(location_GUID=" + locationSelected + ")AND(user_GUID=" + this.UserGUID + ")AND(loaded_date=" + this.global.getStringDate() + ")&api_key=" + constants.DREAMFACTORY_API_KEY;
+            this.http.get(url).map(res => res.json()).subscribe(data => {
+                var cloudData = data["resource"];
+                if (cloudData.length == 0) {
+                    this.totalLoaded = 0
+                }
+                else {
+                    this.totalLoaded = cloudData[0].total_bunches
+                    this.balanceHarvested = this.totalHarvested - this.totalLoaded
+                }
+            });
             this.balanceHarvested = this.totalHarvested - this.totalLoaded
-            // alert('balance'+this.balanceHarvested)
-        }).catch(e => alert("getMandorInfoFromSQLite: " + JSON.stringify(e)));
-
-
+        }
     }
 
     getDataByLocation(locationSelected: any) {

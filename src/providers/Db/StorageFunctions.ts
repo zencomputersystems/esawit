@@ -747,7 +747,7 @@ export class StorageService {
 	syncLoadToSQLite(LoadHistoryList: LoadHistoryModel[]) {
 		// alert('In Sync Function');
 		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
-			db.executeSql('CREATE TABLE IF NOT EXISTS loading_history(location_name TEXT,bunch_count  INTEGER,vehicle_no INTEGER)', {})
+			db.executeSql('CREATE TABLE IF NOT EXISTS loading_history(location_name TEXT,bunch_count  INTEGER,registration_no INTEGER)', {})
 				.then(() =>
 					db.executeSql('DELETE FROM loading_history', null)).then(() => {
 						// alert('Table Deleted');
@@ -755,7 +755,7 @@ export class StorageService {
 						if (LoadHistoryList.length > 0) {
 							LoadHistoryList.forEach(surveyRec => {
 								// alert('Record'+locationRec.Id+" :"+locationRec.Id+"."+locationRec.location_GUID+"=>"+locationRec.location_name);
-								db.executeSql('INSERT INTO loading_history(location_name,bunch_count,vehicle_no) VALUES(?,?,?)', [surveyRec.location_name, surveyRec.bunch_count, surveyRec.vehicle_no])
+								db.executeSql('INSERT INTO loading_history(location_name,bunch_count,registration_no) VALUES(?,?,?)', [surveyRec.location_name, surveyRec.bunch_count, surveyRec.registration_no])
 									.then(() => {
 										// alert('Record Inserted' + surveyRec.location_name);	
 									}
@@ -787,7 +787,7 @@ export class StorageService {
 						var survey: LoadHistoryModel = new LoadHistoryModel();
 						survey.location_name = data.rows.item(i).location_name;
 						survey.bunch_count = data.rows.item(i).bunch_count;
-						survey.vehicle_no = data.rows.item(i).vehicle_no;
+						survey.registration_no = data.rows.item(i).registration_no;
 						unloadItems.push(survey);
 					}
 				}
@@ -809,7 +809,7 @@ export class StorageService {
 				var surveyHistory: LoadHistoryModel = new LoadHistoryModel();
 				surveyHistory.location_name = cloudItem.location_name;
 				surveyHistory.bunch_count = cloudItem.bunch_count;
-				surveyHistory.vehicle_no = cloudItem.registration_no;
+				surveyHistory.registration_no = cloudItem.registration_no;
 				surveyHistoryList.push(surveyHistory);
 			});
 			this.syncLoadToSQLite(surveyHistoryList);
