@@ -29,7 +29,8 @@ export class MyApp {
   constructor(private device: Device, private myCloud: StorageService, public http: Http, platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, translate: TranslateService) {
     translate.setDefaultLang('en');
     platform.ready().then(() => {
-      this.UIDFromMobile = this.device.uuid;
+      this.UIDFromMobile = "6bce1120083b20b7";
+      // this.device.uuid;
               localStorage.setItem('device_UUID', this.UIDFromMobile);
 
       // "6bce1120083b20b7";

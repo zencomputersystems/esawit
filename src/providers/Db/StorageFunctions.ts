@@ -362,7 +362,7 @@ export class StorageService {
 					}
 				}
 				db.executeSql('DELETE FROM transact_survey', null).then(() => {
-					this.showToast('bottom', 'Data Synced to Cloud Successfully');
+					// this.showToast('bottom', 'Data Synced to Cloud Successfully');
 
 					// alert('Survey Table Deleted');
 				});
@@ -395,7 +395,7 @@ export class StorageService {
 									});
 							});
 						}
-						this.showToast('bottom', 'Data Synced to SQLite Successfully');
+						// this.showToast('bottom', 'Data Synced to SQLite Successfully');
 
 					}).catch(e => {
 						// alert('syncSurveyHistoryCloudToSQLite: ' + JSON.stringify(e))
@@ -468,7 +468,7 @@ export class StorageService {
 									// alert('Harvest Sync:' + harvestedRec.location_GUID + harvestedRec.total_bunches)
 									db.executeSql('INSERT INTO mandor_harvested_info(location_GUID,total_harvested) VALUES(?,?)', [harvestedRec.location_GUID, harvestedRec.total_bunches])
 										.then(() => {
-											this.showToast('bottom', 'Saved Successfully');
+											// this.showToast('bottom', 'Saved Successfully');
 											// alert('Record Inserted to SQLite' + myModel.bunch_count);
 										}).catch(e => {
 											// alert('syncMandorInfoCloudToSQLite-Harvest :' + JSON.stringify(e))
@@ -503,7 +503,7 @@ export class StorageService {
 									// alert('Load Sync:' + harvestedRec.location_GUID + harvestedRec.total_bunches)
 									db.executeSql('INSERT INTO mandor_loaded_info(location_GUID,total_loaded) VALUES(?,?)', [harvestedRec.location_GUID, harvestedRec.total_bunches])
 										.then(() => {
-											this.showToast('bottom', 'Saved Successfully');
+											// this.showToast('bottom', 'Saved Successfully');
 											// alert('Record Inserted to SQLite' + myModel.bunch_count);
 										}).catch(e => {
 											// alert('syncMandorInfoCloudToSQLite-loaded :' + JSON.stringify(e))
@@ -600,7 +600,7 @@ export class StorageService {
 					}
 				}
 				db.executeSql('DELETE FROM transact_harvest', null).then(() => {
-					this.showToast('bottom', 'Data Synced to Cloud Successfully');
+					// this.showToast('bottom', 'Data Synced to Cloud Successfully');
 
 					// alert('Survey Table Deleted');
 				});
@@ -634,7 +634,7 @@ export class StorageService {
 									});
 							});
 						}
-						this.showToast('bottom', 'Data Synced to SQLite Successfully');
+						// this.showToast('bottom', 'Data Synced to SQLite Successfully');
 
 					}).catch(e => {
 						// alert('syncHarvestToSQLite: ' + JSON.stringify(e))
@@ -730,7 +730,7 @@ export class StorageService {
 					}
 				}
 				db.executeSql('DELETE FROM transact_loading', null).then(() => {
-					this.showToast('bottom', 'Data Synced to Cloud Successfully');
+					// this.showToast('bottom', 'Data Synced to Cloud Successfully');
 
 					// alert('Survey Table Deleted');
 				});
@@ -764,7 +764,7 @@ export class StorageService {
 									});
 							});
 						}
-						this.showToast('bottom', 'Data Synced to SQLite Successfully');
+						// this.showToast('bottom', 'Data Synced to SQLite Successfully');
 
 					}).catch(e => {
 						// alert('syncLoadToSQLite: ' + JSON.stringify(e))
@@ -860,7 +860,7 @@ export class StorageService {
 					}
 				}
 				db.executeSql('DELETE FROM transact_unloading', null).then(() => {
-					this.showToast('bottom', 'Data Synced to Cloud Successfully');
+					// this.showToast('bottom', 'Data Synced to Cloud Successfully');
 
 					// alert('Survey Table Deleted');
 				});
@@ -894,7 +894,7 @@ export class StorageService {
 									});
 							});
 						}
-						this.showToast('bottom', 'Data Synced to SQLite Successfully');
+						// this.showToast('bottom', 'Data Synced to SQLite Successfully');
 
 					}).catch(e => {
 						// alert('syncFactoryToSQLite: ' + JSON.stringify(e))
