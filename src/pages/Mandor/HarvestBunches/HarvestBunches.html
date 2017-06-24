@@ -81,7 +81,7 @@
               </ion-select>
             </ion-item>
             <ion-item>
-              <ion-label fixed>{{ "_TOTAL_BUNCHES_LBL" | translate }}</ion-label>
+              <ion-label floating>{{ "_TOTAL_BUNCHES_LBL" | translate }}</ion-label>
               <ion-input formControlName="loadedBunchCount" highlight-color="energized" type="text" value=""></ion-input>
             </ion-item>
             <button type="submit" ion-button full [disabled]="!loadAuthForm.valid">{{ "_SUBMIT_BTN" | translate }}</button>
@@ -98,15 +98,15 @@
                 <ion-avatar item-left> <b>{{ "_S_NO_LBL" | translate }}</b> </ion-avatar>
                 <ion-avatar item-left> <b>{{ "_VEHICLE_NO_LBL" | translate }}</b> </ion-avatar>
                 <ion-avatar item-left> <b>{{ "_TOTAL_BUNCHES_LBL" | translate }}</b> </ion-avatar>
-                <ion-avatar item-right> <b>{{ "_HARVESTED_DATE_LBL" | translate }}</b> </ion-avatar>
+                <!--<ion-avatar item-right> <b>{{ "_HARVESTED_DATE_LBL" | translate }}</b> </ion-avatar>-->
               </ion-list-header>
               <ion-item *ngFor="let history of harvestedHistoryData; let i = index;">
                 <ion-avatar item-left>
                   <button ion-button color="light"> {{i+1}} </button>
                 </ion-avatar>
-                <ion-avatar item-left>{{history .registration_no}} </ion-avatar>
+                <ion-avatar item-left>{{history .vehicle_no}} </ion-avatar>
                 <ion-avatar item-left>{{history .bunch_count}} </ion-avatar>
-                <ion-avatar item-right>{{history .created_ts}}</ion-avatar>
+                <!--<ion-avatar item-right>{{history .created_ts}}</ion-avatar>-->
               </ion-item>
             </ion-list>
 

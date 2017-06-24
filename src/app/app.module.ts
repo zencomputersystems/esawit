@@ -13,6 +13,7 @@ import { HarvestBunchesPage } from '../pages/Mandor/HarvestBunches/HarvestBunche
 
 import { SettingsPage } from '../pages/Shared/Settings/Settings';
 import { LoginPage } from '../pages/Shared/Login/Login';
+import {UnAuthorizedUserPage} from '../pages/Shared/UnAuthorizedUser/UnAuthorizedUser'
 
 import { CountBunchesPage } from '../pages/Surveyor/CountBunches/CountBunches';
 import { CountBunchesHistoryPage } from '../pages/Surveyor/CountBunchesHistory/CountBunchesHistory';
@@ -33,7 +34,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
   declarations: [
     MyApp,
     MandorHomePage, HarvestedHistoryPage, HarvestBunchesPage,
-    SettingsPage, LoginPage,
+    SettingsPage, LoginPage,UnAuthorizedUserPage,
     SurveyorHomePage, CountBunchesPage, CountBunchesHistoryPage,
     AcceptBunchesPage, AcceptedBunchesHistoryPage, FactoryHomePage
   ],
@@ -54,7 +55,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
   entryComponents: [
     MyApp,
     MandorHomePage, HarvestedHistoryPage, HarvestBunchesPage,
-    SettingsPage, LoginPage, 
+    SettingsPage, LoginPage, UnAuthorizedUserPage,
     SurveyorHomePage, CountBunchesPage, CountBunchesHistoryPage,
     AcceptBunchesPage, AcceptedBunchesHistoryPage, FactoryHomePage
   ],

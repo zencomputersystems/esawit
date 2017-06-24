@@ -9,6 +9,8 @@ import { SharedFunctions } from '../../../providers/Shared/Functions';
 import { StorageService } from '../../../providers/Db/StorageFunctions';
 import { Network } from '@ionic-native/network';
 import { Subscription } from 'rxjs/Subscription';
+import { MandorInfoModel } from '../../../models/MandorInfoModel';
+import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 
 @Component
     ({
@@ -21,7 +23,7 @@ export class HarvestBunchesPage {
     loadAuthForm: FormGroup;
     locationFromDB: any;
     vehicleFromDB: any;
-    totalHarvested: string; totalLoaded: string; balanceHarvested: any;
+    totalHarvested: number; totalLoaded: number; balanceHarvested: number;
     driverFromDB: any;
     UserGUID: string;
     UIDFromMobile: string;
@@ -30,9 +32,10 @@ export class HarvestBunchesPage {
     harvestedHistoryData: any;
     ifConnect: Subscription;
 
-    constructor(private myCloud: StorageService, private network: Network, public actionsheetCtrl: ActionSheetController, public global: SharedFunctions,
+    constructor(private myCloud: StorageService, private sqlite: SQLite, private network: Network, public actionsheetCtrl: ActionSheetController, public global: SharedFunctions,
         public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public fb: FormBuilder, public navParams: NavParams, public alertCtrl: AlertController) {
-        this.harvestAuthForm = fb.group({
+          
+       this.harvestAuthForm = fb.group({
             'harvestedBunchCount': [null, Validators.compose([Validators.pattern('[0-9]*'), Validators.required])]
         });
         this.loadAuthForm = fb.group({
@@ -40,23 +43,17 @@ export class HarvestBunchesPage {
             'driverSelect': [null, Validators.compose([Validators.required])],
             'vehicleSelect': [null, Validators.compose([Validators.required])]
         });
-        // this.myCloud.getUserLocationListFromCloud();
-        // this.myCloud.getVehicleLocationListFromCloud();
-        // this.myCloud.getDriverLocationListFromCloud();
-        // this.myCloud.syncHarvestHistoryCloudToSQLite();
-        // this.myCloud.syncLoadHistoryCloudToSQLite();
-
-        this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
-        //   var  url = constants.DREAMFACTORY_TABLE_URL + "/active_users_location_view?filter=user_GUID=" + this.UserGUID + "&api_key=" + constants.DREAMFACTORY_API_KEY;
-        //     this.http.get(url).map(res => res.json()).subscribe(data => {
-        //         this.locationFromDB = data["resource"];
-        //     });    
+        this.UserGUID = localStorage.getItem('loggedIn_user_GUID');    
         this.locationFromDB = this.myCloud.getUserLocationsFromSQLite();
+        this.myCloud.syncMandorInfoCloudToSQLite(this.UserGUID, this.global.getStringDate());
+
     }
 
     //-----------------------Offline Sync---------------------------
     ionViewDidEnter() {
         this.ifConnect = this.network.onConnect().subscribe(data => {
+            this.myCloud.syncMandorInfoCloudToSQLite(this.UserGUID, this.global.getStringDate());
+
             this.myCloud.saveHarvestToCloudFromSQLite();
             this.myCloud.syncHarvestHistoryCloudToSQLite();
 
@@ -91,8 +88,36 @@ export class HarvestBunchesPage {
     }
 
     getSummaryByLocation(locationSelected: any) {
-                //    balanceHarvested = (Number(totalHarvested) - Number(totalLoaded));
-// this.myCloud.syncMandorInfoCloudToSQLite(this.UserGUID,locationSelected,this.global.getStringDate());
+
+        this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
+            this.totalHarvested = 0;
+            this.totalLoaded = 0;
+            var query = "select * from mandor_harvested_info where location_GUID='" + locationSelected + "'";
+            // alert(query)
+            db.executeSql(query, {}).then((data) => {
+                // alert('Selecting Inserted list from Sqlite');		
+                // alert('push :' + data.rows.item(0).total_harvested)
+                this.totalHarvested = data.rows.item(0).total_harvested;
+                this.balanceHarvested = this.totalHarvested - this.totalLoaded
+                query = "select * from mandor_loaded_info where location_GUID='" + locationSelected + "'";
+                // alert(query)
+                db.executeSql(query, {}).then((data) => {
+                    // alert('Selecting Inserted list from Sqlite');	
+                    // alert('push :' + data.rows.item(0).total_loaded)
+                    this.totalLoaded = data.rows.item(0).total_loaded;
+                    this.balanceHarvested = this.totalHarvested - this.totalLoaded
+                }, (err) => {
+                    alert('getMandorInfoFromSQLite: ' + JSON.stringify(err));
+                });
+
+            }, (err) => {
+                alert('getMandorInfoFromSQLite: ' + JSON.stringify(err));
+            });
+            // alert('Harvest'+this.totalHarvested); alert('Loaded'+this.totalLoaded)
+            this.balanceHarvested = this.totalHarvested - this.totalLoaded
+            // alert('balance'+this.balanceHarvested)
+        }).catch(e => alert("getMandorInfoFromSQLite: " + JSON.stringify(e)));
+
 
     }
 

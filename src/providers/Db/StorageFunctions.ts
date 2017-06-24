@@ -15,6 +15,7 @@ import { VehicleLocationModel } from '../../models/VehicleLocationModel';
 import { HarvestHistoryModel } from '../../models/HarvestHistoryModel';
 import { LoadBunchesModel } from '../../models/LoadBunchesModel';
 import { LoadHistoryModel } from '../../models/LoadHistoryModel';
+import { MandorInfoModel } from '../../models/MandorInfoModel';
 
 import { App, Platform, ActionSheetController, ToastController, AlertController } from 'ionic-angular';
 import { AcceptBunchesModel } from '../../models/AcceptBunchesModel';
@@ -42,7 +43,7 @@ export class StorageService {
 
 	//-------------------------Master  data------------------------
 	getUserLocationsFromSQLite() {
-		alert('Inside getUserLocationsFromSQLite Function');
+		// alert('Inside getUserLocationsFromSQLite Function');
 		var storageLocationItems = [];
 		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
 			db.executeSql('select * from user_location', {}).then((data) => {
@@ -55,36 +56,16 @@ export class StorageService {
 					}
 				}
 			}, (err) => {
-				alert('getUserLocationsFromSQLite :' + JSON.stringify(err));
+				// alert('getUserLocationsFromSQLite :' + JSON.stringify(err));
 			});
-		}).catch(e => alert("getUserLocationsFromSQLite :" + JSON.stringify(e)));
-		return storageLocationItems;
+		}).catch(e => {// alert("getUserLocationsFromSQLite :" + JSON.stringify(e))
+		}
+			); return storageLocationItems;
 	}
-
-	// syncUserLocationToSQLite(masterLocationList: MasterLocationModel[]) {
-	// 	alert('In syncUserLocationToSQLite Function');
-	// 	this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
-	// 		db.executeSql('CREATE TABLE IF NOT EXISTS user_location(id INTEGER  ,location_GUID TEXT,location_name  TEXT)', {})
-	// 			.then(() =>
-	// 				db.executeSql('DELETE FROM user_location', null)).then(() => {
-	// 					// alert('Table Deleted');
-	// 					// alert('Locations Count' + masterLocationList.length);
-	// 					if (masterLocationList.length > 0) {
-	// 						masterLocationList.forEach(locationRec => {
-	// 							// alert('Record'+locationRec.Id+" :"+locationRec.Id+"."+locationRec.location_GUID+"=>"+locationRec.location_name);
-	// 							db.executeSql('INSERT INTO user_location(id,location_GUID,location_name) VALUES(?,?,?)', [locationRec.Id, locationRec.location_GUID, locationRec.location_name])
-	// 								.then(() => {
-	// 									// alert('Record Inserted' + locationRec.location_name);	
-	// 								}).catch(e => alert('syncUserLocationToSQLite :' + JSON.stringify(e)));
-	// 						});
-	// 					}
-	// 				}).catch(e => alert('syncUserLocationToSQLite :' + JSON.stringify(e)));
-	// 	}).catch(e => alert('syncUserLocationToSQLite :' + JSON.stringify(e)));
-	// }
 
 	getUserLocationListFromCloud() {
 		var UserGUID = localStorage.getItem('loggedIn_user_GUID');
-		alert('getUserLocationListFromCloud Entered')
+		// alert('getUserLocationListFromCloud Entered')
 		var url = constants.DREAMFACTORY_TABLE_URL + "/active_users_location_view?filter=user_GUID=" + UserGUID + "&api_key=" + constants.DREAMFACTORY_API_KEY;
 
 		this.http.get(url).map(res => res.json()).subscribe(data => {
@@ -96,7 +77,7 @@ export class StorageService {
 				masterLocation.location_name = element.location_name;
 				this.masterLocationList.push(masterLocation);
 			});
-			alert(' syncUserLocationToSQLite Begins Here ');
+			// alert(' syncUserLocationToSQLite Begins Here ');
 			this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
 				db.executeSql('CREATE TABLE IF NOT EXISTS user_location(id INTEGER  ,location_GUID TEXT,location_name  TEXT)', {})
 					.then(() =>
@@ -109,16 +90,18 @@ export class StorageService {
 									db.executeSql('INSERT INTO user_location(id,location_GUID,location_name) VALUES(?,?,?)', [locationRec.Id, locationRec.location_GUID, locationRec.location_name])
 										.then(() => {
 											// alert('Record Inserted' + locationRec.location_name);	
-										}).catch(e => alert('syncUserLocationToSQLite :' + JSON.stringify(e)));
+										}).catch(e => {	// alert('syncUserLocationToSQLite :' + JSON.stringify(e))
+										});
 								});
 							}
-						}).catch(e => alert('syncUserLocationToSQLite :' + JSON.stringify(e)));
-			}).catch(e => alert('syncUserLocationToSQLite :' + JSON.stringify(e)));			// console.table(this.masterLocationList);
-			// return this.masterLocationList;
+						}).catch(e => {
+							// alert('syncUserLocationToSQLite :' + JSON.stringify(e))
+						});
+			}).catch(e => {
+				// alert('syncUserLocationToSQLite :' + JSON.stringify(e))
+			});
+			// console.table(this.masterLocationList);
 		});
-		// });
-		// console.table(this.masterLocationList);
-		// return this.masterLocationList;
 	}
 
 	getSQLiteMasterLocations() {
@@ -135,9 +118,13 @@ export class StorageService {
 					}
 				}
 			}, (err) => {
-				alert('getSQLiteMasterLocations :' + JSON.stringify(err));
+				{
+					// alert('getSQLiteMasterLocations :' + JSON.stringify(err));
+				}
 			});
-		}).catch(e => alert("getSQLiteMasterLocations :" + JSON.stringify(e)));
+		}).catch(e => {
+			// alert("getSQLiteMasterLocations :" + JSON.stringify(e))
+		});
 		return storageLocationItems;
 	}
 	getCloudMasterLocations() {
@@ -155,7 +142,6 @@ export class StorageService {
 			});
 			// console.table(this.masterLocationList);
 			this.syncMasterLocationsToSQLite(this.masterLocationList);
-
 			// return this.masterLocationList;
 		});
 		// });
@@ -176,11 +162,17 @@ export class StorageService {
 								db.executeSql('INSERT INTO master_location(id,location_GUID,location_name) VALUES(?,?,?)', [locationRec.Id, locationRec.location_GUID, locationRec.location_name])
 									.then(() => {
 										// alert('Record Inserted' + locationRec.location_name);	
-									}).catch(e => alert('syncMasterLocationsToSQLite :' + JSON.stringify(e)));
+									}).catch(e => {
+										// alert('syncMasterLocationsToSQLite :' + JSON.stringify(e))
+									});
 							});
 						}
-					}).catch(e => alert('syncMasterLocationsToSQLite :' + JSON.stringify(e)));
-		}).catch(e => alert('syncMasterLocationsToSQLite :' + JSON.stringify(e)));
+					}).catch(e => {
+						// alert('syncMasterLocationsToSQLite :' + JSON.stringify(e))
+					});
+		}).catch(e => {
+			// alert('syncMasterLocationsToSQLite :' + JSON.stringify(e))
+		});
 
 	}
 
@@ -200,9 +192,11 @@ export class StorageService {
 					}
 				}
 			}, (err) => {
-				alert('getDriverLocationsFromSQLite :' + JSON.stringify(err));
+				// alert('getDriverLocationsFromSQLite :' + JSON.stringify(err));
 			});
-		}).catch(e => alert("getDriverLocationsFromSQLite :" + JSON.stringify(e)));
+		}).catch(e => {
+			// alert("getDriverLocationsFromSQLite :" + JSON.stringify(e))
+		});
 		return storageLocationItems;
 	}
 	syncDriverLocationToSQLite(masterLocationList: DriverLocationModel[]) {
@@ -219,11 +213,17 @@ export class StorageService {
 								db.executeSql('INSERT INTO driver_location(id,location_GUID,location_name,driver_GUID,driver_name) VALUES(?,?,?,?,?)', [locationRec.Id, locationRec.location_GUID, locationRec.location_name, locationRec.driver_GUID, locationRec.driver_name])
 									.then(() => {
 										// alert('Record Inserted' + locationRec.location_name);	
-									}).catch(e => alert('syncDriverLocationToSQLite :' + JSON.stringify(e)));
+									}).catch(e => {
+										// alert('syncDriverLocationToSQLite :' + JSON.stringify(e))
+									});
 							});
 						}
-					}).catch(e => alert('syncDriverLocationToSQLite :' + JSON.stringify(e)));
-		}).catch(e => alert('syncDriverLocationToSQLite :' + JSON.stringify(e)));
+					}).catch(e => {
+						//  alert('syncDriverLocationToSQLite :' + JSON.stringify(e))
+					});
+		}).catch(e => {
+			//  alert('syncDriverLocationToSQLite :' + JSON.stringify(e))
+		});
 	}
 	getDriverLocationListFromCloud() {
 		// alert(UserGUID)
@@ -263,9 +263,11 @@ export class StorageService {
 					}
 				}
 			}, (err) => {
-				alert('getDriverLocationsFromSQLite :' + JSON.stringify(err));
+				// alert('getDriverLocationsFromSQLite :' + JSON.stringify(err));
 			});
-		}).catch(e => alert("getDriverLocationsFromSQLite :" + JSON.stringify(e)));
+		}).catch(e => {
+			// alert("getDriverLocationsFromSQLite :" + JSON.stringify(e))
+		});
 		return storageLocationItems;
 	}
 	syncVehicleLocationToSQLite(masterLocationList: VehicleLocationModel[]) {
@@ -282,11 +284,17 @@ export class StorageService {
 								db.executeSql('INSERT INTO vehicle_location(id,location_GUID,location_name,vehicle_GUID,vehicle_no) VALUES(?,?,?,?,?)', [locationRec.Id, locationRec.location_GUID, locationRec.location_name, locationRec.vehicle_GUID, locationRec.vehicle_no])
 									.then(() => {
 										// alert('Record Inserted' + locationRec.location_name);	
-									}).catch(e => alert('syncDriverLocationToSQLite :' + JSON.stringify(e)));
+									}).catch(e => {
+										//  alert('syncDriverLocationToSQLite :' + JSON.stringify(e))
+									});
 							});
 						}
-					}).catch(e => alert('syncDriverLocationToSQLite :' + JSON.stringify(e)));
-		}).catch(e => alert('syncDriverLocationToSQLite :' + JSON.stringify(e)));
+					}).catch(e => {
+						//  alert('syncDriverLocationToSQLite :' + JSON.stringify(e))
+					});
+		}).catch(e => {
+			// alert('syncDriverLocationToSQLite :' + JSON.stringify(e))
+		});
 	}
 	getVehicleLocationListFromCloud() {
 		// alert(UserGUID)
@@ -322,8 +330,12 @@ export class StorageService {
 						.then(() => {
 							this.showToast('bottom', 'Saved Successfully');
 							// alert('Record Inserted to SQLite' + myModel.bunch_count);
-						}).catch(e => alert('saveSurveyToSQLite :' + JSON.stringify(e))));
-		}).catch(e => alert("saveSurveyToSQLite :" + JSON.stringify(e)));
+						}).catch(e => {
+							// alert('saveSurveyToSQLite :' + JSON.stringify(e))
+						}));
+		}).catch(e => {
+			//  alert("saveSurveyToSQLite :" + JSON.stringify(e))
+		});
 	}
 
 	saveSurveyToCloudFromSQLite() {
@@ -355,9 +367,11 @@ export class StorageService {
 					// alert('Survey Table Deleted');
 				});
 			}, (err) => {
-				alert('saveSurveyToCloudFromSQLite: ' + JSON.stringify(err));
+				// alert('saveSurveyToCloudFromSQLite: ' + JSON.stringify(err));
 			});
-		}).catch(e => alert("saveSurveyToCloudFromSQLite :" + JSON.stringify(e)));
+		}).catch(e => {
+			//  alert("saveSurveyToCloudFromSQLite :" + JSON.stringify(e))
+		});
 	}
 
 	//-----------------------------Locally Used-------------------
@@ -376,13 +390,19 @@ export class StorageService {
 									.then(() => {
 										// alert('Record Inserted' + surveyRec.location_name);	
 									}
-									).catch(e => alert('syncSurveyHistoryCloudToSQLite: ' + JSON.stringify(e)));
+									).catch(e => {
+										// alert('syncSurveyHistoryCloudToSQLite: ' + JSON.stringify(e))
+									});
 							});
 						}
 						this.showToast('bottom', 'Data Synced to SQLite Successfully');
 
-					}).catch(e => alert('syncSurveyHistoryCloudToSQLite: ' + JSON.stringify(e)));
-		}).catch(e => alert("syncSurveyHistoryCloudToSQLite: " + JSON.stringify(e)));
+					}).catch(e => {
+						// alert('syncSurveyHistoryCloudToSQLite: ' + JSON.stringify(e))
+					});
+		}).catch(e => {
+			//  alert("syncSurveyHistoryCloudToSQLite: " + JSON.stringify(e))
+		});
 	}
 	//-----------------------------End Locally Used-------------------
 
@@ -404,9 +424,11 @@ export class StorageService {
 					}
 				}
 			}, (err) => {
-				alert('getSurveyHistoryFromSQLite: ' + JSON.stringify(err));
+				// alert('getSurveyHistoryFromSQLite: ' + JSON.stringify(err));
 			});
-		}).catch(e => alert("getSurveyHistoryFromSQLite: " + JSON.stringify(e)));
+		}).catch(e => {
+			// alert("getSurveyHistoryFromSQLite: " + JSON.stringify(e))
+		});
 		return surveyItems;
 	}
 
@@ -431,58 +453,113 @@ export class StorageService {
 
 	//--------------------------Mandor Module-------------------------------------
 
-	syncMandorInfoCloudToSQLite(user: string, location: string, today: string) {
-		var totalHarvested: string;
-		var totalLoaded: string;
+	syncMandorInfoCloudToSQLite(user: string, today: string) {
 		//Todo: Inject into a global function
 		var url = constants.DREAMFACTORY_TABLE_URL + "/harvested_count_loc_date_view?filter=(user_GUID=" + user + ")AND(harvested_date=" + today + ")&api_key=" + constants.DREAMFACTORY_API_KEY;
 		this.http.get(url).map(res => res.json()).subscribe(data => {
 			var cloudData = data["resource"];
-			if (cloudData.length == 0) {
-				totalHarvested = "0"
-			}
-			else {
-				totalHarvested = cloudData[0].total_bunches
-			}
+
+			this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
+				db.executeSql('CREATE TABLE IF NOT EXISTS mandor_harvested_info(location_GUID TEXT,total_harvested INTEGER)', {})
+					.then(() =>
+						db.executeSql('DELETE FROM mandor_harvested_info', null)).then(() => {
+							if (cloudData.length > 0) {
+								cloudData.forEach(harvestedRec => {
+									// alert('Harvest Sync:' + harvestedRec.location_GUID + harvestedRec.total_bunches)
+									db.executeSql('INSERT INTO mandor_harvested_info(location_GUID,total_harvested) VALUES(?,?)', [harvestedRec.location_GUID, harvestedRec.total_bunches])
+										.then(() => {
+											this.showToast('bottom', 'Saved Successfully');
+											// alert('Record Inserted to SQLite' + myModel.bunch_count);
+										}).catch(e => {
+											// alert('syncMandorInfoCloudToSQLite-Harvest :' + JSON.stringify(e))
+										});
+								})
+							}
+						}).catch(e => {
+							// alert('syncMandorInfoCloudToSQLite- Harvest: ' + JSON.stringify(e))
+						});
+			}).catch(e => {
+				// alert("syncMandorInfoCloudToSQLite- Harvest :" + JSON.stringify(e))
+			});
+
+			// if (cloudData.length == 0) {
+			// 	totalHarvested = "0"
+			// }
+			// else {
+			// 	totalHarvested = cloudData[0].total_bunches
+			// }
 		});
 
 		url = constants.DREAMFACTORY_TABLE_URL + "/loaded_count_loc_date_view?filter=(user_GUID=" + user + ")AND(loaded_date=" + today + ")&api_key=" + constants.DREAMFACTORY_API_KEY;
 		this.http.get(url).map(res => res.json()).subscribe(data => {
 			var cloudData = data["resource"];
-			if (cloudData.length == 0) {
-				totalLoaded = "0"
-			}
-			else {
-				totalLoaded = cloudData[0].total_bunches
-			}
+
+			this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
+				db.executeSql('CREATE TABLE IF NOT EXISTS mandor_loaded_info(location_GUID TEXT,total_loaded INTEGER)', {})
+					.then(() =>
+						db.executeSql('DELETE FROM mandor_loaded_info', null)).then(() => {
+							if (cloudData.length > 0) {
+								cloudData.forEach(harvestedRec => {
+									// alert('Load Sync:' + harvestedRec.location_GUID + harvestedRec.total_bunches)
+									db.executeSql('INSERT INTO mandor_loaded_info(location_GUID,total_loaded) VALUES(?,?)', [harvestedRec.location_GUID, harvestedRec.total_bunches])
+										.then(() => {
+											this.showToast('bottom', 'Saved Successfully');
+											// alert('Record Inserted to SQLite' + myModel.bunch_count);
+										}).catch(e => {
+											// alert('syncMandorInfoCloudToSQLite-loaded :' + JSON.stringify(e))
+										});
+								})
+							}
+						}).catch(e => {
+							//  alert('syncMandorInfoCloudToSQLite- loaded: ' + JSON.stringify(e))
+						});
+			}).catch(e => {
+				// alert("syncMandorInfoCloudToSQLite- loaded :" + JSON.stringify(e))
+			});
+
+
+			// if (cloudData.length == 0) {
+			// 	totalLoaded = "0"
+			// }
+			// else {
+			// 	totalLoaded = cloudData[0].total_bunches
+			// }
 		});
 
-		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
-			db.executeSql('CREATE TABLE IF NOT EXISTS mandor_info(total_harvested TEXT,total_loaded TEXT)', {})
-				.then(() =>
-					db.executeSql('DELETE FROM mandor_info', null)).then(() => {
-						db.executeSql('INSERT INTO mandor_info(total_harvested,total_loaded) VALUES(?,?)', [totalHarvested, totalLoaded])
-							.then(() => {
-								this.showToast('bottom', 'Saved Successfully');
-								// alert('Record Inserted to SQLite' + myModel.bunch_count);
-							}).catch(e => alert('syncMandorInfoCloudToSQLite :' + JSON.stringify(e)));
-					}).catch(e => alert('syncMandorInfoCloudToSQLite: ' + JSON.stringify(e)));
-		}).catch(e => alert("syncMandorInfoCloudToSQLite :" + JSON.stringify(e)));
+
 	}
 
-	getMandorInfoFromSQLite() {
+	getMandorInfoFromSQLite(location: string) {
 		// alert('Inside Get From Lite Function');
-		var unloadItems = [];
+		var mandorInfo: MandorInfoModel = new MandorInfoModel();
 		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
-			db.executeSql('select * from mandor_info', {}).then((data) => {
-				// alert('Selecting Inserted list from Sqlite');					
-				unloadItems.push(data.rows.item(0).total_harvested);
-				unloadItems.push(data.rows.item(0).total_loaded);
+			var query = "select * from mandor_harvested_info where location_GUID='" + location + "'";
+			// alert(query)
+			db.executeSql(query, {}).then((data) => {
+				// alert('Selecting Inserted list from Sqlite');		
+				// alert('push :' + data.rows.item(0).total_harvested)
+				mandorInfo.total_harvested = (data.rows.item(0).total_harvested);
+
+				query = "select * from mandor_loaded_info where location_GUID='" + location + "'";
+				// alert(query)
+				db.executeSql(query, {}).then((data) => {
+					// alert('Selecting Inserted list from Sqlite');	
+					// alert('push :' + data.rows.item(0).total_loaded)
+					mandorInfo.total_loaded = (data.rows.item(0).total_loaded);
+				}, (err) => {
+					// alert('getMandorInfoFromSQLite: ' + JSON.stringify(err));
+				});
+
 			}, (err) => {
-				alert('getMandorInfoFromSQLite: ' + JSON.stringify(err));
+				// alert('getMandorInfoFromSQLite: ' + JSON.stringify(err));
 			});
-		}).catch(e => alert("getMandorInfoFromSQLite: " + JSON.stringify(e)));
-		return unloadItems;
+			// alert('list:' + mandorInfo.total_harvested + " , " + mandorInfo.total_loaded)
+			return mandorInfo;
+		}).catch(e => {
+			//  alert("getMandorInfoFromSQLite: " + JSON.stringify(e))
+		});
+		// alert('list:' + mandorInfo.total_harvested + " , " + mandorInfo.total_loaded)
+		return mandorInfo;
 	}
 	//--------------------------Harvest Module-------------------------------------
 
@@ -494,8 +571,12 @@ export class StorageService {
 						.then(() => {
 							this.showToast('bottom', 'Saved Successfully');
 							// alert('Record Inserted to SQLite' + myModel.bunch_count);
-						}).catch(e => alert('saveHarvestToSQLite :' + JSON.stringify(e))));
-		}).catch(e => alert("saveHarvestToSQLite :" + JSON.stringify(e)));
+						}).catch(e => {
+							// alert('saveHarvestToSQLite :' + JSON.stringify(e))
+						}));
+		}).catch(e => {
+			// alert("saveHarvestToSQLite :" + JSON.stringify(e))
+		});
 	}
 	saveHarvestToCloudFromSQLite() {
 		// alert('Inside Survey save to Cloud');
@@ -524,9 +605,11 @@ export class StorageService {
 					// alert('Survey Table Deleted');
 				});
 			}, (err) => {
-				alert('saveHarvestToCloudFromSQLite: ' + JSON.stringify(err));
+				// alert('saveHarvestToCloudFromSQLite: ' + JSON.stringify(err));
 			});
-		}).catch(e => alert("saveHarvestToCloudFromSQLite :" + JSON.stringify(e)));
+		}).catch(e => {
+			// alert("saveHarvestToCloudFromSQLite :" + JSON.stringify(e))
+		});
 
 	}
 
@@ -546,13 +629,19 @@ export class StorageService {
 									.then(() => {
 										// alert('Record Inserted' + surveyRec.location_name);	
 									}
-									).catch(e => alert('syncHarvestToSQLite: ' + JSON.stringify(e)));
+									).catch(e => {
+										// alert('syncHarvestToSQLite: ' + JSON.stringify(e))
+									});
 							});
 						}
 						this.showToast('bottom', 'Data Synced to SQLite Successfully');
 
-					}).catch(e => alert('syncHarvestToSQLite: ' + JSON.stringify(e)));
-		}).catch(e => alert("syncHarvestToSQLite: " + JSON.stringify(e)));
+					}).catch(e => {
+						// alert('syncHarvestToSQLite: ' + JSON.stringify(e))
+					});
+		}).catch(e => {
+			// alert("syncHarvestToSQLite: " + JSON.stringify(e))
+		});
 	}
 	//-----------------------------End Locally Used-------------------
 	getHarvestHistoryFromSQLite(locationSelected: string) {
@@ -573,9 +662,11 @@ export class StorageService {
 					}
 				}
 			}, (err) => {
-				alert('getHarvestHistoryFromSQLite: ' + JSON.stringify(err));
+				// alert('getHarvestHistoryFromSQLite: ' + JSON.stringify(err));
 			});
-		}).catch(e => alert("getHarvestHistoryFromSQLite: " + JSON.stringify(e)));
+		}).catch(e => {
+			// alert("getHarvestHistoryFromSQLite: " + JSON.stringify(e))
+		});
 		return unloadItems;
 	}
 	syncHarvestHistoryCloudToSQLite() {
@@ -607,8 +698,12 @@ export class StorageService {
 						.then(() => {
 							this.showToast('bottom', 'Saved Successfully');
 							// alert('Record Inserted to SQLite' + myModel.bunch_count);
-						}).catch(e => alert('saveLoadToSQLite :' + JSON.stringify(e))));
-		}).catch(e => alert("saveLoadToSQLite :" + JSON.stringify(e)));
+						}).catch(e => {
+							// alert('saveLoadToSQLite :' + JSON.stringify(e))
+						}));
+		}).catch(e => {
+			// alert("saveLoadToSQLite :" + JSON.stringify(e))
+		});
 	}
 
 	saveLoadToCloudFromSQLite() {
@@ -640,9 +735,11 @@ export class StorageService {
 					// alert('Survey Table Deleted');
 				});
 			}, (err) => {
-				alert('saveLoadToCloudFromSQLite: ' + JSON.stringify(err));
+				// alert('saveLoadToCloudFromSQLite: ' + JSON.stringify(err));
 			});
-		}).catch(e => alert("saveLoadToCloudFromSQLite :" + JSON.stringify(e)));
+		}).catch(e => {
+			// alert("saveLoadToCloudFromSQLite :" + JSON.stringify(e))
+		});
 
 	}
 
@@ -662,13 +759,19 @@ export class StorageService {
 									.then(() => {
 										// alert('Record Inserted' + surveyRec.location_name);	
 									}
-									).catch(e => alert('syncLoadToSQLite: ' + JSON.stringify(e)));
+									).catch(e => {
+										// alert('syncLoadToSQLite: ' + JSON.stringify(e))
+									});
 							});
 						}
 						this.showToast('bottom', 'Data Synced to SQLite Successfully');
 
-					}).catch(e => alert('syncLoadToSQLite: ' + JSON.stringify(e)));
-		}).catch(e => alert("syncLoadToSQLite: " + JSON.stringify(e)));
+					}).catch(e => {
+						// alert('syncLoadToSQLite: ' + JSON.stringify(e))
+					});
+		}).catch(e => {
+			//  alert("syncLoadToSQLite: " + JSON.stringify(e))
+		});
 	}
 	//-----------------------------End Locally Used-------------------
 	getLoadHistoryFromSQLite(locationSelected: string) {
@@ -689,9 +792,11 @@ export class StorageService {
 					}
 				}
 			}, (err) => {
-				alert('getLoadHistoryFromSQLite: ' + JSON.stringify(err));
+				// alert('getLoadHistoryFromSQLite: ' + JSON.stringify(err));
 			});
-		}).catch(e => alert("getLoadHistoryFromSQLite: " + JSON.stringify(e)));
+		}).catch(e => {
+			// alert("getLoadHistoryFromSQLite: " + JSON.stringify(e))
+		});
 		return unloadItems;
 	}
 	syncLoadHistoryCloudToSQLite() {
@@ -726,7 +831,9 @@ export class StorageService {
 							this.showToast('bottom', 'Saved Successfully');
 							// alert('Record Inserted to SQLite' + myModel.bunch_count);
 						}).catch(e => alert('saveUnloadToSQLite :' + JSON.stringify(e))));
-		}).catch(e => alert("saveUnloadToSQLite :" + JSON.stringify(e)));
+		}).catch(e => {
+			//  alert("saveUnloadToSQLite :" + JSON.stringify(e))
+		});
 
 	}
 	saveUnloadToCloudFromSQLite() {
@@ -758,9 +865,11 @@ export class StorageService {
 					// alert('Survey Table Deleted');
 				});
 			}, (err) => {
-				alert('saveUnloadToCloudFromSQLite: ' + JSON.stringify(err));
+				// alert('saveUnloadToCloudFromSQLite: ' + JSON.stringify(err));
 			});
-		}).catch(e => alert("saveUnloadToCloudFromSQLite :" + JSON.stringify(e)));
+		}).catch(e => {
+			// alert("saveUnloadToCloudFromSQLite :" + JSON.stringify(e))
+		});
 
 	}
 
@@ -780,13 +889,19 @@ export class StorageService {
 									.then(() => {
 										// alert('Record Inserted' + surveyRec.location_name);	
 									}
-									).catch(e => alert('syncFactoryToSQLite: ' + JSON.stringify(e)));
+									).catch(e => {
+										// alert('syncFactoryToSQLite: ' + JSON.stringify(e))
+									});
 							});
 						}
 						this.showToast('bottom', 'Data Synced to SQLite Successfully');
 
-					}).catch(e => alert('syncFactoryToSQLite: ' + JSON.stringify(e)));
-		}).catch(e => alert("syncFactoryToSQLite: " + JSON.stringify(e)));
+					}).catch(e => {
+						// alert('syncFactoryToSQLite: ' + JSON.stringify(e))
+					});
+		}).catch(e => {
+			//  alert("syncFactoryToSQLite: " + JSON.stringify(e))
+		});
 	}
 	//-----------------------------End Locally Used-------------------
 	getUnloadHistoryFromSQLite() {
@@ -807,9 +922,11 @@ export class StorageService {
 					}
 				}
 			}, (err) => {
-				alert('getUnloadHistoryFromSQLite: ' + JSON.stringify(err));
+				// alert('getUnloadHistoryFromSQLite: ' + JSON.stringify(err));
 			});
-		}).catch(e => alert("getUnloadHistoryFromSQLite: " + JSON.stringify(e)));
+		}).catch(e => {
+			// alert("getUnloadHistoryFromSQLite: " + JSON.stringify(e))
+		});
 		return unloadItems;
 	}
 	syncUnloadHistoryCloudToSQLite() {
@@ -848,7 +965,7 @@ export class StorageService {
 				this.showToast('bottom', 'Saved Successfully');
 
 			}, (error) => {
-				alert(error);
+				// alert(error);
 				this.showToast('bottom', 'Failed to Save');
 			});
 	}

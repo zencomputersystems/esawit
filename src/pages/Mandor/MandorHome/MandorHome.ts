@@ -15,11 +15,11 @@ export class MandorHomePage {
     ifConnect: Subscription;
     constructor(private network: Network, private myCloud: StorageService, private mainMenu: SharedFunctions, public navCtrl: NavController, public platform: Platform, public actionsheetCtrl: ActionSheetController) {
         //-----------------------Offline Sync---------------------------
-        this.myCloud.getUserLocationListFromCloud();
-        this.myCloud.getVehicleLocationListFromCloud();
-        this.myCloud.getDriverLocationListFromCloud();
-        this.myCloud.syncHarvestHistoryCloudToSQLite();
-        this.myCloud.syncLoadHistoryCloudToSQLite();
+        // this.myCloud.getUserLocationListFromCloud();
+        // this.myCloud.getVehicleLocationListFromCloud();
+        // this.myCloud.getDriverLocationListFromCloud();
+        // this.myCloud.syncHarvestHistoryCloudToSQLite();
+        // this.myCloud.syncLoadHistoryCloudToSQLite();
         //-----------------------End Offline Sync---------------------------
 
     }
