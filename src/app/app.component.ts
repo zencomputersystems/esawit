@@ -29,11 +29,11 @@ export class MyApp {
   constructor(private device: Device, private myCloud: StorageService, public http: Http, platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, translate: TranslateService) {
     translate.setDefaultLang('en');
     platform.ready().then(() => {
-      this.UIDFromMobile = "6bce1120083b20b7";
-      // this.device.uuid;
+      this.UIDFromMobile = 
+      // "6bce1120083b20b7";
+      this.device.uuid;
               localStorage.setItem('device_UUID', this.UIDFromMobile);
 
-      // "6bce1120083b20b7";
       var url = constants.DREAMFACTORY_TABLE_URL + "/user_imei/" + this.UIDFromMobile + "?id_field=user_IMEI&api_key=" + constants.DREAMFACTORY_API_KEY;
       this.http.get(url).map(res => res.json()).subscribe(data => {
         var loggedInUserFromDB = data;
