@@ -39,7 +39,7 @@ export class HarvestBunchesPage {
             'harvestedBunchCount': [null, Validators.compose([Validators.pattern('[0-9]*'), Validators.required])]
         });
         this.loadAuthForm = fb.group({
-            'loadedBunchCount': [null, Validators.compose([Validators.required])],
+            'loadedBunchCount': [null, Validators.compose([Validators.pattern('[0-9]*'), Validators.required])],
             'driverSelect': [null, Validators.compose([Validators.required])],
             'vehicleSelect': [null, Validators.compose([Validators.required])]
         });
@@ -71,7 +71,7 @@ export class HarvestBunchesPage {
 
             this.harvestedHistoryData = this.myCloud.getHarvestHistoryFromSQLite(locationSelected);
         } else {
-            var url = constants.DREAMFACTORY_TABLE_URL + "/transact_harvest_view?filter=(location_name=" + locationSelected + ")AND(user_GUID=" + this.UserGUID + ")&api_key=" + constants.DREAMFACTORY_API_KEY;
+            var url = constants.DREAMFACTORY_TABLE_URL + "/transact_harvest_view?filter=(location_name=" + locationSelected + ")AND(user_GUID=" + this.UserGUID + ")&limit=20&api_key=" + constants.DREAMFACTORY_API_KEY;
             this.http.get(url).map(res => res.json()).subscribe(data => {
                 this.harvestedHistoryData = data["resource"]
             });
@@ -83,12 +83,11 @@ export class HarvestBunchesPage {
             this.harvestedHistoryData = this.myCloud.getLoadHistoryFromSQLite(locationSelected);
         }
         else {
-            var url = constants.DREAMFACTORY_TABLE_URL + "/transact_loading_view?filter=(location_name=" + locationSelected + ")AND(user_GUID=" + this.UserGUID + ")&api_key=" + constants.DREAMFACTORY_API_KEY;
+            var url = constants.DREAMFACTORY_TABLE_URL + "/transact_loading_view?filter=(location_name=" + locationSelected + ")AND(user_GUID=" + this.UserGUID + ")&limit=20&api_key=" + constants.DREAMFACTORY_API_KEY;
             this.http.get(url).map(res => res.json()).subscribe(data => {
                 this.harvestedHistoryData = data["resource"]
             });
         }
-
     }
 
     getSummaryByLocation(locationSelected: any) {
@@ -181,6 +180,8 @@ export class HarvestBunchesPage {
             alert('Network exists. Saving data to Cloud');
             this.global.showConfirm('cloud', constants.DREAMFACTORY_TABLE_URL + '/transact_harvest', this.harvestModel.toJson(true));
         }
+        this.harvestAuthForm.reset();
+
     }
 
     submitLoadForm(value: any, location_GUID: string) {
@@ -198,6 +199,8 @@ export class HarvestBunchesPage {
             alert('Network exists. Saving data to Cloud');
             this.global.showConfirm('cloud', constants.DREAMFACTORY_TABLE_URL + '/transact_loading', this.loadModel.toJson(true));
         }
+        this.loadAuthForm.reset();
+
     }
 
     onLink(url: string) {

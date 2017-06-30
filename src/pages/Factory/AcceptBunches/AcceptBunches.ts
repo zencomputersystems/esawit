@@ -53,7 +53,9 @@ export class AcceptBunchesPage {
         else {
             alert('Network exists. Saving data to Cloud');
         this.global.showConfirm('cloud',constants.DREAMFACTORY_TABLE_URL + '/transact_unloading', this.factoryModel.toJson(true));
-        }  
+    }  
+            this.authForm.reset();
+
 }
 
     ionViewDidEnter() {

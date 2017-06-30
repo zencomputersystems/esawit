@@ -9,9 +9,10 @@ import { Network } from '@ionic-native/network';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { CountBunchesModel } from '../../models/CountBunchesModel';
 import { SurveyHistoryModel } from '../../models/SurveyHistoryModel';
-import { DriverLocationModel } from '../../models/DriverLocationModel';
+import { DriverLocationModel } from '../../models/SQLiteSync/DriverLocationModel';
 import { HarvestBunchesModel } from '../../models/HarvestBunchesModel';
-import { VehicleLocationModel } from '../../models/VehicleLocationModel';
+import { VehicleLocationModel } from '../../models/SQLiteSync/VehicleLocationModel';
+import { MasterVehicleModel } from '../../models/SQLiteSync/MasterVehicleModel';
 import { HarvestHistoryModel } from '../../models/HarvestHistoryModel';
 import { LoadBunchesModel } from '../../models/LoadBunchesModel';
 import { LoadHistoryModel } from '../../models/LoadHistoryModel';
@@ -36,7 +37,7 @@ export class StorageService {
 	successToast = this.translate.get("_SUCCESS_TOAST_LBL")["value"];
 	failedToast = this.translate.get("_FAILED_TOAST_LBL")["value"];
 	module: any;
-	public masterLocationList: MasterLocationModel[] = [];
+	// public masterLocationList: MasterLocationModel[] = [];
 	constructor(public toastCtrl: ToastController, public translate: TranslateService, private sqlite: SQLite, private http: Http, private network: Network) {
 	}
 
@@ -67,7 +68,7 @@ export class StorageService {
 		var UserGUID = localStorage.getItem('loggedIn_user_GUID');
 		// alert('getUserLocationListFromCloud Entered')
 		var url = constants.DREAMFACTORY_TABLE_URL + "/active_users_location_view?filter=user_GUID=" + UserGUID + "&api_key=" + constants.DREAMFACTORY_API_KEY;
-
+		var masterLocationList: MasterLocationModel[] = [];
 		this.http.get(url).map(res => res.json()).subscribe(data => {
 			var locationListFromDb = data["resource"];
 			locationListFromDb.forEach(element => {
@@ -75,7 +76,7 @@ export class StorageService {
 				masterLocation.Id = element.h1;
 				masterLocation.location_GUID = element.location_GUID;
 				masterLocation.location_name = element.location_name;
-				this.masterLocationList.push(masterLocation);
+				masterLocationList.push(masterLocation);
 			});
 			// alert(' syncUserLocationToSQLite Begins Here ');
 			this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
@@ -84,8 +85,8 @@ export class StorageService {
 						db.executeSql('DELETE FROM user_location', null)).then(() => {
 							// alert('Table Deleted');
 							// alert('Locations Count' + masterLocationList.length);
-							if (this.masterLocationList.length > 0) {
-								this.masterLocationList.forEach(locationRec => {
+							if (masterLocationList.length > 0) {
+								masterLocationList.forEach(locationRec => {
 									// alert('Record'+locationRec.Id+" :"+locationRec.Id+"."+locationRec.location_GUID+"=>"+locationRec.location_name);
 									db.executeSql('INSERT INTO user_location(id,location_GUID,location_name) VALUES(?,?,?)', [locationRec.Id, locationRec.location_GUID, locationRec.location_name])
 										.then(() => {
@@ -130,7 +131,7 @@ export class StorageService {
 	getCloudMasterLocations() {
 		// alert(UserGUID)
 		var url = constants.DREAMFACTORY_TABLE_URL + "/master_location?api_key=" + constants.DREAMFACTORY_API_KEY;
-
+		var masterLocationList: MasterLocationModel[] = [];
 		this.http.get(url).map(res => res.json()).subscribe(data => {
 			var locationListFromDb = data["resource"];
 			locationListFromDb.forEach(element => {
@@ -138,10 +139,10 @@ export class StorageService {
 				masterLocation.Id = element.h1;
 				masterLocation.location_GUID = element.location_GUID;
 				masterLocation.location_name = element.name;
-				this.masterLocationList.push(masterLocation);
+				masterLocationList.push(masterLocation);
 			});
 			// console.table(this.masterLocationList);
-			this.syncMasterLocationsToSQLite(this.masterLocationList);
+			this.syncMasterLocationsToSQLite(masterLocationList);
 			// return this.masterLocationList;
 		});
 		// });
@@ -319,6 +320,75 @@ export class StorageService {
 		// console.table(this.masterLocationList);
 		// return this.masterLocationList;
 	}
+
+	getMasterVehiclesFromSQLite() {
+		// alert('Inside Get From Lite Function');
+		var storageVehicleItems = [];
+		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
+			db.executeSql("select * from master_vehicles", {}).then((data) => {
+				// alert('Selecting Inserted list from Sqlite');
+				if (data.rows.length > 0) {
+					// alert(data.rows.length);
+					for (var i = 0; i < data.rows.length; i++) {
+						// alert('Record '+(i+1)+" :"+data.rows.item(i).location_name);
+						storageVehicleItems.push({ id: data.rows.item(i).id, vehicle_no: data.rows.item(i).vehicle_no, vehicle_GUID: data.rows.item(i).vehicle_GUID });
+					}
+				}
+			}, (err) => {
+				// alert('getDriverLocationsFromSQLite :' + JSON.stringify(err));
+			});
+		}).catch(e => {
+			// alert("getDriverLocationsFromSQLite :" + JSON.stringify(e))
+		});
+		return storageVehicleItems;
+	}
+	syncMasterVehiclesToSQLite(masterVehicleList: MasterVehicleModel[]) {
+		// alert('In Sync Function');
+		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
+			db.executeSql('CREATE TABLE IF NOT EXISTS master_vehicles(id INTEGER  ,vehicle_GUID TEXT,vehicle_no  TEXT)', {})
+				.then(() =>
+					db.executeSql('DELETE FROM master_vehicles', null)).then(() => {
+						// alert('Table Deleted');
+						// alert('Locations Count' + masterLocationList.length);
+						if (masterVehicleList.length > 0) {
+							masterVehicleList.forEach(locationRec => {
+								// alert('Record'+locationRec.Id+" :"+locationRec.Id+"."+locationRec.location_GUID+"=>"+locationRec.location_name);
+								db.executeSql('INSERT INTO master_vehicles(id,vehicle_GUID,vehicle_no) VALUES(?,?,?)', [locationRec.Id, locationRec.vehicle_GUID, locationRec.vehicle_no])
+									.then(() => {
+										// alert('Record Inserted' + locationRec.location_name);	
+									}).catch(e => {
+										//  alert('syncDriverLocationToSQLite :' + JSON.stringify(e))
+									});
+							});
+						}
+					}).catch(e => {
+						//  alert('syncDriverLocationToSQLite :' + JSON.stringify(e))
+					});
+		}).catch(e => {
+			// alert('syncDriverLocationToSQLite :' + JSON.stringify(e))
+		});
+	}
+	getMasterVehiclesListFromCloud() {
+		// alert(UserGUID)
+		var url = constants.DREAMFACTORY_TABLE_URL + "/master_vehicle?api_key=" + constants.DREAMFACTORY_API_KEY;
+		var vehicleList: MasterVehicleModel[] = [];
+		this.http.get(url).map(res => res.json()).subscribe(data => {
+			var locationListFromDb = data["resource"];
+			locationListFromDb.forEach(element => {
+				var masterVehicle: MasterVehicleModel = new MasterVehicleModel();
+				masterVehicle.Id = element.h1;
+				masterVehicle.vehicle_GUID = element.vehicle_GUID;
+				masterVehicle.vehicle_no = element.registration_no;
+				vehicleList.push(masterVehicle);
+			});
+			this.syncMasterVehiclesToSQLite(vehicleList);
+			// console.table(this.masterLocationList);
+			// return this.masterLocationList;
+		});
+		// });
+		// console.table(this.masterLocationList);
+		// return this.masterLocationList;
+	}
 	//-------------------------End Master data -----------------------
 
 	//--------------------------Surveyor Module------------------------------
@@ -373,6 +443,34 @@ export class StorageService {
 			//  alert("saveSurveyToCloudFromSQLite :" + JSON.stringify(e))
 		});
 	}
+
+	getSurveyFromSQLite() {
+		// alert('Inside Get From Lite Function');
+		var surveyItems = [];
+		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
+			var query = 'select B.location_name,A.bunch_count,A.month from transact_survey AS  A INNER JOIN master_location AS B where A.location_GUID = B.location_GUID';
+			// alert('Selecting Inserted list from Sqlite'+query);
+			db.executeSql(query, {}).then((data) => {
+				// alert(data.rows.length);
+				if (data.rows.length > 0) {
+					for (var i = 0; i < data.rows.length; i++) {
+						// alert('Record '+(i+1)+" :"+data.rows.item(i).location_name);
+						var survey: SurveyHistoryModel = new SurveyHistoryModel();
+						survey.location_name = data.rows.item(i).location_name;
+						survey.bunch_count = data.rows.item(i).bunch_count;
+						survey.month = data.rows.item(i).month;
+						surveyItems.push(survey);
+					}
+				}
+			}, (err) => {
+				// alert('getSurveyHistoryFromSQLite: ' + JSON.stringify(err));
+			});
+		}).catch(e => {
+			// alert("getSurveyHistoryFromSQLite: " + JSON.stringify(e))
+		});
+		return surveyItems;
+	}
+
 
 	//-----------------------------Locally Used-------------------
 	syncSurveyHistoryCloudToSQLite(SurveyHistoryList: SurveyHistoryModel[]) {
@@ -434,7 +532,7 @@ export class StorageService {
 
 	syncHistoryCloudToSQLite() {
 		alert('Network exists. Saving data to Cloud');
-		var url = constants.DREAMFACTORY_TABLE_URL + "/transact_survey_view?filter=user_GUID=" + localStorage.getItem('loggedIn_user_GUID') + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+		var url = constants.DREAMFACTORY_TABLE_URL + "/transact_survey_view?filter=user_GUID=" + localStorage.getItem('loggedIn_user_GUID') + "&limit=20&api_key=" + constants.DREAMFACTORY_API_KEY;
 		this.http.get(url).map(res => res.json()).subscribe(data => {
 			var modelFromCloud = data["resource"];
 			var surveyHistoryList: SurveyHistoryModel[] = [];
@@ -671,7 +769,7 @@ export class StorageService {
 	}
 	syncHarvestHistoryCloudToSQLite() {
 		alert('Network exists. Saving data to SQLite');
-		var url = constants.DREAMFACTORY_TABLE_URL + "/transact_harvest_view?filter=user_GUID=" + localStorage.getItem('loggedIn_user_GUID') + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+		var url = constants.DREAMFACTORY_TABLE_URL + "/transact_harvest_view?filter=user_GUID=" + localStorage.getItem('loggedIn_user_GUID') + "&limit=20&api_key=" + constants.DREAMFACTORY_API_KEY;
 		this.http.get(url).map(res => res.json()).subscribe(data => {
 			var modelFromCloud = data["resource"];
 			var surveyHistoryList: HarvestHistoryModel[] = [];
@@ -801,7 +899,7 @@ export class StorageService {
 	}
 	syncLoadHistoryCloudToSQLite() {
 		alert('Network exists. Saving data to SQLite');
-		var url = constants.DREAMFACTORY_TABLE_URL + "/transact_loading_view?filter=user_GUID=" + localStorage.getItem('loggedIn_user_GUID') + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+		var url = constants.DREAMFACTORY_TABLE_URL + "/transact_loading_view?filter=user_GUID=" + localStorage.getItem('loggedIn_user_GUID') + "&limit=20&api_key=" + constants.DREAMFACTORY_API_KEY;
 		this.http.get(url).map(res => res.json()).subscribe(data => {
 			var modelFromCloud = data["resource"];
 			var surveyHistoryList: LoadHistoryModel[] = [];
@@ -929,9 +1027,36 @@ export class StorageService {
 		});
 		return unloadItems;
 	}
+
+	getUnloadFromSQLite() {
+		// alert('Inside Get From Lite Function');
+		var unloadItems = [];
+		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
+			var query = 'select B.location_name,A.bunch_count, C.vehicle_no from transact_unloading AS  A INNER JOIN master_location AS B on  A.location_GUID = B.location_GUID INNER JOIN master_vehicles AS C ON A.vehicle_GUID=C.vehicle_GUID ';
+			db.executeSql(query, {}).then((data) => {
+				// alert('Selecting Inserted list from Sqlite');
+				if (data.rows.length > 0) {
+					// alert(data.rows.length);
+					for (var i = 0; i < data.rows.length; i++) {
+						// alert('Record '+(i+1)+" :"+data.rows.item(i).location_name);
+						var survey: FactoryHistoryModel = new FactoryHistoryModel();
+						survey.location_name = data.rows.item(i).location_name;
+						survey.bunch_count = data.rows.item(i).bunch_count;
+						survey.vehicle_no = data.rows.item(i).vehicle_no;
+						unloadItems.push(survey);
+					}
+				}
+			}, (err) => {
+				// alert('getUnloadHistoryFromSQLite: ' + JSON.stringify(err));
+			});
+		}).catch(e => {
+			// alert("getUnloadHistoryFromSQLite: " + JSON.stringify(e))
+		});
+		return unloadItems;
+	}
 	syncUnloadHistoryCloudToSQLite() {
 		alert('Network exists. Saving data to SQLite');
-		var url = constants.DREAMFACTORY_TABLE_URL + "/transact_unloading_view?filter=user_GUID=" + localStorage.getItem('loggedIn_user_GUID') + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+		var url = constants.DREAMFACTORY_TABLE_URL + "/transact_unloading_view?filter=user_GUID=" + localStorage.getItem('loggedIn_user_GUID') + "&limit=20&api_key=" + constants.DREAMFACTORY_API_KEY;
 		this.http.get(url).map(res => res.json()).subscribe(data => {
 			var modelFromCloud = data["resource"];
 			var surveyHistoryList: FactoryHistoryModel[] = [];
@@ -939,16 +1064,13 @@ export class StorageService {
 				var surveyHistory: FactoryHistoryModel = new FactoryHistoryModel();
 				surveyHistory.location_name = cloudItem.location_name;
 				surveyHistory.bunch_count = cloudItem.bunch_count;
-				surveyHistory.vehicle_no = cloudItem.registration_no;
+				surveyHistory.vehicle_no = cloudItem.vehicle_no;
 				surveyHistoryList.push(surveyHistory);
 			});
 			this.syncFactoryToSQLite(surveyHistoryList);
 		});
 	}
 	//--------------------------End Factory Module--------------------------------
-
-
-
 	saveToCloud(url: string, myModel: any) {
 		// alert('In Save Cloud');
 		var queryHeaders = new Headers();

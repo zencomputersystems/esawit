@@ -19,7 +19,7 @@ import { SharedFunctions } from '../../../providers/Shared/Functions';
 export class AcceptedBunchesHistoryPage {
     labelsFromStorage: any; UserGUID: any;
     acceptedBunchesHistoryData: any; ifConnect: Subscription;
-
+    localHistoryData: any;
     //  private mainMenu: MainMenu,
     constructor(public global: SharedFunctions, private myCloud: StorageService, private network: Network, public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, public http: Http, public platform: Platform, public actionsheetCtrl: ActionSheetController) {
         this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
@@ -39,12 +39,13 @@ export class AcceptedBunchesHistoryPage {
         if (this.network.type == "none") {
             alert('No Network. Getting data from SQLite');
             this.acceptedBunchesHistoryData = this.myCloud.getUnloadHistoryFromSQLite();
+            this.localHistoryData = this.myCloud.getUnloadFromSQLite();
         }
         else {
             alert('Network exists. Getting data from Cloud');
             this.myCloud.syncUnloadHistoryCloudToSQLite();
 
-            var url = constants.DREAMFACTORY_TABLE_URL + "/transact_unloading_view?filter=user_GUID=" + this.UserGUID + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+            var url = constants.DREAMFACTORY_TABLE_URL + "/transact_unloading_view?filter=user_GUID=" + this.UserGUID + "&limit=20&api_key=" + constants.DREAMFACTORY_API_KEY;
             this.http.get(url).map(res => res.json()).subscribe(data => {
                 this.acceptedBunchesHistoryData = data["resource"];
             });

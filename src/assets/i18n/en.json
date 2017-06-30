@@ -58,6 +58,8 @@
   "_ACCEPTED_BUNCHES_HISTORY_HEADER": "Accepted Bunches History",
   "_COUNT_BUNCHES_HISTORY_HEADER":"Count Bunches History",
   "_LOAD_HARVESTED_BUNCHES_HEADER": "Load Harvested Bunches",
+  "_LOCAL_DATA_HEADER":"Local Data",
+  "_ONLINE_DATA_HEADER":"Online Data",
   "_MONTH": {
     "1": "Jan",
     "2": "Feb",

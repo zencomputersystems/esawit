@@ -14,13 +14,15 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class FactoryHomePage {
     ifConnect: Subscription;
-    constructor(private network: Network, private myCloud: StorageService,public navCtrl: NavController, public platform: Platform, public actionsheetCtrl: ActionSheetController) {
+    constructor(private network: Network, private myCloud: StorageService, public navCtrl: NavController, public platform: Platform, public actionsheetCtrl: ActionSheetController) {
         //-----------------------Offline Sync---------------------------
         //Get locations based on user_GUID from Cloud. It will be used in CountBunches Module.
         this.myCloud.getCloudMasterLocations();
         this.myCloud.getVehicleLocationListFromCloud();
         this.myCloud.getDriverLocationListFromCloud();
-                    this.myCloud.syncUnloadHistoryCloudToSQLite();
+        this.myCloud.getMasterVehiclesListFromCloud();
+        this.myCloud.getMasterVehiclesFromSQLite();
+        this.myCloud.syncUnloadHistoryCloudToSQLite();
 
         //Sync the locationList from cloud to SQLite
         // this.myCloud.syncMasterLocationsToSQLite(locationListFromCloud);
@@ -31,7 +33,7 @@ export class FactoryHomePage {
     //-----------------------Offline Sync---------------------------
     ionViewDidEnter() {
         this.ifConnect = this.network.onConnect().subscribe(data => {
-                    // this.myCloud.getCloudMasterLocations();
+            // this.myCloud.getCloudMasterLocations();
             //Sync the Count Bunches Page
             this.myCloud.saveUnloadToCloudFromSQLite();
             //Sync the History Page

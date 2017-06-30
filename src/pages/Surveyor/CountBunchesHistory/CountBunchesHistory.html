@@ -10,8 +10,42 @@
 </ion-header>
 <ion-content padding>
 
+    <h1>{{ "_COUNT_BUNCHES_HISTORY_HEADER" | translate }}</h1>
+
   <ion-list>
-    <h2>{{ "_COUNT_BUNCHES_HISTORY_HEADER" | translate }}</h2>
+        <h4>{{ "_LOCAL_DATA_HEADER" | translate }}</h4>
+    <ion-list-header>
+      <ion-avatar item-left>
+        <h2>{{ "_S_NO_LBL" | translate }}</h2>
+      </ion-avatar>
+      <ion-avatar item-left>
+        <h2>{{ "_MONTH_LBL" | translate }}</h2>
+      </ion-avatar>
+      <ion-avatar item-right>
+        <h2>{{ "_LOCATION_LBL" | translate }}</h2>
+      </ion-avatar>
+      <ion-avatar item-right>
+        <h2>{{ "_TOTAL_BUNCHES_LBL" | translate }}</h2>
+      </ion-avatar>
+    </ion-list-header>
+    <ion-item *ngFor="let item of localHistoryData; let i = index;" (click)="itemSelected(item)">
+      <ion-avatar item-left>
+        <button ion-button color="light"> {{i+1}} </button>
+      </ion-avatar>
+      <ion-avatar item-left>
+        <h2>{{ "_MONTH." + item.month | translate }}</h2>
+      </ion-avatar>
+      <ion-avatar item-right>
+        <h2>{{ item.location_name }}</h2>
+      </ion-avatar>
+      <ion-avatar item-right>
+        <h2>{{item .bunch_count}}</h2>
+      </ion-avatar>
+    </ion-item>
+  </ion-list>
+
+    <ion-list>
+    <h4>{{ "_ONLINE_DATA_HEADER" | translate }}</h4>
     <ion-list-header>
       <ion-avatar item-left>
         <h2>{{ "_S_NO_LBL" | translate }}</h2>
@@ -36,11 +70,10 @@
       <ion-avatar item-right>
         <h2>{{ item.location_name }}</h2>
       </ion-avatar>
-
       <ion-avatar item-right>
         <h2>{{item .bunch_count}}</h2>
       </ion-avatar>
-
     </ion-item>
   </ion-list>
+
 </ion-content>
