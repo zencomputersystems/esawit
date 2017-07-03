@@ -46,6 +46,23 @@
           </ion-card-header>
           <ion-card-content>
             <ion-list>
+              <h4>{{ "_LOCAL_DATA_HEADER" | translate }}</h4>
+              <ion-list-header>
+                <ion-avatar item-left> <b>{{ "_S_NO_LBL" | translate }}</b> </ion-avatar>
+                <ion-avatar item-left> <b>{{ "_TOTAL_BUNCHES_LBL" | translate }}</b> </ion-avatar>
+                <ion-avatar item-right> <b>{{ "_HARVESTED_DATE_LBL" | translate }}</b> </ion-avatar>
+              </ion-list-header>
+              <ion-item *ngFor="let history of localHarvestHistory; let i = index;">
+                <ion-avatar item-left>
+                  <button ion-button color="light"> {{i+1}} </button>
+                </ion-avatar>
+                <ion-avatar item-left>{{history .bunch_count}} </ion-avatar>
+                <ion-avatar item-right>{{history .created_ts}}</ion-avatar>
+              </ion-item>
+            </ion-list>
+
+            <ion-list>
+              <h4>{{ "_ONLINE_DATA_HEADER" | translate }}</h4>
               <ion-list-header>
                 <ion-avatar item-left> <b>{{ "_S_NO_LBL" | translate }}</b> </ion-avatar>
                 <ion-avatar item-left> <b>{{ "_TOTAL_BUNCHES_LBL" | translate }}</b> </ion-avatar>
@@ -59,7 +76,6 @@
                 <ion-avatar item-right>{{history .created_ts}}</ion-avatar>
               </ion-item>
             </ion-list>
-
           </ion-card-content>
         </ion-card>
 

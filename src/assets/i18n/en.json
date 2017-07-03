@@ -2,6 +2,8 @@
   "_MENU": "Menu",
   "_TITLE": "eSawit Mobile",
   "_CONFIRMATION_TITLE": "Create New Record?",
+  "_DEVICE_ID_LBL":"Your device's UUID is :",
+  "_CONTACT_ADMIN_LBL":"Please contact to the admin.",
   "_BUNCH_COUNT_VLD": "* Bunch Count Required",
   "_VEHICLE_SELECT_VLD": "* Please Select the Vehicle",
   "_DRIVER_SELECT_VLD": "* Please Select the Driver",

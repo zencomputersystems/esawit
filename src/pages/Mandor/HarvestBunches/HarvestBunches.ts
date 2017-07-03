@@ -31,7 +31,8 @@ export class HarvestBunchesPage {
     loadModel: LoadBunchesModel = new LoadBunchesModel();
     harvestedHistoryData: any;
     ifConnect: Subscription;
-
+    localHarvestHistory: any;
+    
     constructor(private myCloud: StorageService, private sqlite: SQLite, private network: Network, public actionsheetCtrl: ActionSheetController, public global: SharedFunctions,
         public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public fb: FormBuilder, public navParams: NavParams, public alertCtrl: AlertController) {
 
