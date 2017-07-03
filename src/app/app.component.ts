@@ -29,10 +29,8 @@ export class MyApp {
   constructor(private device: Device, private myCloud: StorageService, public http: Http, platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, translate: TranslateService) {
     translate.setDefaultLang('en');
     platform.ready().then(() => {
-      this.UIDFromMobile = 
-      // "6bce1120083b20b7";
-      this.device.uuid;
-              localStorage.setItem('device_UUID', this.UIDFromMobile);
+      this.UIDFromMobile = this.device.uuid;
+      localStorage.setItem('device_UUID', this.UIDFromMobile);
 
       var url = constants.DREAMFACTORY_TABLE_URL + "/user_imei/" + this.UIDFromMobile + "?id_field=user_IMEI&api_key=" + constants.DREAMFACTORY_API_KEY;
       this.http.get(url).map(res => res.json()).subscribe(data => {
@@ -41,6 +39,8 @@ export class MyApp {
         localStorage.setItem('loggedIn_user_GUID', loggedInUserFromDB.user_GUID);
         localStorage.setItem('selected_module', loggedInUserFromDB.module_id);
         this.module = loggedInUserFromDB.module_id==null?0: loggedInUserFromDB.module_id;
+
+         
         // alert(this.module)
         switch (this.module) {
           case 1: this.rootPage = SurveyorHomePage; break;
@@ -50,7 +50,7 @@ export class MyApp {
             this.myCloud.getDriverLocationListFromCloud();
             this.myCloud.syncHarvestHistoryCloudToSQLite();
             this.myCloud.syncLoadHistoryCloudToSQLite();    
-            this.rootPage = MandorHomePage;          
+            this.rootPage = HarvestBunchesPage;          
             break;
           case 3: this.rootPage = FactoryHomePage; break;
         }
@@ -63,9 +63,14 @@ export class MyApp {
       alert('Something wrong with server');
    }
    else if(err.status==404){
-     alert('UUID is not registered')
+     //alert('UUID is not registered');
+     //This is for Theme Development
+        localStorage.setItem('device_UUID', "ada434add3a71754");
+        localStorage.setItem('loggedIn_user_GUID', "b935ee1c-5fa1-11e7-91cd-00155de7e742");
+        localStorage.setItem('selected_module', "2");
+       this.rootPage = HarvestBunchesPage;
    }
-        this.rootPage = UnAuthorizedUserPage;
+        //this.rootPage = UnAuthorizedUserPage;
       });
       statusBar.styleDefault(); splashScreen.hide();
     });

@@ -71,6 +71,7 @@ export class HarvestBunchesPage {
 
             this.harvestedHistoryData = this.myCloud.getHarvestHistoryFromSQLite(locationSelected);
         } else {
+            console.log("transact_harvest_view");
             var url = constants.DREAMFACTORY_TABLE_URL + "/transact_harvest_view?filter=(location_name=" + locationSelected + ")AND(user_GUID=" + this.UserGUID + ")&limit=20&api_key=" + constants.DREAMFACTORY_API_KEY;
             this.http.get(url).map(res => res.json()).subscribe(data => {
                 this.harvestedHistoryData = data["resource"]
