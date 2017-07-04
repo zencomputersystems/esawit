@@ -31,6 +31,7 @@ export class HarvestBunchesPage {
     loadModel: LoadBunchesModel = new LoadBunchesModel();
     harvestedHistoryData: any;
     ifConnect: Subscription;
+    localHarvestHistory: any;
 
     constructor(private myCloud: StorageService, private sqlite: SQLite, private network: Network, public actionsheetCtrl: ActionSheetController, public global: SharedFunctions,
         public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public fb: FormBuilder, public navParams: NavParams, public alertCtrl: AlertController) {
@@ -44,7 +45,13 @@ export class HarvestBunchesPage {
             'vehicleSelect': [null, Validators.compose([Validators.required])]
         });
         this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
-        this.locationFromDB = this.myCloud.getUserLocationsFromSQLite();
+        //-----------------------------------------Web Design Purpose------------------------------------
+        // this.locationFromDB = this.myCloud.getUserLocationsFromSQLite();
+        var url = constants.DREAMFACTORY_TABLE_URL + "/master_location?api_key=" + constants.DREAMFACTORY_API_KEY;
+        this.http.get(url).map(res => res.json()).subscribe(data => {
+            this.locationFromDB = data["resource"];
+        });
+        //-----------------------------------------Web Design Purpose------------------------------------
         this.myCloud.syncMandorInfoCloudToSQLite(this.UserGUID, this.global.getStringDate());
     }
 
@@ -150,21 +157,22 @@ export class HarvestBunchesPage {
     }
 
     getDataByLocation(locationSelected: any) {
-        this.driverFromDB = this.myCloud.getDriverLocationsFromSQLite(locationSelected);
-        this.vehicleFromDB = this.myCloud.getVehicleLocationsFromSQLite(locationSelected);
+        //-----------------------------------------Web Design Purpose------------------------------------
+        // this.driverFromDB = this.myCloud.getDriverLocationsFromSQLite(locationSelected);
+        // this.vehicleFromDB = this.myCloud.getVehicleLocationsFromSQLite(locationSelected);
 
-        //Todo: Inject into a global function
-        // var url = constants.DREAMFACTORY_TABLE_URL +
-        //     "/active_vehicle_location_view?filter=location_GUID=" + locationSelected + "&api_key=" + constants.DREAMFACTORY_API_KEY;
-        // this.http.get(url).map(res => res.json()).subscribe(data => {
-        //     this.vehicleFromDB = data["resource"];
-        // });
-        //Todo: Inject into a global function
-        // url = constants.DREAMFACTORY_TABLE_URL +
-        //     "/active_driver_location_view?filter=location_GUID=" + locationSelected + "&api_key=" + constants.DREAMFACTORY_API_KEY;
-        // this.http.get(url).map(res => res.json()).subscribe(data => {
-        //     this.driverFromDB = data["resource"];
-        // });
+        var url = constants.DREAMFACTORY_TABLE_URL +
+            "/active_vehicle_location_view?filter=location_GUID=" + locationSelected + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+        this.http.get(url).map(res => res.json()).subscribe(data => {
+            this.vehicleFromDB = data["resource"];
+        });
+
+        url = constants.DREAMFACTORY_TABLE_URL +
+            "/active_driver_location_view?filter=location_GUID=" + locationSelected + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+        this.http.get(url).map(res => res.json()).subscribe(data => {
+            this.driverFromDB = data["resource"];
+        });
+        //-----------------------------------------Web Design Purpose------------------------------------
     }
 
     submitHarvestForm(value: any, location_GUID: string, location_name: string) {
