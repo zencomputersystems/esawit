@@ -8,9 +8,42 @@
     </ion-buttons>
   </ion-navbar>
 </ion-header>
-<ion-content padding>
-  <button ion-button icon-left color="dark" block (click)="NewCount()">
-                <ion-icon name="calculator" ></ion-icon>{{ "_COUNT_BUNCHES_BTN" | translate }}</button>
-  <button ion-button icon-left color="dark" block (click)="GetCountHistory()">
-            <ion-icon name="calendar" ></ion-icon>{{ "_COUNT_HISTORY_BTN" | translate }}</button>
+
+<ion-content class="bgColor-lightGrey">
+
+  <div class="headerBox bgColor-gradRed">
+    <div class="headerBoxTitle1">Deliver</div>
+    <div class="headerBoxText">Lorem ipsum dolor sit amet</div>
+  </div>
+
+  <ion-card class="cardBox posRelative" (click)="NewCount()">
+    <ion-item>
+      <div class="btnMainIcon bgColor-red fontColor-white">
+        <ion-icon name="calculator" class="hdIcon"></ion-icon>
+      </div>
+      <div class="btnMainTitle fontColor-grey">{{ "_COUNT_BUNCHES_BTN" | translate }}</div>
+      <ion-icon class="fontColor-grey" item-end name="arrow-forward"></ion-icon>
+    </ion-item>
+  </ion-card>
+
+  <ion-card class="cardBox posRelative" (click)="GetCountHistory()">
+    <ion-item>
+      <div class="btnMainIcon bgColor-red fontColor-white">
+        <ion-icon name="calendar" class="hdIcon"></ion-icon>
+      </div>
+      <div class="btnMainTitle fontColor-grey">{{ "_COUNT_HISTORY_BTN" | translate }}</div>
+      <ion-icon class="fontColor-grey" item-end name="arrow-forward"></ion-icon>
+    </ion-item>
+  </ion-card>
+
+
+  <!--<button ion-button color="dark" (click)="NewCount()">
+    <div class="btnMainIcon"><ion-icon name="calculator" ></ion-icon></div>
+    <div class="btnMainTitle">{{ "_COUNT_BUNCHES_BTN" | translate }}</div>
+  </button>
+  <button ion-button color="dark" (click)="GetCountHistory()">
+    <div class="btnMainIcon"><ion-icon name="calendar" ></ion-icon></div>
+    <div class="btnMainTitle">{{ "_COUNT_HISTORY_BTN" | translate }}</div>
+  </button>-->
+
 </ion-content>

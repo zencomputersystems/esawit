@@ -1,3 +1,174 @@
-page-Home {
+.bgColor-white {background: #fff;}
+.bgColor-lightGrey {background: #f6f6f6;}
+.bgColor-lightblue {background: #a6bed2;}
+.bgColor-red {background: #ff6b6b; color: #fff;}
+.bgColor-purple {background: #9c27b0; color: #fff;}
+.bgColor-green {background: #6bc801; color: #fff;}
+.bgColor-grey {background: #9aa8b3;border-color:  #adadad;}
+.bgColor-yellow {background: #f8cb00; color: #fff;}
+.bgColor-blue {background: #65c3df; color: #fff;}
+.bgColor-darkBlue {background: #31333c; color: #fff;}
+.bgColor-blackOpa {background: rgba(0, 0, 0, 0.45)}
+.bgColor-gradRed {background: linear-gradient(45deg, #e91e98, #ff6b6b);}
+.bgColor-gradBlue {background: linear-gradient(45deg, #9e3be8, #65c3df);}
+.bgColor-gradGreen {background: linear-gradient(45deg, #009673, #6bc801);}
 
+.btnColor-red {background: #fff; color: #717171; transition: 0.2s linear;}
+.btnColor-purple {background: #fff; color: #717171; transition: 0.2s linear;}
+.btnColor-green {background: #fff; color: #717171; transition: 0.2s linear;}
+.btnColor-grey {background: #fff;border-color:  #717171; transition: 0.2s linear;}
+.btnColor-yellow {background: #fff; color: #717171; transition: 0.2s linear;}
+.btnColor-blue {background: #fff; color: #717171; transition: 0.2s linear;}
+.btnColor-darkBlue {background: #fff; color: #717171; transition: 0.2s linear;}
+
+.btnColor-red:hover {background: #ff6b6b; color: #fff;}
+.btnColor-purple:hover {background: #9c27b0; color: #fff;}
+.btnColor-green:hover {background: #6bc801; color: #fff;}
+.btnColor-grey:hover {background: #9aa8b3;border-color:  #fff;}
+.btnColor-yellow:hover {background: #f8cb00; color: #fff;}
+.btnColor-blue:hover {background: #65c3df; color: #fff;}
+.btnColor-darkBlue:hover {background: #31333c; color: #fff;}
+
+.fontColor-white {color: #fff !important;}
+.fontColor-grey {color: #9c9b9b !important;}
+.fontColor-dark {color: #717171 !important;}
+.fontColor-red {color: #ff6b6b !important;}
+.fontColor-green {color: #6bc801 !important;}
+.fontColor-yellow {color: #f8cb00 !important;}
+.fontColor-blue {color: #65c3df !important;}
+.fontColor-purple {color: #9c27b0 !important;}
+
+.fullHeight {height: 100% !important;}
+.fullWidth {width: 100% !important;}
+
+.contentHeight {max-height: calc(100% - 115px) !important;}
+.contentHeight2 {max-height: calc(100% - 175px) !important;}
+.contentHeight3 {height: calc(100% - 70px) !important;}
+.MaxHeightFull {max-height: 100% !important;}
+
+.posFixed {position: fixed !important;}
+.posRelative {position: relative !important;}
+.posAbsolute {position: absolute !important;}
+
+.floatRight {float: right !important;}
+.floatLeft {float: left !important;}
+
+.textLeft {text-align: left;}
+.textRight {text-align: right;}
+
+.leftZero {left: 0 !important;}
+.topZero {top: 0 !important;}
+.rightZero {right: 0 !important;}
+.bottomZero {bottom: 0 !important;}
+
+.btnMainIcon {
+    width: 55px;
+    height: 100%;
+    padding: 10px 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+    text-align: center;
+    font-size: 20px;
+}
+
+.btnMainTitle {
+    margin-left: 50px;
+    font-size: 13px;
+}
+
+.headerBox {
+    padding: 20px 5px;
+    height: 150px;
+    color: rgba(255, 255, 255, 0.43);
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.5);
+}
+
+.headerBoxTitle1 {
+    color: rgba(255, 255, 255, 0.43);
+    font-weight: bold;
+    font-size: 55px;
+    text-transform: uppercase;
+}
+
+.headerBoxTitle2 {
+    color: rgba(255, 255, 255, 0.6);
+    text-align: center;
+    font-size: 25px;
+    font-weight: bold;
+    padding: 10px;
+}
+
+.headerBoxText {
+    color: #fff;
+    padding: 3px;
+}
+
+.listItemCard {
+    position: relative;
+    box-shadow: none !important;
+    border-bottom: 1px solid #d4d4d4;
+}
+.listItemNo {
+    width: 45px;
+    position: absolute;
+    height: 100%;
+    padding: 17px 10px;
+}
+.listItemContent {
+    margin-left: 45px;
+    height: 100%;
+    width: calc(100% - 130px);
+    padding: 10px 5px;
+}
+.listItemVehicle, .listItemLocation {
+    min-height: 20px;
+}
+.listItemTotal {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 85px;
+    height: 100%;
+}
+.listItemIcon {
+    float: left;
+    width: 20px;
+    font-size: 15px;
+}
+.listItemLabel {
+    font-size: 15px;
+}
+.listItemValue {
+    font-size: 20px;
+    font-weight: 100;
+    padding: 19px;
+    text-align: right;
+}
+.litsItemNoValue {
+    width: 25px;
+    height: 25px;
+    border-radius: 5px;
+    text-align: center;
+    padding: 6px 0;
+    font-size: 12px;
+}
+.contentBox {
+    display: table;
+    width: calc(100% - 30px);
+    margin: -40px 15px;
+    background: white;
+    border-radius: 5px 5px 0 0;
+    overflow: hidden;
+}
+.formBtnCircle {
+    width: 90px !important;
+    height: 90px !important;
+    border-radius: 50% !important;
+    border: 1px solid #FFC107 !important;
+    background: #fff9c8 !important;
+    color: #FFC107 !important;
+    margin: auto !important;
+    margin-top: 15px !important;
+    box-shadow: none !important;
 }

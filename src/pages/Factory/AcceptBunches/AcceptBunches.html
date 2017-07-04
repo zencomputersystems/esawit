@@ -8,43 +8,50 @@
     </ion-buttons>
   </ion-navbar>
 </ion-header>
-<ion-content>
-  <ion-list>
+<ion-content class="bgColor-lightGrey">
 
-    <form [formGroup]="authForm" (ngSubmit)="submitForm(authForm.value)">
-      <h1>{{ "_ACCEPT_BUNCHES_HEADER" | translate }}</h1>
-      <ion-item>
-        <ion-label>{{ "_LOCATION_LBL" | translate }}</ion-label>
-        <ion-select formControlName="locationSelect" [(ngModel)]='locationSelect' interface="popover" placeholder='{{"_SELECT_LOCATION_HINT" | translate}}'
-          (ionChange)="onLocationSelect(locationSelect)">
-                    <ion-option *ngFor="let location of locationFromDb" value={{location.location_GUID}}>{{location.name}}</ion-option>
-          <!--<ion-option *ngFor="let location of locationFromDb" value={{location.location_GUID}}>{{location.location_name}}</ion-option>-->
-        </ion-select>
-      </ion-item>
+  <div class="headerBox bgColor-gradGreen">
+    <div class="headerBoxTitle2">{{ "_ACCEPT_BUNCHES_HEADER" | translate }}</div>
+  </div>
 
-      <ion-item>
-        <ion-label>{{ "_VEHICLE_NO_LBL" | translate }}</ion-label>
-        <ion-select formControlName="vehicleSelect" interface="popover" placeholder='{{"_SELECT_VEHICLE_HINT" | translate}}'>
-                    <ion-option *ngFor="let vehicle of vehicleFromDb" value={{vehicle.vehicle_GUID}}>{{vehicle.registration_no}}</ion-option>
-          <!--<ion-option *ngFor="let vehicle of vehicleFromDb" value={{vehicle.vehicle_GUID}}>{{vehicle.vehicle_no}}</ion-option>-->
-        </ion-select>
-      </ion-item>
+  <div class="contentBox">
 
-      <ion-item>
-        <ion-label>{{ "_DRIVER_LBL" | translate }}</ion-label>
-        <ion-select formControlName="driverSelect" interface="popover" placeholder='{{"_SELECT_DRIVER_HINT" | translate}}'>
-                   <ion-option *ngFor="let driver of driverFromDb" value={{driver.driver_GUID}}>{{driver.fullname}}</ion-option>
-          <!--<ion-option *ngFor="let driver of driverFromDb" value={{driver.driver_GUID}}>{{driver.driver_name}}</ion-option>-->
-        </ion-select>
-      </ion-item>
+    <ion-list>
 
-      <ion-item>
-        <ion-label floating>{{ "_TOTAL_BUNCHES_LBL" | translate }}</ion-label>
-        <ion-input formControlName="bunchCount" highlight-color="energized" type="text"></ion-input>
-      </ion-item>
-      <button type="submit" ion-button full [disabled]="!authForm.valid">{{ "_SUBMIT_BTN" | translate }}</button>
+      <form [formGroup]="authForm" (ngSubmit)="submitForm(authForm.value)">
+        <ion-item>
+          <ion-label floating>{{ "_LOCATION_LBL" | translate }}</ion-label>
+          <ion-select formControlName="locationSelect" [(ngModel)]='locationSelect' interface="popover" (ionChange)="onLocationSelect(locationSelect)">
+            <ion-option *ngFor="let location of locationFromDb" value={{location.location_GUID}}>{{location.name}}</ion-option>
+            <!--<ion-option *ngFor="let location of locationFromDb" value={{location.location_GUID}}>{{location.location_name}}</ion-option>-->
+          </ion-select>
+        </ion-item>
 
-    </form> 
+        <ion-item>
+          <ion-label floating>{{ "_VEHICLE_NO_LBL" | translate }}</ion-label>
+          <ion-select formControlName="vehicleSelect" interface="popover">
+            <ion-option *ngFor="let vehicle of vehicleFromDb" value={{vehicle.vehicle_GUID}}>{{vehicle.registration_no}}</ion-option>
+            <!--<ion-option *ngFor="let vehicle of vehicleFromDb" value={{vehicle.vehicle_GUID}}>{{vehicle.vehicle_no}}</ion-option>-->
+          </ion-select>
+        </ion-item>
 
-  </ion-list>
+        <ion-item>
+          <ion-label floating>{{ "_DRIVER_LBL" | translate }}</ion-label>
+          <ion-select formControlName="driverSelect" interface="popover">
+            <ion-option *ngFor="let driver of driverFromDb" value={{driver.driver_GUID}}>{{driver.fullname}}</ion-option>
+            <!--<ion-option *ngFor="let driver of driverFromDb" value={{driver.driver_GUID}}>{{driver.driver_name}}</ion-option>-->
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label floating>{{ "_TOTAL_BUNCHES_LBL" | translate }}</ion-label>
+          <ion-input formControlName="bunchCount" highlight-color="energized" type="text"></ion-input>
+        </ion-item>
+        <button class="formBtnCircle" type="submit" ion-button full [disabled]="!authForm.valid">{{ "_SUBMIT_BTN" | translate }}</button>
+
+      </form>
+
+    </ion-list>
+  </div>
+
 </ion-content>

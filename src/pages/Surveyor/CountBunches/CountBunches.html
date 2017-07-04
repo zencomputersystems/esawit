@@ -8,21 +8,26 @@
     </ion-buttons>
   </ion-navbar>
 </ion-header>
-<ion-content>
+<ion-content class="bgColor-lightGrey">
+
+  <div class="headerBox bgColor-gradRed">
+    <div class="headerBoxTitle2">{{ "_ABOUT_BUNCHES_HEADER" | translate }}</div>
+  </div>
+
+  <div class="contentBox">
   <ion-list>
-    <h1>{{ "_ABOUT_BUNCHES_HEADER" | translate }}</h1>
     <form [formGroup]="authForm" (ngSubmit)="submitForm(authForm.value)">
       <ion-item>
-        <ion-label>{{ "_MONTH_LBL" | translate }}</ion-label>
-        <ion-select formControlName="monthSelect" interface="popover" placeholder='{{"_SELECT_MONTH_HINT" | translate}}'>
+        <ion-label floating>{{ "_MONTH_LBL" | translate }}</ion-label>
+        <ion-select formControlName="monthSelect" interface="popover">
           <ion-option *ngFor="let month of monthsFromStorage" value={{month.value}}>{{ "_MONTH." + month.value | translate }}</ion-option>
         </ion-select>
       </ion-item>
       <!--<div class="error-box" *ngIf="authForm.controls['monthSelect'].hasError('required')">{{ "_MONTH_SELECT_VLD" | translate }}</div>-->
 
       <ion-item>
-        <ion-label>{{ "_LOCATION_LBL" | translate }}</ion-label>
-        <ion-select formControlName="locationSelect" interface="popover" placeholder='{{"_SELECT_LOCATION_HINT" | translate}}'>
+        <ion-label floating>{{ "_LOCATION_LBL" | translate }}</ion-label>
+        <ion-select formControlName="locationSelect" interface="popover">
           <ion-option *ngFor="let item of locationListFromDb" value={{item.location_GUID}}>{{item.location_name}}</ion-option>
         </ion-select>
       </ion-item>
@@ -34,9 +39,10 @@
       </ion-item>
       <!--<div class="error-box" *ngIf="authForm.controls['bunchCount'].hasError('required')">{{ "_BUNCH_COUNT_VLD" | translate }}</div>-->
 
-      <button type="submit" ion-button full [disabled]="!authForm.valid">{{ "_SUBMIT_BTN" | translate }}</button>
+      <button class="formBtnCircle" type="submit" ion-button full [disabled]="!authForm.valid">{{ "_SUBMIT_BTN" | translate }}</button>
 
 
     </form>
   </ion-list>
+  </div>
 </ion-content>

@@ -8,11 +8,15 @@
     </ion-buttons>
   </ion-navbar>
 </ion-header>
-<ion-content padding>  
-    <h1>{{ "_ACCEPTED_BUNCHES_HISTORY_HEADER" | translate }}</h1>
- 
-  <ion-list>
-            <h4>{{ "_LOCAL_DATA_HEADER" | translate }}</h4>
+<ion-content class="bgColor-lightGrey">
+
+  <div class="headerBox bgColor-gradGreen">
+    <div class="headerBoxTitle2">{{ "_ACCEPTED_BUNCHES_HISTORY_HEADER" | translate }}</div>
+  </div>
+  
+
+  <!--<ion-list>
+    <h4>{{ "_LOCAL_DATA_HEADER" | translate }}</h4>
     <ion-list-header>
       <ion-avatar item-left> <b>{{ "_S_NO_LBL" | translate }}</b> </ion-avatar>
       <ion-avatar item-left> <b>{{ "_VEHICLE_NO_LBL" | translate }}</b> </ion-avatar>
@@ -23,16 +27,19 @@
       <ion-avatar item-left>
         <button ion-button color="light"> {{i+1}} </button>
       </ion-avatar>
-            <ion-avatar item-left>
-      <h2>{{ history.vehicle_no }}</h2>      </ion-avatar>
       <ion-avatar item-left>
-      <h2>{{history .location_name}}</h2>      </ion-avatar>
+        <h2>{{ history.vehicle_no }}</h2>
+      </ion-avatar>
+      <ion-avatar item-left>
+        <h2>{{history .location_name}}</h2>
+      </ion-avatar>
       <ion-avatar item-right>
-      <h2>{{history .bunch_count}}</h2>      </ion-avatar>
+        <h2>{{history .bunch_count}}</h2>
+      </ion-avatar>
     </ion-item>
-  </ion-list>
+  </ion-list>-->
 
-<ion-list>
+  <!--<ion-list>
     <h4>{{ "_ONLINE_DATA_HEADER" | translate }}</h4>
     <ion-list-header>
       <ion-avatar item-left> <b>{{ "_S_NO_LBL" | translate }}</b> </ion-avatar>
@@ -40,18 +47,99 @@
       <ion-avatar item-left> <b>{{ "_LOCATION_LBL" | translate }}</b> </ion-avatar>
       <ion-avatar item-right> <b>{{ "_TOTAL_BUNCHES_LBL" | translate }}</b> </ion-avatar>
     </ion-list-header>
+
     <ion-item *ngFor="let history of acceptedBunchesHistoryData; let i = index;" (click)="itemSelected(history)">
       <ion-avatar item-left>
         <button ion-button color="light"> {{i+1}} </button>
       </ion-avatar>
-            <ion-avatar item-left>
-
-      <h2>{{ history.vehicle_no }}</h2>      </ion-avatar>
       <ion-avatar item-left>
-      <h2>{{history .location_name}}</h2>      </ion-avatar>
+
+        <h2>{{ history.vehicle_no }}</h2>
+      </ion-avatar>
+      <ion-avatar item-left>
+        <h2>{{history .location_name}}</h2>
+      </ion-avatar>
       <ion-avatar item-right>
-      <h2>{{history .bunch_count}}</h2>      </ion-avatar>
+        <h2>{{history .bunch_count}}</h2>
+      </ion-avatar>
     </ion-item>
-  </ion-list>
-  
+  </ion-list>-->
+
+<div class="contentBox">
+
+  <ion-row>
+    <ion-segment [(ngModel)]="Bunch" [ngModelOptions]="{standalone:true}" color="secondary">
+      <ion-segment-button value="Local" isActive>
+        {{ "_LOCAL_DATA_HEADER" | translate }}
+      </ion-segment-button>
+      <ion-segment-button value="Online">
+        {{ "_ONLINE_DATA_HEADER" | translate }}
+      </ion-segment-button>
+    </ion-segment>
+  </ion-row>
+
+  <div [ngSwitch]="Bunch">
+    <ion-list *ngSwitchDefault>
+
+      <ion-card class="listItemCard" *ngFor="let history of localHistoryData; let i = index;" (click)="itemSelected(history)">
+        <div class="listItemNo">
+          <div class="litsItemNoValue bgColor-green fontColor-white">{{i+1}}</div>
+        </div>
+        <div class="listItemContent">
+          <div class="listItemVehicle">
+            <div class="listItemIcon">
+              <ion-icon class="fontColor-purple" item-start name="bus"></ion-icon>
+            </div>
+            <div class="listItemLabel fontColor-dark"><b>{{ history.vehicle_no }}</b></div>
+          </div>
+          <div class="listItemLocation">
+            <div class="listItemIcon">
+              <ion-icon class="fontColor-yellow" item-start name="pin"></ion-icon>
+            </div>
+            <div class="listItemLabel fontColor-grey">{{history .location_name}}</div>
+          </div>
+        </div>
+        <div class="listItemTotal">
+          <div class="listItemValue fontColor-green">
+            {{history .bunch_count}}
+          </div>
+        </div>
+      </ion-card>
+
+    </ion-list>
+
+    <ion-list *ngSwitchCase="'Online'">
+
+      <ion-card class="listItemCard" *ngFor="let history of acceptedBunchesHistoryData; let i = index;" (click)="itemSelected(history)">
+        <div class="listItemNo">
+          <div class="litsItemNoValue bgColor-green fontColor-white">{{i+1}}</div>
+        </div>
+        <div class="listItemContent">
+          <div class="listItemVehicle">
+            <div class="listItemIcon">
+              <ion-icon class="fontColor-purple" item-start name="bus"></ion-icon>
+            </div>
+            <div class="listItemLabel fontColor-dark"><b>{{ history.vehicle_no }}</b></div>
+          </div>
+          <div class="listItemLocation">
+            <div class="listItemIcon">
+              <ion-icon class="fontColor-yellow" item-start name="pin"></ion-icon>
+            </div>
+            <div class="listItemLabel fontColor-grey">{{history .location_name}}</div>
+          </div>
+        </div>
+        <div class="listItemTotal">
+          <div class="listItemValue fontColor-green">
+            {{history .bunch_count}}
+          </div>
+        </div>
+      </ion-card>
+
+    </ion-list>
+
+  </div>
+
+</div>
+
+
 </ion-content>

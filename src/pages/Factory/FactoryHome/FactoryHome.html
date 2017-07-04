@@ -8,9 +8,36 @@
     </ion-buttons>
   </ion-navbar>
 </ion-header>
-<ion-content padding>
-  <button ion-button icon-left color="dark" block (click)="NewAcceptance()">
+
+<ion-content class="bgColor-lightGrey">
+
+  <div class="headerBox bgColor-gradGreen">
+    <div class="headerBoxTitle1">Accepted</div>
+    <div class="headerBoxText">Lorem ipsum dolor sit amet</div>
+  </div>
+
+  <ion-card class="cardBox posRelative" (click)="NewAcceptance()">
+    <ion-item>
+      <div class="btnMainIcon bgColor-green fontColor-white">
+        <ion-icon name="cut" class="hdIcon"></ion-icon>
+      </div>
+      <div class="btnMainTitle fontColor-grey">{{ "_ACCEPT_BUNCHES_BTN" | translate }}</div>
+      <ion-icon class="fontColor-grey" item-end name="arrow-forward"></ion-icon>
+    </ion-item>
+  </ion-card>
+
+  <ion-card class="cardBox posRelative" (click)="GetHistory()">
+    <ion-item>
+      <div class="btnMainIcon bgColor-green fontColor-white">
+        <ion-icon name="bus" class="hdIcon"></ion-icon>
+      </div>
+      <div class="btnMainTitle fontColor-grey">{{ "_ACCEPTED_BUNCHES_HISTORY_BTN" | translate }}</div>
+      <ion-icon class="fontColor-grey" item-end name="arrow-forward"></ion-icon>
+    </ion-item>
+  </ion-card>
+
+  <!--<button ion-button icon-left color="dark" block (click)="NewAcceptance()">
                 <ion-icon name="cut" ></ion-icon>{{"_ACCEPT_BUNCHES_BTN" | translate}}</button>
   <button ion-button icon-left color="dark" block (click)="GetHistory()">
-            <ion-icon name="bus" ></ion-icon>{{"_ACCEPTED_BUNCHES_HISTORY_BTN" | translate}}</button>
+            <ion-icon name="bus" ></ion-icon>{{"_ACCEPTED_BUNCHES_HISTORY_BTN" | translate}}</button>-->
 </ion-content>
