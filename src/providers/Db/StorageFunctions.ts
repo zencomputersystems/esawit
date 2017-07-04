@@ -767,6 +767,32 @@ export class StorageService {
 		});
 		return unloadItems;
 	}
+
+	getHarvestFromSQLite(locationSelected: string) {
+		// alert('Inside Get From Lite Function');
+		var unloadItems = [];
+		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
+			db.executeSql("select * from harvest_history where location_name='" + locationSelected + "'", {}).then((data) => {
+				// alert('Selecting Inserted list from Sqlite');
+				if (data.rows.length > 0) {
+					// alert(data.rows.length);
+					for (var i = 0; i < data.rows.length; i++) {
+						// alert('Record '+(i+1)+" :"+data.rows.item(i).location_name);
+						var survey: HarvestHistoryModel = new HarvestHistoryModel();
+						survey.location_name = data.rows.item(i).location_name;
+						survey.bunch_count = data.rows.item(i).bunch_count;
+						survey.created_ts = data.rows.item(i).created_ts;
+						unloadItems.push(survey);
+					}
+				}
+			}, (err) => {
+				// alert('getHarvestHistoryFromSQLite: ' + JSON.stringify(err));
+			});
+		}).catch(e => {
+			// alert("getHarvestHistoryFromSQLite: " + JSON.stringify(e))
+		});
+		return unloadItems;
+	}
 	syncHarvestHistoryCloudToSQLite() {
 		alert('Network exists. Saving data to SQLite');
 		var url = constants.DREAMFACTORY_TABLE_URL + "/transact_harvest_view?filter=user_GUID=" + localStorage.getItem('loggedIn_user_GUID') + "&limit=20&api_key=" + constants.DREAMFACTORY_API_KEY;
