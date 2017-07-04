@@ -27,7 +27,7 @@ export class AcceptBunchesPage {
     factoryModel: AcceptBunchesModel = new AcceptBunchesModel();
     locationListFromDb: any;
 
-    constructor(private myCloud: StorageService, private network: Network,public actionsheetCtrl: ActionSheetController, public global: SharedFunctions,
+    constructor(private myCloud: StorageService, private network: Network, public actionsheetCtrl: ActionSheetController, public global: SharedFunctions,
         public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public fb: FormBuilder, public navParams: NavParams, public alertCtrl: AlertController) {
         this.authForm = fb.group({
             'bunchCount': [null, Validators.compose([Validators.pattern('[0-9]*'), Validators.required])],
@@ -35,14 +35,14 @@ export class AcceptBunchesPage {
             'vehicleSelect': [null, Validators.compose([Validators.required])],
             'locationSelect': [null, Validators.compose([Validators.required])],
         })
-                this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
-                    //-----------------------------------------Web Design Purpose------------------------------------
-            //   this.locationFromDb = this.myCloud.getSQLiteMasterLocations();
-              	var url = constants.DREAMFACTORY_TABLE_URL + "/master_location?api_key=" + constants.DREAMFACTORY_API_KEY;
-		this.http.get(url).map(res => res.json()).subscribe(data => {
-			this.locationFromDb = data["resource"];
+        this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
+        //-----------------------------------------Web Design Purpose------------------------------------
+        //   this.locationFromDb = this.myCloud.getSQLiteMasterLocations();
+        var url = constants.DREAMFACTORY_TABLE_URL + "/master_location?api_key=" + constants.DREAMFACTORY_API_KEY;
+        this.http.get(url).map(res => res.json()).subscribe(data => {
+            this.locationFromDb = data["resource"];
         });
-                //-----------------------------------------Web Design Purpose------------------------------------
+        //-----------------------------------------Web Design Purpose------------------------------------
 
     }
     submitForm(value: any) {
@@ -52,17 +52,17 @@ export class AcceptBunchesPage {
         this.factoryModel.user_GUID = this.factoryModel.createdby_GUID = this.factoryModel.updatedby_GUID = this.UserGUID;
         this.factoryModel.bunch_count = value.bunchCount;
         this.factoryModel.updated_ts = this.factoryModel.created_ts = this.global.getStringTimeStamp();
-            if (this.network.type == "none") {
+        if (this.network.type == "none") {
             alert('No Network. Saving data to SQLite');
             this.global.showConfirm('sqlite', '4', this.factoryModel);
         }
         else {
             alert('Network exists. Saving data to Cloud');
-        this.global.showConfirm('cloud',constants.DREAMFACTORY_TABLE_URL + '/transact_unloading', this.factoryModel.toJson(true));
-    }  
-            this.authForm.reset();
+            this.global.showConfirm('cloud', constants.DREAMFACTORY_TABLE_URL + '/transact_unloading', this.factoryModel.toJson(true));
+        }
+        this.authForm.reset();
 
-}
+    }
 
     ionViewDidEnter() {
         this.ifConnect = this.network.onConnect().subscribe(data => {
@@ -70,16 +70,16 @@ export class AcceptBunchesPage {
             this.myCloud.saveUnloadToCloudFromSQLite();
             // alert(data.type);
         }, error => console.error(error));
-        }
+    }
 
     ionViewWillLeave() {
         this.ifConnect.unsubscribe();
     }
 
     onLocationSelect(locationSelected: string) {
-    //-----------------------------------------Web Design Purpose------------------------------------
-// this.driverFromDb= this.myCloud.getDriverLocationsFromSQLite(locationSelected);
-// this.vehicleFromDb = this.myCloud.getVehicleLocationsFromSQLite(locationSelected);
+        //-----------------------------------------Web Design Purpose------------------------------------
+        // this.driverFromDb= this.myCloud.getDriverLocationsFromSQLite(locationSelected);
+        // this.vehicleFromDb = this.myCloud.getVehicleLocationsFromSQLite(locationSelected);
         var url = constants.DREAMFACTORY_TABLE_URL + "/active_vehicle_location_view?filter=location_GUID=" + locationSelected + "&api_key=" + constants.DREAMFACTORY_API_KEY;
         this.http.get(url).map(res => res.json()).subscribe(data => {
             this.vehicleFromDb = data["resource"];
@@ -88,7 +88,7 @@ export class AcceptBunchesPage {
         this.http.get(url).map(res => res.json()).subscribe(data => {
             this.driverFromDb = data["resource"];
         });
-            //-----------------------------------------Web Design Purpose------------------------------------
+        //-----------------------------------------Web Design Purpose------------------------------------
     }
 
     onLink(url: string) {
