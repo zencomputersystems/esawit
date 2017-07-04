@@ -27,7 +27,6 @@ export class CountBunchesPage {
     UIDFromMobile: string;
     UserGUID: string;
     ifConnect: Subscription;
-    ifDisconnect: Subscription;
 
     constructor(private myCloud: StorageService, private network: Network, public actionsheetCtrl: ActionSheetController, private storage: Storage, public global: SharedFunctions,
         public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public fb: FormBuilder, public navParams: NavParams, public alertCtrl: AlertController) {
@@ -38,7 +37,14 @@ export class CountBunchesPage {
         })
         this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
         // console.log(this.UserGUID);
-        this.locationListFromDb = this.myCloud.getUserLocationsFromSQLite();
+    //-----------------------------------------Web Design Purpose------------------------------------
+        // this.locationListFromDb = this.myCloud.getUserLocationsFromSQLite();
+        		var url = constants.DREAMFACTORY_TABLE_URL + "/active_users_location_view?filter=user_GUID=" + this.UserGUID + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+		this.http.get(url).map(res => res.json()).subscribe(data => {
+			 this.locationListFromDb = data["resource"];
+        });
+            //-----------------------------------------Web Design Purpose------------------------------------
+
         this.getMonths();
         this.currentYear = new Date().getFullYear();
     }
@@ -53,7 +59,6 @@ export class CountBunchesPage {
 
     ionViewWillLeave() {
         this.ifConnect.unsubscribe();
-        this.ifDisconnect.unsubscribe();
     }
 
 
