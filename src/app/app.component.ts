@@ -29,25 +29,25 @@ export class MyApp {
   constructor(private device: Device, private myCloud: StorageService, public http: Http, platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, translate: TranslateService) {
     translate.setDefaultLang('en');
     platform.ready().then(() => {
-    //-----------------------------------------Web Design Purpose------------------------------------
-      this.UIDFromMobile = 
-      "6bce1120083b20b7";
-      // this.device.uuid;
-    //-----------------------------------------End Web Design Purpose------------------------------------
-              localStorage.setItem('device_UUID', this.UIDFromMobile);
+      //-----------------------------------------Web Design Purpose------------------------------------
+      this.UIDFromMobile =
+        // "6bce1120083b20b7";
+      this.device.uuid;
+      //-----------------------------------------End Web Design Purpose------------------------------------
+      localStorage.setItem('device_UUID', this.UIDFromMobile);
 
-           var url = constants.DREAMFACTORY_TABLE_URL + "/user_imei?filter=(user_IMEI=" + this.UIDFromMobile + ")AND(active=1)&api_key=" + constants.DREAMFACTORY_API_KEY;
+      var url = constants.DREAMFACTORY_TABLE_URL + "/user_imei?filter=(user_IMEI=" + this.UIDFromMobile + ")AND(active=1)&api_key=" + constants.DREAMFACTORY_API_KEY;
 
       this.http.get(url).map(res => res.json()).subscribe(data => {
         var loggedInUserFromDB = data["resource"][0];
-        if(loggedInUserFromDB==null){
+        if (loggedInUserFromDB == null) {
           this.module = 0;
         }
-        else{
-        // console.table(loggedInUserFromDB)
-        localStorage.setItem('loggedIn_user_GUID', loggedInUserFromDB.user_GUID);
-        localStorage.setItem('selected_module', loggedInUserFromDB.module_id);
-        this.module = loggedInUserFromDB.module_id==null?0: loggedInUserFromDB.module_id;
+        else {
+          // console.table(loggedInUserFromDB)
+          localStorage.setItem('loggedIn_user_GUID', loggedInUserFromDB.user_GUID);
+          localStorage.setItem('selected_module', loggedInUserFromDB.module_id);
+          this.module = loggedInUserFromDB.module_id == null ? 0 : loggedInUserFromDB.module_id;
         }
         // alert(this.module)
         switch (this.module) {
@@ -57,24 +57,24 @@ export class MyApp {
             this.myCloud.getVehicleLocationListFromCloud();
             this.myCloud.getDriverLocationListFromCloud();
             this.myCloud.syncHarvestHistoryCloudToSQLite();
-            this.myCloud.syncLoadHistoryCloudToSQLite();    
-            this.rootPage = MandorHomePage;          
+            this.myCloud.syncLoadHistoryCloudToSQLite();
+            this.rootPage = MandorHomePage;
             break;
           case 3: this.rootPage = FactoryHomePage; break;
-         default:         this.rootPage = UnAuthorizedUserPage;
+          default: this.rootPage = UnAuthorizedUserPage;
 
         }
-      },err=>{
-         if(err.status == 400){
-      alert('400 Error')
-   }else if(err.status == 403){
-    alert('403 Error')
-   }else if(err.status == 500){
-      alert('Something wrong with server');
-   }
-   else if(err.status==404){
-     alert('UUID is not registered')
-   }
+      }, err => {
+        if (err.status == 400) {
+          alert('400 Error')
+        } else if (err.status == 403) {
+          alert('403 Error')
+        } else if (err.status == 500) {
+          alert('Something wrong with server');
+        }
+        else if (err.status == 404) {
+          alert('UUID is not registered')
+        }
         this.rootPage = UnAuthorizedUserPage;
       });
       statusBar.styleDefault(); splashScreen.hide();
