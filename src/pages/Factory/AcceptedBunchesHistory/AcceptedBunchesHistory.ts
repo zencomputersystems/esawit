@@ -24,11 +24,11 @@ export class AcceptedBunchesHistoryPage {
     constructor(public global: SharedFunctions, private myCloud: StorageService, private network: Network, public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, public http: Http, public platform: Platform, public actionsheetCtrl: ActionSheetController) {
         this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
     //-----------------------------------------Web Design Purpose------------------------------------
-        // this.historyDataInitializer();
-     var url = constants.DREAMFACTORY_TABLE_URL + "/transact_unloading_view?filter=user_GUID=" + this.UserGUID + "&limit=20&api_key=" + constants.DREAMFACTORY_API_KEY;
-            this.http.get(url).map(res => res.json()).subscribe(data => {
-                this.acceptedBunchesHistoryData = data["resource"];
-            });
+        this.historyDataInitializer();
+    //  var url = constants.DREAMFACTORY_TABLE_URL + "/transact_unloading_view?filter=user_GUID=" + this.UserGUID + "&limit=20&api_key=" + constants.DREAMFACTORY_API_KEY;
+    //         this.http.get(url).map(res => res.json()).subscribe(data => {
+    //             this.acceptedBunchesHistoryData = data["resource"];
+    //         });
     //-----------------------------------------Web Design Purpose------------------------------------
     }
 

@@ -21,11 +21,11 @@ export class CountBunchesHistoryPage {
 
     constructor(public global: SharedFunctions, private myCloud: StorageService, private network: Network, public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, public http: Http, public platform: Platform, public actionsheetCtrl: ActionSheetController) {
     //-----------------------------------------Web Design Purpose------------------------------------
-        // this.historyDataInitializer();
-         var url = constants.DREAMFACTORY_TABLE_URL + "/transact_survey_view?filter=user_GUID=" + localStorage.getItem('loggedIn_user_GUID') + "&limit=20&api_key=" + constants.DREAMFACTORY_API_KEY;
-            this.http.get(url).map(res => res.json()).subscribe(data => {
-                this.countHistoryData = data["resource"];
-            });
+        this.historyDataInitializer();
+        //  var url = constants.DREAMFACTORY_TABLE_URL + "/transact_survey_view?filter=user_GUID=" + localStorage.getItem('loggedIn_user_GUID') + "&limit=20&api_key=" + constants.DREAMFACTORY_API_KEY;
+        //     this.http.get(url).map(res => res.json()).subscribe(data => {
+        //         this.countHistoryData = data["resource"];
+        //     });
     //-----------------------------------------Web Design Purpose------------------------------------
     }
     //-----------------------Offline Sync---------------------------

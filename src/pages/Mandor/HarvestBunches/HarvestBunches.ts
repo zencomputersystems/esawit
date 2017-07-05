@@ -46,11 +46,11 @@ export class HarvestBunchesPage {
         });
         this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
         //-----------------------------------------Web Design Purpose------------------------------------
-        // this.locationFromDB = this.myCloud.getUserLocationsFromSQLite();
-        var url = constants.DREAMFACTORY_TABLE_URL + "/master_location?api_key=" + constants.DREAMFACTORY_API_KEY;
-        this.http.get(url).map(res => res.json()).subscribe(data => {
-            this.locationFromDB = data["resource"];
-        });
+        this.locationFromDB = this.myCloud.getUserLocationsFromSQLite();
+        // var url = constants.DREAMFACTORY_TABLE_URL + "/master_location?api_key=" + constants.DREAMFACTORY_API_KEY;
+        // this.http.get(url).map(res => res.json()).subscribe(data => {
+        //     this.locationFromDB = data["resource"];
+        // });
         //-----------------------------------------Web Design Purpose------------------------------------
         this.myCloud.syncMandorInfoCloudToSQLite(this.UserGUID, this.global.getStringDate());
     }
@@ -158,20 +158,20 @@ export class HarvestBunchesPage {
 
     getDataByLocation(locationSelected: any) {
         //-----------------------------------------Web Design Purpose------------------------------------
-        // this.driverFromDB = this.myCloud.getDriverLocationsFromSQLite(locationSelected);
-        // this.vehicleFromDB = this.myCloud.getVehicleLocationsFromSQLite(locationSelected);
+        this.driverFromDB = this.myCloud.getDriverLocationsFromSQLite(locationSelected);
+        this.vehicleFromDB = this.myCloud.getVehicleLocationsFromSQLite(locationSelected);
 
-        var url = constants.DREAMFACTORY_TABLE_URL +
-            "/active_vehicle_location_view?filter=location_GUID=" + locationSelected + "&api_key=" + constants.DREAMFACTORY_API_KEY;
-        this.http.get(url).map(res => res.json()).subscribe(data => {
-            this.vehicleFromDB = data["resource"];
-        });
+        // var url = constants.DREAMFACTORY_TABLE_URL +
+        //     "/active_vehicle_location_view?filter=location_GUID=" + locationSelected + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+        // this.http.get(url).map(res => res.json()).subscribe(data => {
+        //     this.vehicleFromDB = data["resource"];
+        // });
 
-        url = constants.DREAMFACTORY_TABLE_URL +
-            "/active_driver_location_view?filter=location_GUID=" + locationSelected + "&api_key=" + constants.DREAMFACTORY_API_KEY;
-        this.http.get(url).map(res => res.json()).subscribe(data => {
-            this.driverFromDB = data["resource"];
-        });
+        // url = constants.DREAMFACTORY_TABLE_URL +
+        //     "/active_driver_location_view?filter=location_GUID=" + locationSelected + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+        // this.http.get(url).map(res => res.json()).subscribe(data => {
+        //     this.driverFromDB = data["resource"];
+        // });
         //-----------------------------------------Web Design Purpose------------------------------------
     }
 
