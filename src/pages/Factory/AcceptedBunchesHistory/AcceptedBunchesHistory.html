@@ -10,7 +10,7 @@
 </ion-header>
 <ion-content class="bgColor-lightGrey">
 
-  <div class="headerBox bgColor-gradGreen">
+  <div class="headerBox bgColor-gradOrange">
     <div class="headerBoxTitle2">{{ "_ACCEPTED_BUNCHES_HISTORY_HEADER" | translate }}</div>
   </div>
   
@@ -68,7 +68,7 @@
 <div class="contentBox">
 
   <ion-row>
-    <ion-segment [(ngModel)]="Bunch" [ngModelOptions]="{standalone:true}" color="secondary">
+    <ion-segment [(ngModel)]="Bunch" [ngModelOptions]="{standalone:true}" color="earth">
       <ion-segment-button value="Local" isActive>
         {{ "_LOCAL_DATA_HEADER" | translate }}
       </ion-segment-button>
@@ -100,7 +100,7 @@
           </div>
         </div>
         <div class="listItemTotal">
-          <div class="listItemValue fontColor-green">
+          <div class="listItemValue fontColor-brown">
             {{history .bunch_count}}
           </div>
         </div>
@@ -129,7 +129,7 @@
           </div>
         </div>
         <div class="listItemTotal">
-          <div class="listItemValue fontColor-green">
+          <div class="listItemValue fontColor-brown">
             {{history .bunch_count}}
           </div>
         </div>

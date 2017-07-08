@@ -10,7 +10,7 @@
 </ion-header>
 <ion-content class="bgColor-lightGrey">
 
-  <div class="headerBox bgColor-gradRed">
+  <div class="headerBox bgColor-gradOrange">
     <div class="headerBoxTitle2">{{ "_COUNT_BUNCHES_HISTORY_HEADER" | translate }}</div>
   </div>
 
@@ -82,7 +82,7 @@
 <div class="contentBox">
 
   <ion-row>
-    <ion-segment [(ngModel)]="Bunch" [ngModelOptions]="{standalone:true}" color="danger">
+    <ion-segment [(ngModel)]="Bunch" [ngModelOptions]="{standalone:true}" color="earth">
       <ion-segment-button value="Local" isActive>
         {{ "_LOCAL_DATA_HEADER" | translate }}
       </ion-segment-button>
@@ -97,7 +97,7 @@
 
       <ion-card class="listItemCard" *ngFor="let item of localHistoryData; let i = index;" (click)="itemSelected(item)">
         <div class="listItemNo">
-          <div class="litsItemNoValue bgColor-red fontColor-white">{{i+1}}</div>
+          <div class="litsItemNoValue bgColor-green fontColor-white">{{i+1}}</div>
         </div>
         <div class="listItemContent">
           <div class="listItemVehicle">
@@ -114,7 +114,7 @@
           </div>
         </div>
         <div class="listItemTotal">
-          <div class="listItemValue fontColor-red">
+          <div class="listItemValue fontColor-brown">
             {{item .bunch_count}}
           </div>
         </div>
@@ -126,7 +126,7 @@
 
       <ion-card class="listItemCard" *ngFor="let item of countHistoryData; let i = index;" (click)="itemSelected(item)">
         <div class="listItemNo">
-          <div class="litsItemNoValue bgColor-red fontColor-white">{{i+1}}</div>
+          <div class="litsItemNoValue bgColor-green fontColor-white">{{i+1}}</div>
         </div>
         <div class="listItemContent">
           <div class="listItemVehicle">
@@ -143,7 +143,7 @@
           </div>
         </div>
         <div class="listItemTotal">
-          <div class="listItemValue fontColor-red">
+          <div class="listItemValue fontColor-brown">
             {{item .bunch_count}}
           </div>
         </div>

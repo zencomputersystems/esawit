@@ -4,9 +4,16 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="bgColor-lightGrey">
+
+  <div class="headerBox bgColor-darkBlue">
+    <div class="headerBoxTitle2">{{ "_COUNT_BUNCHES_HISTORY_HEADER" | translate }}</div>
+  </div>
+
+
+<div class="contentBox">
   <ion-card class="cards-list-demo" *ngFor="let location of locationFromDB">
-    <ion-card-header class="bgColor-blue fontColor-white">
+    <ion-card-header class="bgColor-green fontColor-white">
       <!--{{ "_LOCATION_LBL" | translate }} : {{location.location_name}}-->
       {{ "_LOCATION_LBL" | translate }} : {{location.name}}
     </ion-card-header>
@@ -103,11 +110,11 @@
 
             <ion-list>
               <h4>{{ "_ONLINE_DATA_HEADER" | translate }}</h4>
-              <ion-list-header>
+              <!--<ion-list-header>
                 <ion-avatar item-left> <b>{{ "_S_NO_LBL" | translate }}</b> </ion-avatar>
                 <ion-avatar item-left> <b>{{ "_TOTAL_BUNCHES_LBL" | translate }}</b> </ion-avatar>
                 <ion-avatar item-right> <b>{{ "_HARVESTED_DATE_LBL" | translate }}</b> </ion-avatar>
-              </ion-list-header>
+              </ion-list-header>-->
               <!--<ion-item *ngFor="let history of harvestedHistoryData; let i = index;">
                 <ion-avatar item-left>
                   <button ion-button color="light"> {{i+1}} </button>
@@ -218,4 +225,6 @@
     <ion-list>
     </ion-list>
   </ion-card>
+</div>
+
 </ion-content>

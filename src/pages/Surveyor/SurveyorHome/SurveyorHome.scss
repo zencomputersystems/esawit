@@ -9,9 +9,12 @@
 .bgColor-blue {background: #65c3df; color: #fff;}
 .bgColor-darkBlue {background: #31333c; color: #fff;}
 .bgColor-blackOpa {background: rgba(0, 0, 0, 0.45)}
+.bgColor-brown {background: #795548; color: #fff;}
+
 .bgColor-gradRed {background: linear-gradient(45deg, #e91e98, #ff6b6b);}
 .bgColor-gradBlue {background: linear-gradient(45deg, #9e3be8, #65c3df);}
 .bgColor-gradGreen {background: linear-gradient(45deg, #009673, #6bc801);}
+.bgColor-gradOrange {background: linear-gradient(0deg, #FF5722, #ff9900);}
 
 .btnColor-red {background: #fff; color: #717171; transition: 0.2s linear;}
 .btnColor-purple {background: #fff; color: #717171; transition: 0.2s linear;}
@@ -37,6 +40,7 @@
 .fontColor-yellow {color: #f8cb00 !important;}
 .fontColor-blue {color: #65c3df !important;}
 .fontColor-purple {color: #9c27b0 !important;}
+.fontColor-brown {color: #795548 !important;}
 
 .fullHeight {height: 100% !important;}
 .fullWidth {width: 100% !important;}
@@ -55,11 +59,14 @@
 
 .textLeft {text-align: left;}
 .textRight {text-align: right;}
+.textCenter {text-align: center;}
 
 .leftZero {left: 0 !important;}
 .topZero {top: 0 !important;}
 .rightZero {right: 0 !important;}
 .bottomZero {bottom: 0 !important;}
+
+.paddingZero {padding: 0 !important;}
 
 .btnMainIcon {
     width: 55px;
@@ -165,9 +172,9 @@
     width: 90px !important;
     height: 90px !important;
     border-radius: 50% !important;
-    border: 1px solid #FFC107 !important;
-    background: #fff9c8 !important;
-    color: #FFC107 !important;
+    border: 1px solid #6bc801 !important;
+    background: #9af138 !important;
+    color: #ffffff !important;
     margin: auto !important;
     margin-top: 15px !important;
     box-shadow: none !important;
