@@ -7,18 +7,18 @@
 <ion-content>
   <ion-card class="cards-list-demo" *ngFor="let location of locationFromDB">
     <ion-card-header>
-      <!--{{ "_LOCATION_LBL" | translate }} : {{location.location_name}}-->
-            {{ "_LOCATION_LBL" | translate }} : {{location.name}}
+      {{ "_LOCATION_LBL" | translate }} : {{location.location_name}}
+      <!--{{ "_LOCATION_LBL" | translate }} : {{location.name}}-->
       <ion-segment [(ngModel)]="location.h1" color="secondary">
         <ion-segment-button value="seg_info" (click)="getSummaryByLocation(location.location_GUID)">
           {{"_INFO_LBL" | translate }}
         </ion-segment-button>
-              <!--<ion-segment-button value="seg_harvest" (click)="getHarvestedHistory(location.location_name)">-->
-        <ion-segment-button value="seg_harvest" (click)="getHarvestedHistory(location.name)">
+        <ion-segment-button value="seg_harvest" (click)="getHarvestedHistory(location.location_name)">
+          <!--<ion-segment-button value="seg_harvest" (click)="getHarvestedHistory(location.name)">-->
           {{"_HARVEST_LBL" | translate }}
         </ion-segment-button>
-               <ion-segment-button value="seg_load" (click)="getDataByLocation(location.location_GUID);getLoadedHistory(location.name)">
-        <!--<ion-segment-button value="seg_load" (click)="getDataByLocation(location.location_GUID);getLoadedHistory(location.location_name)">-->
+        <!--<ion-segment-button value="seg_load" (click)="getDataByLocation(location.location_GUID);getLoadedHistory(location.name)">-->
+        <ion-segment-button value="seg_load" (click)="getDataByLocation(location.location_GUID);getLoadedHistory(location.location_name)">
           {{"_LOAD_LBL" | translate }}
         </ion-segment-button>
       </ion-segment>
@@ -40,8 +40,8 @@
             </ion-item>
             <button type="submit" ion-button full [disabled]="!harvestAuthForm.valid">{{ "_SUBMIT_BTN" | translate }}</button>
           </form>
-                  <button full ion-button (click)="location.h2 = !location.h2;getHarvestedHistory(location.name)">{{ "_HARVEST_HISTORY_BTN" | translate }}</button>
-          <!--<button full ion-button (click)="location.h2 = !location.h2;getHarvestedHistory(location.location_name)">{{ "_HARVEST_HISTORY_BTN" | translate }}</button>-->
+          <!--<button full ion-button (click)="location.h2 = !location.h2;getHarvestedHistory(location.name)">{{ "_HARVEST_HISTORY_BTN" | translate }}</button>-->
+          <button full ion-button (click)="location.h2 = !location.h2;getHarvestedHistory(location.location_name)">{{ "_HARVEST_HISTORY_BTN" | translate }}</button>
         </ion-card-content>
 
         <ion-card [hidden]="location.h2">
@@ -91,15 +91,15 @@
             <ion-item>
               <ion-label>{{"_VEHICLE_NO_LBL" | translate}}</ion-label>
               <ion-select formControlName="vehicleSelect" [(ngModel)]="vehicleSelect" interface="popover" placeholder='{{"_SELECT_VEHICLE_HINT" | translate}}'>
-                             <ion-option *ngFor="let vehicle of vehicleFromDB" value={{vehicle.vehicle_GUID}}>{{vehicle.registration_no}}</ion-option>
-                <!--<ion-option *ngFor="let vehicle of vehicleFromDB" value={{vehicle.vehicle_GUID}}>{{vehicle.vehicle_no}}</ion-option>-->
+                <!--<ion-option *ngFor="let vehicle of vehicleFromDB" value={{vehicle.vehicle_GUID}}>{{vehicle.registration_no}}</ion-option>-->
+                <ion-option *ngFor="let vehicle of vehicleFromDB" value={{vehicle.vehicle_GUID}}>{{vehicle.vehicle_no}}</ion-option>
               </ion-select>
             </ion-item>
             <ion-item>
               <ion-label>{{"_DRIVER_LBL" | translate}}</ion-label>
               <ion-select formControlName="driverSelect" [(ngModel)]="driverSelect" interface="popover" placeholder='{{"_SELECT_DRIVER_HINT" | translate}}'>
-                              <ion-option *ngFor="let driver of driverFromDB" value={{driver.driver_GUID}}>{{driver.fullname}}</ion-option>
-                <!--<ion-option *ngFor="let driver of driverFromDB" value={{driver.driver_GUID}}>{{driver.driver_name}}</ion-option>-->
+                <!--<ion-option *ngFor="let driver of driverFromDB" value={{driver.driver_GUID}}>{{driver.fullname}}</ion-option>-->
+                <ion-option *ngFor="let driver of driverFromDB" value={{driver.driver_GUID}}>{{driver.driver_name}}</ion-option>
               </ion-select>
             </ion-item>
             <ion-item>
@@ -108,8 +108,8 @@
             </ion-item>
             <button type="submit" ion-button full [disabled]="!loadAuthForm.valid">{{ "_SUBMIT_BTN" | translate }}</button>
           </form>
-                    <button full ion-button (click)="location.h3 = !location.h3;getLoadedHistory(location.name)">{{ "_LOADED_HISTORY_BTN" | translate }}</button>
-          <!--<button full ion-button (click)="location.h3 = !location.h3;getLoadedHistory(location.location_name)">{{ "_LOADED_HISTORY_BTN" | translate }}</button>-->
+          <!--<button full ion-button (click)="location.h3 = !location.h3;getLoadedHistory(location.name)">{{ "_LOADED_HISTORY_BTN" | translate }}</button>-->
+          <button full ion-button (click)="location.h3 = !location.h3;getLoadedHistory(location.location_name)">{{ "_LOADED_HISTORY_BTN" | translate }}</button>
         </ion-card-content>
         <ion-card [hidden]="location.h3">
           <ion-card-header>

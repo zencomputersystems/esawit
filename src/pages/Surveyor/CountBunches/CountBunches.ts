@@ -38,11 +38,11 @@ export class CountBunchesPage {
         this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
         // console.log(this.UserGUID);
     //-----------------------------------------Web Design Purpose------------------------------------
-        // this.locationListFromDb = this.myCloud.getUserLocationsFromSQLite();
-        		var url = constants.DREAMFACTORY_TABLE_URL + "/active_users_location_view?filter=user_GUID=" + this.UserGUID + "&api_key=" + constants.DREAMFACTORY_API_KEY;
-		this.http.get(url).map(res => res.json()).subscribe(data => {
-			 this.locationListFromDb = data["resource"];
-        });
+        this.locationListFromDb = this.myCloud.getUserLocationsFromSQLite();
+        // 		var url = constants.DREAMFACTORY_TABLE_URL + "/active_users_location_view?filter=user_GUID=" + this.UserGUID + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+		// this.http.get(url).map(res => res.json()).subscribe(data => {
+		// 	 this.locationListFromDb = data["resource"];
+        // });
             //-----------------------------------------Web Design Purpose------------------------------------
 
         this.getMonths();
