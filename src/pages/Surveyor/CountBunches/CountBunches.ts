@@ -31,19 +31,19 @@ export class CountBunchesPage {
     constructor(private myCloud: StorageService, private network: Network, public actionsheetCtrl: ActionSheetController, private storage: Storage, public global: SharedFunctions,
         public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public fb: FormBuilder, public navParams: NavParams, public alertCtrl: AlertController) {
         this.authForm = fb.group({
-            'bunchCount': [null, Validators.compose([Validators.pattern('[0-9]*'), Validators.required])],
+            'bunchCount': [null, Validators.compose([Validators.pattern('^((?!(0))[0-9])$'), Validators.required])],
             'monthSelect': [null, Validators.compose([Validators.required])],
             'locationSelect': [null, Validators.compose([Validators.required])],
         })
         this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
         // console.log(this.UserGUID);
-    //-----------------------------------------Web Design Purpose------------------------------------
+        //-----------------------------------------Web Design Purpose------------------------------------
         this.locationListFromDb = this.myCloud.getUserLocationsFromSQLite();
         // 		var url = constants.DREAMFACTORY_TABLE_URL + "/active_users_location_view?filter=user_GUID=" + this.UserGUID + "&api_key=" + constants.DREAMFACTORY_API_KEY;
-		// this.http.get(url).map(res => res.json()).subscribe(data => {
-		// 	 this.locationListFromDb = data["resource"];
+        // this.http.get(url).map(res => res.json()).subscribe(data => {
+        // 	 this.locationListFromDb = data["resource"];
         // });
-            //-----------------------------------------Web Design Purpose------------------------------------
+        //-----------------------------------------Web Design Purpose------------------------------------
 
         this.getMonths();
         this.currentYear = new Date().getFullYear();
@@ -51,11 +51,11 @@ export class CountBunchesPage {
 
     ionViewDidEnter() {
         this.ifConnect = this.network.onConnect().subscribe(data => {
-            alert('Network exists. Saving data to Cloud');
+            // alert('Network exists. Saving data to Cloud');
             this.myCloud.saveSurveyToCloudFromSQLite();
             // alert(data.type);
         }, error => console.error(error));
-        }
+    }
 
     ionViewWillLeave() {
         this.ifConnect.unsubscribe();
@@ -65,9 +65,17 @@ export class CountBunchesPage {
 
     getMonths() {
         var url = "assets/Surveyor/Months.json";
-        console.log(url);
         this.http.get(url).map(res => res.json()).subscribe(data => {
             this.monthsFromStorage = data["MonthsList"];
+            var month = (new Date().getMonth() + 1)
+            var mark = 0;
+            this.monthsFromStorage.forEach(function (item, index, object) {
+                if (parseInt(item.value) < month) {
+                    mark++;
+                }
+            }
+            );
+            this.monthsFromStorage.splice(0, mark);
         });
     }
 
@@ -83,11 +91,11 @@ export class CountBunchesPage {
         this.surveyModel.year = this.currentYear;
         this.surveyModel.updated_ts = this.surveyModel.created_ts = this.global.getStringTimeStamp();
         if (this.network.type == "none") {
-            alert('No Network. Saving data to SQLite');
+            // alert('No Network. Saving data to SQLite');
             this.global.showConfirm('sqlite', '1', this.surveyModel);
         }
         else {
-            alert('Network exists. Saving data to Cloud');
+            // alert('Network exists. Saving data to Cloud');
             this.global.showConfirm('cloud', constants.DREAMFACTORY_TABLE_URL + '/transact_survey', this.surveyModel.toJson(true));
         }
         this.authForm.reset();

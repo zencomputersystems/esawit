@@ -25,13 +25,13 @@
     </ion-card-header>
     <div [ngSwitch]="location.h1">
 
-      <ion-card *ngSwitchDefault>
+      <ion-card *ngSwitchCase="'seg_info'">
         <ion-label>{{ "_TOTAL_HARVESTED_LBL" | translate }}: {{totalHarvested}}</ion-label>
         <ion-label>{{ "_LOADED_LBL" | translate }} : {{totalLoaded}}</ion-label>
         <ion-label>{{ "_BALANCE_LBL" | translate }} : {{balanceHarvested}}</ion-label>
       </ion-card>
 
-      <ion-card *ngSwitchCase="'seg_harvest'">
+      <ion-card *ngSwitchDefault >
         <ion-card-content>
           <form [formGroup]="harvestAuthForm" (ngSubmit)="submitHarvestForm(harvestAuthForm.value,location.location_GUID,location.location_name)">
             <ion-item>

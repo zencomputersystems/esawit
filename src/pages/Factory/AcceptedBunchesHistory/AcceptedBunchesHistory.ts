@@ -35,12 +35,12 @@ export class AcceptedBunchesHistoryPage {
     //-----------------------Offline Sync---------------------------
     historyDataInitializer() {
         if (this.network.type == "none") {
-            alert('No Network. Getting data from SQLite');
+            // alert('No Network. Getting data from SQLite');
             this.acceptedBunchesHistoryData = this.myCloud.getUnloadHistoryFromSQLite();
             this.localHistoryData = this.myCloud.getUnloadFromSQLite();
         }
         else {
-            alert('Network exists. Getting data from Cloud');
+            // alert('Network exists. Getting data from Cloud');
             this.myCloud.syncUnloadHistoryCloudToSQLite();
 
             var url = constants.DREAMFACTORY_TABLE_URL + "/transact_unloading_view?filter=user_GUID=" + this.UserGUID + "&limit=20&api_key=" + constants.DREAMFACTORY_API_KEY;

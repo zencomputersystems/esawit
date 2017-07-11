@@ -30,7 +30,7 @@ export class AcceptBunchesPage {
     constructor(private myCloud: StorageService, private network: Network, public actionsheetCtrl: ActionSheetController, public global: SharedFunctions,
         public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public fb: FormBuilder, public navParams: NavParams, public alertCtrl: AlertController) {
         this.authForm = fb.group({
-            'bunchCount': [null, Validators.compose([Validators.pattern('[0-9]*'), Validators.required])],
+            'bunchCount': [null, Validators.compose([Validators.pattern('^((?!(0))[0-9])$'), Validators.required])],
             'driverSelect': [null, Validators.compose([Validators.required])],
             'vehicleSelect': [null, Validators.compose([Validators.required])],
             'locationSelect': [null, Validators.compose([Validators.required])],
@@ -53,11 +53,11 @@ export class AcceptBunchesPage {
         this.factoryModel.bunch_count = value.bunchCount;
         this.factoryModel.updated_ts = this.factoryModel.created_ts = this.global.getStringTimeStamp();
         if (this.network.type == "none") {
-            alert('No Network. Saving data to SQLite');
+            // alert('No Network. Saving data to SQLite');
             this.global.showConfirm('sqlite', '4', this.factoryModel);
         }
         else {
-            alert('Network exists. Saving data to Cloud');
+            // alert('Network exists. Saving data to Cloud');
             this.global.showConfirm('cloud', constants.DREAMFACTORY_TABLE_URL + '/transact_unloading', this.factoryModel.toJson(true));
         }
         this.authForm.reset();
@@ -66,7 +66,7 @@ export class AcceptBunchesPage {
 
     ionViewDidEnter() {
         this.ifConnect = this.network.onConnect().subscribe(data => {
-            alert('Network exists. Saving data to Cloud');
+            // alert('Network exists. Saving data to Cloud');
             this.myCloud.saveUnloadToCloudFromSQLite();
             // alert(data.type);
         }, error => console.error(error));

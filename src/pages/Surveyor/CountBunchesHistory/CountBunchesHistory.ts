@@ -31,12 +31,12 @@ export class CountBunchesHistoryPage {
     //-----------------------Offline Sync---------------------------
     historyDataInitializer() {
         if (this.network.type == "none") {
-            alert('No Network. Getting data from SQLite');
+            // alert('No Network. Getting data from SQLite');
             this.countHistoryData = this.myCloud.getSurveyHistoryFromSQLite();
             this.localHistoryData = this.myCloud.getSurveyFromSQLite();
         }
         else {
-            alert('Network exists. Getting data from Cloud');
+            // alert('Network exists. Getting data from Cloud');
             this.myCloud.syncHistoryCloudToSQLite();
 
             var url = constants.DREAMFACTORY_TABLE_URL + "/transact_survey_view?filter=user_GUID=" + localStorage.getItem('loggedIn_user_GUID') + "&limit=20&api_key=" + constants.DREAMFACTORY_API_KEY;

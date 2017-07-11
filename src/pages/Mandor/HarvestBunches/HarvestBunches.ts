@@ -37,10 +37,10 @@ export class HarvestBunchesPage {
         public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public fb: FormBuilder, public navParams: NavParams, public alertCtrl: AlertController) {
 
         this.harvestAuthForm = fb.group({
-            'harvestedBunchCount': [null, Validators.compose([Validators.pattern('[0-9]*'), Validators.required])]
+            'harvestedBunchCount': [null, Validators.compose([Validators.pattern('^((?!(0))[0-9])$'), Validators.required])]
         });
         this.loadAuthForm = fb.group({
-            'loadedBunchCount': [null, Validators.compose([Validators.pattern('[0-9]*'), Validators.required])],
+            'loadedBunchCount': [null, Validators.compose([Validators.pattern('^((?!(0))[0-9])$'), Validators.required])],
             'driverSelect': [null, Validators.compose([Validators.required])],
             'vehicleSelect': [null, Validators.compose([Validators.required])]
         });
@@ -75,8 +75,8 @@ export class HarvestBunchesPage {
 
     getHarvestedHistory(locationSelected: any) {
         if (this.network.type == "none") {
-
             this.harvestedHistoryData = this.myCloud.getHarvestHistoryFromSQLite(locationSelected);
+            this.localHarvestHistory = this.myCloud.getHarvestFromSQLite(locationSelected);
         } else {
             var url = constants.DREAMFACTORY_TABLE_URL + "/transact_harvest_view?filter=(location_name=" + locationSelected + ")AND(user_GUID=" + this.UserGUID + ")&limit=20&api_key=" + constants.DREAMFACTORY_API_KEY;
             this.http.get(url).map(res => res.json()).subscribe(data => {
@@ -181,11 +181,11 @@ export class HarvestBunchesPage {
         this.harvestModel.updated_ts = this.harvestModel.created_ts = this.global.getStringTimeStamp();
         this.harvestModel.user_GUID = this.harvestModel.createdby_GUID = this.harvestModel.updatedby_GUID = this.UserGUID;
         if (this.network.type == "none") {
-            alert('No Network. Saving data to SQLite');
+            // alert('No Network. Saving data to SQLite');
             this.global.showConfirm('sqlite', '2', this.harvestModel);
         }
         else {
-            alert('Network exists. Saving data to Cloud');
+            // alert('Network exists. Saving data to Cloud');
             this.global.showConfirm('cloud', constants.DREAMFACTORY_TABLE_URL + '/transact_harvest', this.harvestModel.toJson(true));
         }
         this.harvestAuthForm.reset();
@@ -200,11 +200,11 @@ export class HarvestBunchesPage {
         this.loadModel.createdby_GUID = this.loadModel.updatedby_GUID = this.loadModel.user_GUID = this.UserGUID;
         this.loadModel.created_ts = this.loadModel.updated_ts = this.global.getStringTimeStamp();
         if (this.network.type == "none") {
-            alert('No Network. Saving data to SQLite');
+            // alert('No Network. Saving data to SQLite');
             this.global.showConfirm('sqlite', '3', this.loadModel);
         }
         else {
-            alert('Network exists. Saving data to Cloud');
+            // alert('Network exists. Saving data to Cloud');
             this.global.showConfirm('cloud', constants.DREAMFACTORY_TABLE_URL + '/transact_loading', this.loadModel.toJson(true));
         }
         this.loadAuthForm.reset();
