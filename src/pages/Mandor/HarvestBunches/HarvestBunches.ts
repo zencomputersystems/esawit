@@ -187,6 +187,8 @@ export class HarvestBunchesPage {
         else {
             // alert('Network exists. Saving data to Cloud');
             this.global.showConfirm('cloud', constants.DREAMFACTORY_TABLE_URL + '/transact_harvest', this.harvestModel.toJson(true));
+            this.myCloud.syncHarvestHistoryCloudToSQLite();
+
         }
         this.harvestAuthForm.reset();
 
@@ -206,6 +208,8 @@ export class HarvestBunchesPage {
         else {
             // alert('Network exists. Saving data to Cloud');
             this.global.showConfirm('cloud', constants.DREAMFACTORY_TABLE_URL + '/transact_loading', this.loadModel.toJson(true));
+            this.myCloud.syncLoadHistoryCloudToSQLite();
+
         }
         this.loadAuthForm.reset();
 

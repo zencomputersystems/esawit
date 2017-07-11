@@ -53,6 +53,7 @@ export class CountBunchesPage {
         this.ifConnect = this.network.onConnect().subscribe(data => {
             // alert('Network exists. Saving data to Cloud');
             this.myCloud.saveSurveyToCloudFromSQLite();
+            this.myCloud.syncHistoryCloudToSQLite();
             // alert(data.type);
         }, error => console.error(error));
     }
@@ -60,9 +61,6 @@ export class CountBunchesPage {
     ionViewWillLeave() {
         this.ifConnect.unsubscribe();
     }
-
-
-
     getMonths() {
         var url = "assets/Surveyor/Months.json";
         this.http.get(url).map(res => res.json()).subscribe(data => {
@@ -78,7 +76,6 @@ export class CountBunchesPage {
             this.monthsFromStorage.splice(0, mark);
         });
     }
-
     onLink(url: string) {
         window.open(url);
     }
@@ -97,16 +94,9 @@ export class CountBunchesPage {
         else {
             // alert('Network exists. Saving data to Cloud');
             this.global.showConfirm('cloud', constants.DREAMFACTORY_TABLE_URL + '/transact_survey', this.surveyModel.toJson(true));
-        }
+            this.myCloud.syncHistoryCloudToSQLite();       
+     }
         this.authForm.reset();
     }
 }
-
-
-
-
-
-
-
-
 

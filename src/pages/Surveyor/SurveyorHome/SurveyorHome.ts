@@ -17,7 +17,7 @@ export class SurveyorHomePage {
     constructor(private network: Network, private myCloud: StorageService, public navCtrl: NavController, public platform: Platform, public actionsheetCtrl: ActionSheetController) {
         //   alert('Modified');
         //-----------------------Offline Sync---------------------------
-                this.myCloud.getCloudMasterLocations();
+                // this.myCloud.getCloudMasterLocations();
         this.myCloud.getUserLocationListFromCloud();
         this.myCloud.syncHistoryCloudToSQLite();
         //-----------------------End Offline Sync---------------------------

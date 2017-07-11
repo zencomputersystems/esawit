@@ -59,7 +59,9 @@ export class AcceptBunchesPage {
         else {
             // alert('Network exists. Saving data to Cloud');
             this.global.showConfirm('cloud', constants.DREAMFACTORY_TABLE_URL + '/transact_unloading', this.factoryModel.toJson(true));
-        }
+                this.myCloud.syncUnloadHistoryCloudToSQLite();
+  
+      }
         this.authForm.reset();
 
     }
@@ -68,6 +70,8 @@ export class AcceptBunchesPage {
         this.ifConnect = this.network.onConnect().subscribe(data => {
             // alert('Network exists. Saving data to Cloud');
             this.myCloud.saveUnloadToCloudFromSQLite();
+                        this.myCloud.syncUnloadHistoryCloudToSQLite();
+
             // alert(data.type);
         }, error => console.error(error));
     }
