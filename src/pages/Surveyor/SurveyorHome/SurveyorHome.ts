@@ -6,6 +6,7 @@ import { SharedFunctions } from '../../../providers/Shared/Functions';
 import { StorageService } from '../../../providers/Db/StorageFunctions';
 import { Network } from '@ionic-native/network';
 import { Subscription } from 'rxjs/Subscription';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'page-home',
@@ -14,7 +15,11 @@ import { Subscription } from 'rxjs/Subscription';
 export class SurveyorHomePage {
     ifConnect: Subscription;
 
-    constructor(private network: Network, private myCloud: StorageService, public navCtrl: NavController, public platform: Platform, public actionsheetCtrl: ActionSheetController) {
+    constructor(private network: Network, private myCloud: StorageService, public navCtrl: NavController, public platform: Platform, public actionsheetCtrl: ActionSheetController, public translate: TranslateService, public translateService: TranslateService) {
+        
+        this.translateToEnglish();
+        this.translateToMalay();
+
         //   alert('Modified');
         //-----------------------Offline Sync---------------------------
                 this.myCloud.getCloudMasterLocations();
@@ -51,4 +56,25 @@ export class SurveyorHomePage {
         this.navCtrl.push(CountBunchesHistoryPage, {});
 
     }
+
+    //---------------------header button start---------------------//
+    public translateToEnglishClicked: boolean = true; //Whatever you want to initialise it as
+    public translateToMalayClicked: boolean = false; //Whatever you want to initialise it as
+
+    public translateToEnglish() {
+        this.translateService.use('en');
+        this.translateToMalayClicked = !this.translateToMalayClicked;
+        this.translateToEnglishClicked = !this.translateToEnglishClicked;
+        console.log("ms : " + this.translateToMalayClicked);
+        console.log("en : " + this.translateToEnglishClicked);
+    }
+
+    public translateToMalay() {
+        this.translateService.use('ms');
+        this.translateToEnglishClicked = !this.translateToEnglishClicked;
+        this.translateToMalayClicked = !this.translateToMalayClicked;
+        console.log("ms : " + this.translateToMalayClicked);
+        console.log("en : " + this.translateToEnglishClicked);
+    }
+    //---------------------header button end---------------------//
 }

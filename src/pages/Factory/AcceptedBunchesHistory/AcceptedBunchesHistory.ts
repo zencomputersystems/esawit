@@ -9,6 +9,7 @@ import * as constants from '../../../config/constants';
 import { Network } from '@ionic-native/network';
 import { Subscription } from 'rxjs/Subscription';
 import { SharedFunctions } from '../../../providers/Shared/Functions';
+import { TranslateService } from '@ngx-translate/core';
 
 // import { MainMenu } from "../../../providers/MainMenu";
 
@@ -21,7 +22,11 @@ export class AcceptedBunchesHistoryPage {
     acceptedBunchesHistoryData: any; ifConnect: Subscription;
     localHistoryData: any;
     //  private mainMenu: MainMenu,
-    constructor(public global: SharedFunctions, private myCloud: StorageService, private network: Network, public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, public http: Http, public platform: Platform, public actionsheetCtrl: ActionSheetController) {
+    constructor(public global: SharedFunctions, private myCloud: StorageService, private network: Network, public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, public http: Http, public platform: Platform, public actionsheetCtrl: ActionSheetController, public translate: TranslateService, public translateService: TranslateService) {
+        
+        this.translateToEnglish();
+        this.translateToMalay();
+
         this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
     //-----------------------------------------Web Design Purpose------------------------------------
         // this.historyDataInitializer();
@@ -58,6 +63,27 @@ export class AcceptedBunchesHistoryPage {
         this.ifConnect.unsubscribe();
     }
     //-----------------------End Offline Sync---------------------------
+
+    //---------------------header button start---------------------//
+    public translateToEnglishClicked: boolean = true; //Whatever you want to initialise it as
+    public translateToMalayClicked: boolean = false; //Whatever you want to initialise it as
+
+    public translateToEnglish() {
+        this.translateService.use('en');
+        this.translateToMalayClicked = !this.translateToMalayClicked;
+        this.translateToEnglishClicked = !this.translateToEnglishClicked;
+        console.log("ms : " + this.translateToMalayClicked);
+        console.log("en : " + this.translateToEnglishClicked);
+    }
+
+    public translateToMalay() {
+        this.translateService.use('ms');
+        this.translateToEnglishClicked = !this.translateToEnglishClicked;
+        this.translateToMalayClicked = !this.translateToMalayClicked;
+        console.log("ms : " + this.translateToMalayClicked);
+        console.log("en : " + this.translateToEnglishClicked);
+    }
+    //---------------------header button end---------------------//
 
 
 }

@@ -1,230 +1,180 @@
 ﻿<ion-header>
-  <ion-navbar>
-    <ion-title>{{ "_TITLE" | translate }} - {{ "_HARVEST_BUNCHES_HEADER" | translate }}</ion-title>
+  <ion-navbar class="bgColor-darkBlue">
+    <ion-avatar class="logoSize" item-start>
+      <img src="../assets/img/eSawitLogo.png">
+    </ion-avatar>
+
+    <div class="headerInfo">
+
+      <ion-fab top right edge class="topZero rightZero">
+        <button ion-fab mini class="btnClear"><ion-icon name="settings"></ion-icon></button>
+        <ion-fab-list class="settingBtnFab" side="left">
+          <button ion-fab class="bgColor-green" [class.menuHide]="translateToMalayClicked" (click)="translateToMalay()">BM</button>
+          <button ion-fab class="bgColor-green" [class.menuHide]="translateToEnglishClicked" (click)="translateToEnglish()">EN</button>
+        </ion-fab-list>
+      </ion-fab>
+
+    </div>
+
   </ion-navbar>
 </ion-header>
 
 <ion-content class="bgColor-lightGrey">
 
-  <div class="headerBox bgColor-darkBlue">
+  <div class="headerBox bgColor-gradOrange">
     <div class="headerBoxTitle2">{{ "_COUNT_BUNCHES_HISTORY_HEADER" | translate }}</div>
   </div>
 
+  <div class="contentBox">
+    <div class="MandorTitle fontColor-brown">{{ "_LOCATION_LIST_LBL" | translate }}</div>
 
-<div class="contentBox">
-  <ion-card class="cards-list-demo" *ngFor="let location of locationFromDB">
-    <ion-card-header class="bgColor-green fontColor-white">
-      <!--{{ "_LOCATION_LBL" | translate }} : {{location.location_name}}-->
-      {{ "_LOCATION_LBL" | translate }} : {{location.name}}
-    </ion-card-header>
+    <ion-list>
+      <ion-item>
+        <ion-label>{{ "_LOCATION_LBL" | translate }}</ion-label>
+        <ion-select #ddLocation [(ngModel)]="locationID" (ionChange)="LocationClick(locationID); getSummaryByLocation(locationID);">
+          <ion-option *ngFor="let location of locationFromDB" value={{location.location_GUID}} interface="popover">{{location.name}}</ion-option>
+        </ion-select>
+      </ion-item>
+    </ion-list>
 
-    <ion-segment [(ngModel)]="location.h1" color="secondary">
-      <ion-segment-button value="seg_info" (click)="getSummaryByLocation(location.location_GUID)">
-        {{"_INFO_LBL" | translate }}
-      </ion-segment-button>
-      <!--<ion-segment-button value="seg_harvest" (click)="getHarvestedHistory(location.location_name)">-->
-      <ion-segment-button value="seg_harvest" (click)="getHarvestedHistory(location.name)">
-        {{"_HARVEST_LBL" | translate }}
-      </ion-segment-button>
-      <ion-segment-button value="seg_load" (click)="getDataByLocation(location.location_GUID);getLoadedHistory(location.name)">
-        <!--<ion-segment-button value="seg_load" (click)="getDataByLocation(location.location_GUID);getLoadedHistory(location.location_name)">-->
-        {{"_LOAD_LBL" | translate }}
-      </ion-segment-button>
-    </ion-segment>
+    <!--<ion-fab class="locationBtn">
+      <button ion-fab color="danger" (click)="locationForm"><ion-icon name="pin"></ion-icon></button>
+    </ion-fab>-->
 
-    <div [ngSwitch]="location.h1">
+    <div class="posRelative" *ngFor="let location of locationFromDB; let i = index;">
 
-      <div *ngSwitchDefault>
-        <ion-item>
-          {{ "_TOTAL_HARVESTED_LBL" | translate }}
-          <ion-badge item-end>{{totalHarvested}}</ion-badge>
-        </ion-item>
-        <ion-item>
-          {{ "_LOADED_LBL" | translate }}
-          <ion-badge item-end>{{totalLoaded}}</ion-badge>
-        </ion-item>
-        <ion-item>
-          {{ "_BALANCE_LBL" | translate }}
-          <ion-badge item-end>{{balanceHarvested}}</ion-badge>
-        </ion-item>
+      <div class="harvestContent MandorListRow borderColor-lightGrey" *ngIf="LocationClicked == location.location_GUID">
+        <ion-segment [(ngModel)]="location.h1" color="earth">
+          <ion-segment-button value="seg_info" (click)="getSummaryByLocation(location.location_GUID)">
+            {{"_INFO_LBL" | translate }}
+          </ion-segment-button>
+          <ion-segment-button value="seg_harvest" (click)="getHarvestedHistory(location.name)">
+            {{"_HARVEST_LBL" | translate }}
+          </ion-segment-button>
+          <ion-segment-button value="seg_load" (click)="getDataByLocation(location.location_GUID);getLoadedHistory(location.name)">
+            {{"_LOAD_LBL" | translate }}
+          </ion-segment-button>
+        </ion-segment>
 
-        <!--<ion-label>{{ "_TOTAL_HARVESTED_LBL" | translate }}: {{totalHarvested}}</ion-label>
-        <ion-label>{{ "_LOADED_LBL" | translate }} : {{totalLoaded}}</ion-label>
-        <ion-label>{{ "_BALANCE_LBL" | translate }} : {{balanceHarvested}}</ion-label>-->
-      </div>
+        <div [ngSwitch]="location.h1">
 
-      <div *ngSwitchCase="'seg_harvest'">
-        <ion-card-content>
-          <form [formGroup]="harvestAuthForm" (ngSubmit)="submitHarvestForm(harvestAuthForm.value,location.location_GUID,location.location_name)">
-            <ion-item>
-              <ion-label floating>{{ "_TOTAL_BUNCHES_LBL" | translate }}</ion-label>
-              <ion-input formControlName="harvestedBunchCount" highlight-color="energized" type="text" value=""></ion-input>
-            </ion-item>
-            <button type="submit" ion-button full [disabled]="!harvestAuthForm.valid">{{ "_SUBMIT_BTN" | translate }}</button>
-          </form>
-          <button full ion-button (click)="location.h2 = !location.h2;getHarvestedHistory(location.name)">{{ "_HARVEST_HISTORY_BTN" | translate }}</button>
-          <!--<button full ion-button (click)="location.h2 = !location.h2;getHarvestedHistory(location.location_name)">{{ "_HARVEST_HISTORY_BTN" | translate }}</button>-->
-        </ion-card-content>
+          <div *ngSwitchDefault>
 
-        <ion-card [hidden]="location.h2">
-          <ion-card-header>
-            {{"_HARVESTED_BUNCHES_HISTORY_HEADER" | translate}}
-          </ion-card-header>
-          <ion-card-content>
-            <ion-list>
-              <h4>{{ "_LOCAL_DATA_HEADER" | translate }}</h4>
-              <!--<ion-list-header>
-                <ion-avatar item-left> <b>{{ "_S_NO_LBL" | translate }}</b> </ion-avatar>
-                <ion-avatar item-left> <b>{{ "_TOTAL_BUNCHES_LBL" | translate }}</b> </ion-avatar>
-                <ion-avatar item-right> <b>{{ "_HARVESTED_DATE_LBL" | translate }}</b> </ion-avatar>
-              </ion-list-header>-->
+            <div class="posRelative MandorListRow borderColor-lightGrey">
+              <div class="MandorListLabel">{{"_HARVESTED_LBL"| translate}}</div>
+              <div class="MandorListValue fontColor-green">{{totalHarvested}}</div>
+            </div>
+            <div class="posRelative MandorListRow borderColor-lightGrey">
+              <div class="MandorListLabel">{{"_LOADED_LBL2"| translate}}</div>
+              <div class="MandorListValue fontColor-green">{{totalLoaded}}</div>
+            </div>
+            <div class="posRelative MandorListRow borderColor-lightGrey">
+              <div class="MandorListLabel">{{"_BALANCE_LBL"| translate}}</div>
+              <div class="MandorListValue fontColor-green">{{balanceHarvested}}</div>
+            </div>
+          </div>
 
-              <!--<ion-item *ngFor="let history of localHarvestHistory; let i = index;">
-                <ion-avatar item-left>
-                  <button ion-button color="light"> {{i+1}} </button>
-                </ion-avatar>
-                <ion-avatar item-left>{{history .bunch_count}} </ion-avatar>
-                <ion-avatar item-right>{{history .created_ts}}</ion-avatar>
-              </ion-item>-->
+          <div *ngSwitchCase="'seg_harvest'">
 
-              <ion-card class="listItemCard" *ngFor="let history of localHarvestHistory; let i = index;">
-                <div class="listItemNo">
-                  <div class="litsItemNoValue bgColor-red fontColor-white">{{i+1}}</div>
-                </div>
-                <div class="listItemContent">
-                  <div class="listItemVehicle">
-                    <div class="listItemIcon">
-                      <ion-icon class="fontColor-purple" item-start name="calendar"></ion-icon>
+            <div class="popupForm posRelative">
+              <form [formGroup]="harvestAuthForm" (ngSubmit)="submitHarvestForm(harvestAuthForm.value,location.location_GUID,location.location_name)">
+                
+                <ion-item>
+                  <ion-label floating>{{'_TOTAL_BUNCHES_LBL' | translate }}</ion-label>
+                  <ion-input formControlName="harvestedBunchCount" type="text"></ion-input>
+                </ion-item>
+
+                <button class="formBtnCircle" type="submit" ion-button full [disabled]="!harvestAuthForm.valid">{{ "_SUBMIT_BTN" | translate }}</button>
+              </form>
+
+              <button class="historyBtn" full (click)="location.h2 = !location.h2;getHarvestedHistory(location.name)">{{ "_HARVEST_HISTORY_BTN" | translate }}</button>
+              </div>
+
+            <div [hidden]="location.h2">
+              <ion-card-content>
+
+                <ion-list>
+                  <div class="listItemCard" *ngFor="let history of harvestedHistoryData; let i = index;">
+                    <div class="harvestListItemNo">
+                      <div class="litsItemNoValue bgColor-green fontColor-white">{{i+1}}</div>
                     </div>
-                    <div class="listItemLabel fontColor-dark"><b>{{history .created_ts}}</b></div>
-                  </div>
-                </div>
-                <div class="listItemTotal">
-                  <div class="listItemValue fontColor-red">
-                    {{history .bunch_count}}
-                  </div>
-                </div>
-              </ion-card>
-
-            </ion-list>
-
-            <ion-list>
-              <h4>{{ "_ONLINE_DATA_HEADER" | translate }}</h4>
-              <!--<ion-list-header>
-                <ion-avatar item-left> <b>{{ "_S_NO_LBL" | translate }}</b> </ion-avatar>
-                <ion-avatar item-left> <b>{{ "_TOTAL_BUNCHES_LBL" | translate }}</b> </ion-avatar>
-                <ion-avatar item-right> <b>{{ "_HARVESTED_DATE_LBL" | translate }}</b> </ion-avatar>
-              </ion-list-header>-->
-              <!--<ion-item *ngFor="let history of harvestedHistoryData; let i = index;">
-                <ion-avatar item-left>
-                  <button ion-button color="light"> {{i+1}} </button>
-                </ion-avatar>
-                <ion-avatar item-left>{{history .bunch_count}} </ion-avatar>
-                <ion-avatar item-right>{{history .created_ts}}</ion-avatar>
-              </ion-item>-->
-
-              <ion-card class="listItemCard" *ngFor="let history of harvestedHistoryData; let i = index;">
-                <div class="listItemNo">
-                  <div class="litsItemNoValue bgColor-red fontColor-white">{{i+1}}</div>
-                </div>
-                <div class="listItemContent">
-                  <div class="listItemVehicle">
-                    <div class="listItemIcon">
-                      <ion-icon class="fontColor-purple" item-start name="calendar"></ion-icon>
+                    <div class="harvestListItemContent">
+                      <div class="listItemLabel fontColor-dark"><b>{{history .created_ts}}</b></div>
                     </div>
-                    <div class="listItemLabel fontColor-dark"><b>{{history .created_ts}}</b></div>
-                  </div>
-                </div>
-                <div class="listItemTotal">
-                  <div class="listItemValue fontColor-red">
-                    {{history .bunch_count}}
-                  </div>
-                </div>
-              </ion-card>
-
-            </ion-list>
-          </ion-card-content>
-        </ion-card>
-
-      </div>
-
-      <div *ngSwitchCase="'seg_load'">
-        <ion-card-content>
-          <form [formGroup]="loadAuthForm" (ngSubmit)="submitLoadForm(loadAuthForm.value,location.location_GUID)">
-            <ion-item>
-              <ion-label floating>{{"_VEHICLE_NO_LBL" | translate}}</ion-label>
-              <ion-select formControlName="vehicleSelect" [(ngModel)]="vehicleSelect" interface="popover">
-                <ion-option *ngFor="let vehicle of vehicleFromDB" value={{vehicle.vehicle_GUID}}>{{vehicle.registration_no}}</ion-option>
-                <!--<ion-option *ngFor="let vehicle of vehicleFromDB" value={{vehicle.vehicle_GUID}}>{{vehicle.vehicle_no}}</ion-option>-->
-              </ion-select>
-            </ion-item>
-            <ion-item>
-              <ion-label floating>{{"_DRIVER_LBL" | translate}}</ion-label>
-              <ion-select formControlName="driverSelect" [(ngModel)]="driverSelect" interface="popover">
-                <ion-option *ngFor="let driver of driverFromDB" value={{driver.driver_GUID}}>{{driver.fullname}}</ion-option>
-                <!--<ion-option *ngFor="let driver of driverFromDB" value={{driver.driver_GUID}}>{{driver.driver_name}}</ion-option>-->
-              </ion-select>
-            </ion-item>
-            <ion-item>
-              <ion-label floating>{{ "_TOTAL_BUNCHES_LBL" | translate }}</ion-label>
-              <ion-input formControlName="loadedBunchCount" highlight-color="energized" type="text" value=""></ion-input>
-            </ion-item>
-            <button type="submit" ion-button full [disabled]="!loadAuthForm.valid">{{ "_SUBMIT_BTN" | translate }}</button>
-          </form>
-          <button full ion-button (click)="location.h3 = !location.h3;getLoadedHistory(location.name)">{{ "_LOADED_HISTORY_BTN" | translate }}</button>
-          <!--<button full ion-button (click)="location.h3 = !location.h3;getLoadedHistory(location.location_name)">{{ "_LOADED_HISTORY_BTN" | translate }}</button>-->
-        </ion-card-content>
-        <div [hidden]="location.h3">
-          <ion-card-header>
-            {{"_BUNCHES_TRANSPORTED_HEADER" | translate}}
-          </ion-card-header>
-          <ion-card-content>
-            <ion-list>
-              <!--<ion-list-header>
-                <ion-avatar item-left> <b>{{ "_S_NO_LBL" | translate }}</b> </ion-avatar>
-                <ion-avatar item-left> <b>{{ "_VEHICLE_NO_LBL" | translate }}</b> </ion-avatar>
-                <ion-avatar item-left> <b>{{ "_TOTAL_BUNCHES_LBL" | translate }}</b> </ion-avatar>-->
-                <!--<ion-avatar item-right> <b>{{ "_HARVESTED_DATE_LBL" | translate }}</b> </ion-avatar>-->
-              <!--</ion-list-header>-->
-              <!--<ion-item *ngFor="let history of harvestedHistoryData; let i = index;">
-                <ion-avatar item-left>
-                  <button ion-button color="light"> {{i+1}} </button>
-                </ion-avatar>
-                <ion-avatar item-left>{{history .registration_no}} </ion-avatar>
-                <ion-avatar item-left>{{history .bunch_count}} </ion-avatar>
-                <ion-avatar item-right>{{history .created_ts}}</ion-avatar>
-              </ion-item>-->
-
-              <ion-card class="listItemCard" *ngFor="let history of harvestedHistoryData; let i = index;">
-                <div class="listItemNo">
-                  <div class="litsItemNoValue bgColor-red fontColor-white">{{i+1}}</div>
-                </div>
-                <div class="listItemContent">
-                  <div class="listItemVehicle">
-                    <div class="listItemIcon">
-                      <ion-icon class="fontColor-purple" item-start name="list-box"></ion-icon>
+                    <div class="harvestListItemTotal">
+                      <div class="harvestListItemValue fontColor-brown">
+                        {{history .bunch_count}}
+                      </div>
                     </div>
-                    <div class="listItemLabel fontColor-dark"><b>{{history .registration_no}}</b></div>
                   </div>
-                </div>
-                <div class="listItemTotal">
-                  <div class="listItemValue fontColor-red">
-                    {{history .bunch_count}}
+                </ion-list>
+
+              </ion-card-content>
+            </div>
+
+          </div>
+
+          <div *ngSwitchCase="'seg_load'">
+
+            <div class="popupForm posRelative">
+              <form [formGroup]="loadAuthForm" (ngSubmit)="submitLoadForm(loadAuthForm.value,location.location_GUID)">
+                
+                <ion-item>
+                  <ion-label floating>{{"_VEHICLE_NO_LBL" | translate}}</ion-label>
+                  <ion-select formControlName="vehicleSelect" [(ngModel)]="vehicleSelect" interface="popover">
+                    <ion-option *ngFor="let vehicle of vehicleFromDB" value={{vehicle.vehicle_GUID}}>{{vehicle.registration_no}}</ion-option>
+                    <!--<ion-option *ngFor="let vehicle of vehicleFromDB" value={{vehicle.vehicle_GUID}}>{{vehicle.vehicle_no}}</ion-option>-->
+                  </ion-select>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label floating>{{"_DRIVER_LBL" | translate}}</ion-label>
+                  <ion-select formControlName="driverSelect" [(ngModel)]="driverSelect" interface="popover">
+                    <ion-option *ngFor="let driver of driverFromDB" value={{driver.driver_GUID}}>{{driver.fullname}}</ion-option>
+                    <!--<ion-option *ngFor="let driver of driverFromDB" value={{driver.driver_GUID}}>{{driver.driver_name}}</ion-option>-->
+                  </ion-select>
+                </ion-item>
+                
+                <ion-item>
+                  <ion-label floating>{{'_TOTAL_BUNCHES_LBL' | translate }}</ion-label>
+                  <ion-input formControlName="loadedBunchCount" type="text"></ion-input>
+                </ion-item>
+
+                <button class="formBtnCircle" type="submit" ion-button full [disabled]="!loadAuthForm.valid">{{ "_SUBMIT_BTN" | translate }}</button>
+              </form>
+              <button class="historyBtn" (click)="location.h3 = !location.h3;getLoadedHistory(location.name)">{{ "_LOADED_HISTORY_BTN" | translate }}</button>
+              <!--<button full ion-button (click)="location.h3 = !location.h3;getLoadedHistory(location.location_name)">{{ "_LOADED_HISTORY_BTN" | translate }}</button>-->
+            </div>
+
+            <div [hidden]="location.h3">
+              <ion-card-content>
+
+                <ion-list>
+                  <div class="listItemCard" *ngFor="let history of harvestedHistoryData; let i = index;">
+                    <div class="harvestListItemNo">
+                      <div class="litsItemNoValue bgColor-purple fontColor-white">{{i+1}}</div>
+                    </div>
+                    <div class="harvestListItemContent">
+                      <div class="listItemLabel fontColor-dark"><b>{{history .registration_no}}</b></div>
+                    </div>
+                    <div class="harvestListItemTotal">
+                      <div class="harvestListItemValue fontColor-brown">
+                        {{history .bunch_count}}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </ion-card>
+                </ion-list>
+                <ion-list>
 
-            </ion-list>
+                </ion-list>
 
-          </ion-card-content>
+              </ion-card-content>
+            </div>
+          </div>
         </div>
 
       </div>
-
     </div>
-    <ion-list>
-    </ion-list>
-  </ion-card>
-</div>
+  </div>
 
 </ion-content>

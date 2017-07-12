@@ -1,22 +1,47 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title> {{ "_TITLE" | translate }}</ion-title>
-    <ion-buttons end>
-      <button ion-right ion-button icon-only>
-        <ion-icon name='menu'></ion-icon>
-      </button>
-    </ion-buttons>
+  <ion-navbar class="bgColor-darkBlue">
+    <ion-avatar class="logoSize" item-start>
+      <img src="../assets/img/eSawitLogo.png">
+    </ion-avatar>
+
+    <div class="headerInfo">
+
+      <ion-fab top right edge class="topZero rightZero">
+        <button ion-fab mini class="btnClear"><ion-icon name="settings"></ion-icon></button>
+        <ion-fab-list class="settingBtnFab" side="left">
+          <button ion-fab class="bgColor-green" [class.menuHide]="translateToMalayClicked" (click)="translateToMalay()">BM</button>
+          <button ion-fab class="bgColor-green" [class.menuHide]="translateToEnglishClicked" (click)="translateToEnglish()">EN</button>
+        </ion-fab-list>
+      </ion-fab>
+
+    </div>
+
   </ion-navbar>
 </ion-header>
 
-<ion-content class="bgColor-lightGrey">
+<ion-content class="bgColor-gradOrange">
 
-  <div class="headerBox bgColor-gradOrange">
-    <div class="headerBoxTitle1">Deliver</div>
+  <div class="headerBox2">
+    <div class="headerBoxTitle1">{{"_DELIVER_LBL" | translate}}</div>
     <div class="headerBoxText">Lorem ipsum dolor sit amet</div>
   </div>
 
-  <ion-card class="cardBox posRelative" (click)="NewCount()">
+
+  <div class="cardBox2 posRelative" (click)="NewCount()">
+    <div class="btnMainIcon2">
+      <ion-icon name="calculator" class="fontColor-white"></ion-icon>
+    </div>
+    <div class="btnMainTitle2 fontColor-white">{{"_COUNT_BUNCHES_BTN" | translate}}</div>
+  </div>
+
+  <div class="cardBox2 posRelative" (click)="GetCountHistory()">
+    <div class="btnMainIcon2">
+      <ion-icon name="calendar" class="fontColor-white"></ion-icon>
+    </div>
+    <div class="btnMainTitle2 fontColor-white">{{"_COUNT_HISTORY_BTN" | translate}}</div>
+  </div>
+
+  <!--<ion-card class="cardBox posRelative" (click)="NewCount()">
     <ion-item>
       <div class="btnMainIcon bgColor-green fontColor-white">
         <ion-icon name="calculator" class="hdIcon"></ion-icon>
@@ -34,7 +59,7 @@
       <div class="btnMainTitle fontColor-grey">{{ "_COUNT_HISTORY_BTN" | translate }}</div>
       <ion-icon class="fontColor-grey" item-end name="arrow-forward"></ion-icon>
     </ion-item>
-  </ion-card>
+  </ion-card>-->
 
 
   <!--<button ion-button color="dark" (click)="NewCount()">

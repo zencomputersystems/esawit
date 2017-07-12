@@ -1,13 +1,24 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title> {{ "_TITLE" | translate }}</ion-title>
-    <ion-buttons end>
-      <button ion-right ion-button icon-only (click)="openGlobalMenu()">
-        <ion-icon name='menu'></ion-icon>
-      </button>
-    </ion-buttons>
+  <ion-navbar class="bgColor-darkBlue">
+    <ion-avatar class="logoSize" item-start>
+      <img src="../assets/img/eSawitLogo.png">
+    </ion-avatar>
+
+    <div class="headerInfo">
+
+      <ion-fab top right edge class="topZero rightZero">
+        <button ion-fab mini class="btnClear"><ion-icon name="settings"></ion-icon></button>
+        <ion-fab-list class="settingBtnFab" side="left">
+          <button ion-fab class="bgColor-green" [class.menuHide]="translateToMalayClicked" (click)="translateToMalay()">BM</button>
+          <button ion-fab class="bgColor-green" [class.menuHide]="translateToEnglishClicked" (click)="translateToEnglish()">EN</button>
+        </ion-fab-list>
+      </ion-fab>
+
+    </div>
+
   </ion-navbar>
 </ion-header>
+
 <ion-content class="bgColor-lightGrey">
 
   <div class="headerBox bgColor-gradOrange">
