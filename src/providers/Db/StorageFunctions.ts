@@ -772,15 +772,13 @@ export class StorageService {
 		// alert('Inside Get From Lite Function');
 		var harvestItems = [];
 		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
-			var query ="select B.location_name,A.bunch_count,A.created_ts from transact_harvest AS A INNER JOIN master_location AS B where A.location_GUID = B.location_GUID AND B.location_name='"+locationSelected+"')";
-
-			// var query = "select B.location_name,A.bunch_count,A.created_ts from transact_harvest AS A INNER JOIN master_location AS B where A.location_GUID = B.location_GUID )";
-			alert(query)
+			var query = "select B.location_name,A.bunch_count,A.created_ts from transact_harvest AS A INNER JOIN user_location AS B on A.location_GUID = B.location_GUID where B.location_name='" + locationSelected + "'";
+			// alert(query)
 			db.executeSql(query, {}).then((data) => {
 				// alert('Selecting Inserted list from Sqlite');
-				alert(query + '   ' + data.rows.length)
+				// alert(query + '   ' + data.rows.length)
 				if (data.rows.length > 0) {
-					alert(query)
+					// alert(query)
 					// alert(data.rows.length);
 					for (var i = 0; i < data.rows.length; i++) {
 						// alert('Record '+(i+1)+" :"+data.rows.item(i).location_name);
@@ -800,7 +798,8 @@ export class StorageService {
 	}
 	syncHarvestHistoryCloudToSQLite() {
 		// alert('Network exists. Saving data to SQLite');
-		var url = constants.DREAMFACTORY_TABLE_URL + "/transact_harvest_view?filter=user_GUID=" + localStorage.getItem('loggedIn_user_GUID') + "&limit=20&api_key=" + constants.DREAMFACTORY_API_KEY;
+			var url = constants.DREAMFACTORY_TABLE_URL + "/transact_harvest_view?filter=user_GUID=" + localStorage.getItem('loggedIn_user_GUID') + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+		// var url = constants.DREAMFACTORY_TABLE_URL + "/transact_harvest_view?filter=user_GUID=" + localStorage.getItem('loggedIn_user_GUID') + "&limit=20&api_key=" + constants.DREAMFACTORY_API_KEY;
 		this.http.get(url).map(res => res.json()).subscribe(data => {
 			var modelFromCloud = data["resource"];
 			var surveyHistoryList: HarvestHistoryModel[] = [];
@@ -914,7 +913,6 @@ export class StorageService {
 					for (var i = 0; i < data.rows.length; i++) {
 						// alert('Record '+(i+1)+" :"+data.rows.item(i).location_name);
 						var survey: LoadHistoryModel = new LoadHistoryModel();
-						survey.location_name = data.rows.item(i).location_name;
 						survey.bunch_count = data.rows.item(i).bunch_count;
 						survey.registration_no = data.rows.item(i).registration_no;
 						unloadItems.push(survey);
@@ -928,9 +926,40 @@ export class StorageService {
 		});
 		return unloadItems;
 	}
+
+	getLoadFromSQLite(locationSelected: string) {
+		// alert('Inside Get From Lite Function');
+		var loadItems = [];
+		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
+			var query = "select Distinct C.vehicle_no AS registration_no ,A.bunch_count from transact_loading AS A INNER JOIN user_location AS B on A.location_GUID = B.location_GUID INNER JOIN vehicle_location AS C on A.vehicle_GUID = C.vehicle_GUID   where B.location_name='" + locationSelected + "'";
+			// alert(query)
+			db.executeSql(query, {}).then((data) => {
+				// alert('Selecting Inserted list from Sqlite');
+				// alert(query + '   ' + data.rows.length)
+				if (data.rows.length > 0) {
+					// alert(query)
+					// alert(data.rows.length);
+					for (var i = 0; i < data.rows.length; i++) {
+						// alert('Record '+(i+1)+" :"+data.rows.item(i).location_name);
+						var load: LoadHistoryModel = new LoadHistoryModel();
+						load.bunch_count = data.rows.item(i).bunch_count;
+						load.registration_no = data.rows.item(i).registration_no;
+						loadItems.push(load);
+					}
+				}
+			}, (err) => {
+				alert('getHarvestFromSQLite: ' + JSON.stringify(err));
+			});
+		}).catch(e => {
+			alert("getHarvestFromSQLite: " + JSON.stringify(e))
+		});
+		return loadItems;
+	}
+
 	syncLoadHistoryCloudToSQLite() {
 		// alert('Network exists. Saving data to SQLite');
-		var url = constants.DREAMFACTORY_TABLE_URL + "/transact_loading_view?filter=user_GUID=" + localStorage.getItem('loggedIn_user_GUID') + "&limit=20&api_key=" + constants.DREAMFACTORY_API_KEY;
+		var url = constants.DREAMFACTORY_TABLE_URL + "/transact_loading_view?filter=user_GUID=" + localStorage.getItem('loggedIn_user_GUID') + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+				// var url = constants.DREAMFACTORY_TABLE_URL + "/transact_loading_view?filter=user_GUID=" + localStorage.getItem('loggedIn_user_GUID') + "&limit=20&api_key=" + constants.DREAMFACTORY_API_KEY;
 		this.http.get(url).map(res => res.json()).subscribe(data => {
 			var modelFromCloud = data["resource"];
 			var surveyHistoryList: LoadHistoryModel[] = [];

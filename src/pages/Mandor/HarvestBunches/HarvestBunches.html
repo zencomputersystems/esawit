@@ -31,7 +31,7 @@
         <ion-label>{{ "_BALANCE_LBL" | translate }} : {{balanceHarvested}}</ion-label>
       </ion-card>
 
-      <ion-card *ngSwitchDefault >
+      <ion-card *ngSwitchDefault>
         <ion-card-content>
           <form [formGroup]="harvestAuthForm" (ngSubmit)="submitHarvestForm(harvestAuthForm.value,location.location_GUID,location.location_name)">
             <ion-item>
@@ -111,19 +111,21 @@
           <!--<button full ion-button (click)="location.h3 = !location.h3;getLoadedHistory(location.name)">{{ "_LOADED_HISTORY_BTN" | translate }}</button>-->
           <button full ion-button (click)="location.h3 = !location.h3;getLoadedHistory(location.location_name)">{{ "_LOADED_HISTORY_BTN" | translate }}</button>
         </ion-card-content>
+
         <ion-card [hidden]="location.h3">
           <ion-card-header>
             {{"_BUNCHES_TRANSPORTED_HEADER" | translate}}
           </ion-card-header>
           <ion-card-content>
             <ion-list>
+              <h4>{{ "_LOCAL_DATA_HEADER" | translate }}</h4>
               <ion-list-header>
                 <ion-avatar item-left> <b>{{ "_S_NO_LBL" | translate }}</b> </ion-avatar>
                 <ion-avatar item-left> <b>{{ "_VEHICLE_NO_LBL" | translate }}</b> </ion-avatar>
                 <ion-avatar item-left> <b>{{ "_TOTAL_BUNCHES_LBL" | translate }}</b> </ion-avatar>
                 <!--<ion-avatar item-right> <b>{{ "_HARVESTED_DATE_LBL" | translate }}</b> </ion-avatar>-->
               </ion-list-header>
-              <ion-item *ngFor="let history of harvestedHistoryData; let i = index;">
+              <ion-item *ngFor="let history of localLoadHistory; let i = index;">
                 <ion-avatar item-left>
                   <button ion-button color="light"> {{i+1}} </button>
                 </ion-avatar>
@@ -133,6 +135,23 @@
               </ion-item>
             </ion-list>
 
+            <ion-list>
+              <h4>{{ "_ONLINE_DATA_HEADER" | translate }}</h4>
+              <ion-list-header>
+                <ion-avatar item-left> <b>{{ "_S_NO_LBL" | translate }}</b> </ion-avatar>
+                <ion-avatar item-left> <b>{{ "_VEHICLE_NO_LBL" | translate }}</b> </ion-avatar>
+                <ion-avatar item-left> <b>{{ "_TOTAL_BUNCHES_LBL" | translate }}</b> </ion-avatar>
+                <!--<ion-avatar item-right> <b>{{ "_HARVESTED_DATE_LBL" | translate }}</b> </ion-avatar>-->
+              </ion-list-header>
+              <ion-item *ngFor="let history of loadedHistoryData; let i = index;">
+                <ion-avatar item-left>
+                  <button ion-button color="light"> {{i+1}} </button>
+                </ion-avatar>
+                <ion-avatar item-left>{{history .registration_no}} </ion-avatar>
+                <ion-avatar item-left>{{history .bunch_count}} </ion-avatar>
+                <!--<ion-avatar item-right>{{history .created_ts}}</ion-avatar>-->
+              </ion-item>
+            </ion-list>
           </ion-card-content>
         </ion-card>
       </ion-card>

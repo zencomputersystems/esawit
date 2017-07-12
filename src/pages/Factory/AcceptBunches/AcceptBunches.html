@@ -1,16 +1,16 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>{{ "_TITLE" | translate }}</ion-title>
-    <ion-buttons end>
-      <button ion-right ion-button icon-only>
+    <ion-title>{{"_TITLE" | translate}}</ion-title>
+    <!--<ion-buttons end>
+      <button ion-right ion-button icon-only (click)="openGlobalMenu()">
         <ion-icon name='menu'></ion-icon>
       </button>
-    </ion-buttons>
+    </ion-buttons>-->
   </ion-navbar>
 </ion-header>
+
 <ion-content>
   <ion-list>
-
     <form [formGroup]="authForm" (ngSubmit)="submitForm(authForm.value)">
       <h1>{{ "_ACCEPT_BUNCHES_HEADER" | translate }}</h1>
       <ion-item>

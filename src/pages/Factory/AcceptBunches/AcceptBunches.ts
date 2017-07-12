@@ -30,7 +30,7 @@ export class AcceptBunchesPage {
     constructor(private myCloud: StorageService, private network: Network, public actionsheetCtrl: ActionSheetController, public global: SharedFunctions,
         public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public fb: FormBuilder, public navParams: NavParams, public alertCtrl: AlertController) {
         this.authForm = fb.group({
-            'bunchCount': [null, Validators.compose([Validators.pattern('^((?!(0))[0-9])$'), Validators.required])],
+            'bunchCount': [null, Validators.compose([Validators.pattern('^((?!(0))[0-9])*'), Validators.required])],
             'driverSelect': [null, Validators.compose([Validators.required])],
             'vehicleSelect': [null, Validators.compose([Validators.required])],
             'locationSelect': [null, Validators.compose([Validators.required])],

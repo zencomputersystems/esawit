@@ -30,6 +30,7 @@ export class HarvestBunchesPage {
     harvestModel: HarvestBunchesModel = new HarvestBunchesModel();
     loadModel: LoadBunchesModel = new LoadBunchesModel();
     harvestedHistoryData: any;
+    loadedHistoryData:any; localLoadHistory:any;
     ifConnect: Subscription;
     localHarvestHistory: any;
 
@@ -37,10 +38,10 @@ export class HarvestBunchesPage {
         public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public fb: FormBuilder, public navParams: NavParams, public alertCtrl: AlertController) {
 
         this.harvestAuthForm = fb.group({
-            'harvestedBunchCount': [null, Validators.compose([Validators.pattern('^((?!(0))[0-9])$'), Validators.required])]
+            'harvestedBunchCount': [null, Validators.compose([Validators.pattern('^((?!(0))[0-9])*'), Validators.required])]
         });
         this.loadAuthForm = fb.group({
-            'loadedBunchCount': [null, Validators.compose([Validators.pattern('^((?!(0))[0-9])$'), Validators.required])],
+            'loadedBunchCount': [null, Validators.compose([Validators.pattern('^((?!(0))[0-9])*'), Validators.required])],
             'driverSelect': [null, Validators.compose([Validators.required])],
             'vehicleSelect': [null, Validators.compose([Validators.required])]
         });
@@ -87,12 +88,14 @@ export class HarvestBunchesPage {
 
     getLoadedHistory(locationSelected: any) {
         if (this.network.type == "none") {
-            this.harvestedHistoryData = this.myCloud.getLoadHistoryFromSQLite(locationSelected);
+            this.loadedHistoryData = this.myCloud.getLoadHistoryFromSQLite(locationSelected);
+                        this.localLoadHistory = this.myCloud.getLoadFromSQLite(locationSelected);
+                       
         }
         else {
             var url = constants.DREAMFACTORY_TABLE_URL + "/transact_loading_view?filter=(location_name=" + locationSelected + ")AND(user_GUID=" + this.UserGUID + ")&limit=20&api_key=" + constants.DREAMFACTORY_API_KEY;
             this.http.get(url).map(res => res.json()).subscribe(data => {
-                this.harvestedHistoryData = data["resource"]
+                this.loadedHistoryData = data["resource"]
             });
         }
     }
