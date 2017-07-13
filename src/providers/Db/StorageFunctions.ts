@@ -444,11 +444,12 @@ export class StorageService {
 		});
 	}
 
+
 	getSurveyFromSQLite() {
 		// alert('Inside Get From Lite Function');
 		var surveyItems = [];
 		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
-			var query = 'select B.location_name,A.bunch_count,A.month from transact_survey AS  A INNER JOIN master_location AS B where A.location_GUID = B.location_GUID';
+			var query = 'select B.location_name,A.bunch_count,A.month from transact_survey AS  A INNER JOIN user_location AS B where A.location_GUID = B.location_GUID';
 			// alert('Selecting Inserted list from Sqlite'+query);
 			db.executeSql(query, {}).then((data) => {
 				// alert(data.rows.length);
