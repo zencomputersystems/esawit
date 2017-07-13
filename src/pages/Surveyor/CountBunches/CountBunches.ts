@@ -35,7 +35,7 @@ export class CountBunchesPage {
             this.myCloud.syncHistoryCloudToSQLite();
         }
         this.authForm = fb.group({
-            'bunchCount': [null, Validators.compose([Validators.pattern('^((?!(0))[0-9])*'), Validators.required])],
+            'bunchCount': [null, Validators.compose([Validators.pattern('^(?!(0))[0-9]*'), Validators.required])],
             'monthSelect': [null, Validators.compose([Validators.required])],
             'locationSelect': [null, Validators.compose([Validators.required])],
         })
