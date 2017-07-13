@@ -9,6 +9,7 @@ import { AcceptBunchesModel } from '../../../models/AcceptBunchesModel';
 import { SharedFunctions } from '../../../providers/Shared/Functions';
 import { StorageService } from '../../../providers/Db/StorageFunctions';
 import { Network } from '@ionic-native/network';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
@@ -28,7 +29,11 @@ export class AcceptBunchesPage {
     locationListFromDb: any;
 
     constructor(private myCloud: StorageService, private network: Network, public actionsheetCtrl: ActionSheetController, public global: SharedFunctions,
-        public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public fb: FormBuilder, public navParams: NavParams, public alertCtrl: AlertController) {
+        public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public fb: FormBuilder, public navParams: NavParams, public alertCtrl: AlertController, public translate: TranslateService, public translateService: TranslateService) {
+        
+        this.translateToEnglish();
+        this.translateToMalay();
+
         this.authForm = fb.group({
             'bunchCount': [null, Validators.compose([Validators.pattern('^((?!(0))[0-9])*'), Validators.required])],
             'driverSelect': [null, Validators.compose([Validators.required])],
@@ -99,6 +104,27 @@ export class AcceptBunchesPage {
     onLink(url: string) {
         window.open(url);
     }
+
+    //---------------------header button start---------------------//
+    public translateToEnglishClicked: boolean = true; //Whatever you want to initialise it as
+    public translateToMalayClicked: boolean = false; //Whatever you want to initialise it as
+
+    public translateToEnglish() {
+        this.translateService.use('en');
+        this.translateToMalayClicked = !this.translateToMalayClicked;
+        this.translateToEnglishClicked = !this.translateToEnglishClicked;
+        console.log("ms : " + this.translateToMalayClicked);
+        console.log("en : " + this.translateToEnglishClicked);
+    }
+
+    public translateToMalay() {
+        this.translateService.use('ms');
+        this.translateToEnglishClicked = !this.translateToEnglishClicked;
+        this.translateToMalayClicked = !this.translateToMalayClicked;
+        console.log("ms : " + this.translateToMalayClicked);
+        console.log("en : " + this.translateToEnglishClicked);
+    }
+    //---------------------header button end---------------------//
 }
 
 

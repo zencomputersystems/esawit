@@ -1,79 +1,170 @@
-<ion-header>
-  <ion-navbar>
-    <ion-title> {{ "_TITLE" | translate }}</ion-title>
-    <ion-buttons end>
-      <button ion-right ion-button icon-only (click)="openGlobalMenu()">
-        <ion-icon name='menu'></ion-icon>
-      </button>
-    </ion-buttons>
-  </ion-navbar>
-</ion-header>
-<ion-content padding>
-
-  <h1>{{ "_COUNT_BUNCHES_HISTORY_HEADER" | translate }}</h1>
-
-  <ion-list>
-    <h4>{{ "_LOCAL_DATA_HEADER" | translate }}</h4>
-    <ion-list-header>
-      <ion-avatar item-left>
-        <h2>{{ "_S_NO_LBL" | translate }}</h2>
-      </ion-avatar>
-      <ion-avatar item-left>
-        <h2>{{ "_MONTH_LBL" | translate }}</h2>
-      </ion-avatar>
-      <ion-avatar item-right>
-        <h2>{{ "_LOCATION_LBL" | translate }}</h2>
-      </ion-avatar>
-      <ion-avatar item-right>
-        <h2>{{ "_TOTAL_BUNCHES_LBL" | translate }}</h2>
-      </ion-avatar>
-    </ion-list-header>
-    <ion-item *ngFor="let item of localHistoryData; let i = index;" (click)="itemSelected(item)">
-      <ion-avatar item-left>
-        <button ion-button color="light"> {{i+1}} </button>
-      </ion-avatar>
-      <ion-avatar item-left>
-        <h2>{{ "_MONTH." + item.month | translate }}</h2>
-      </ion-avatar>
-      <ion-avatar item-right>
-        <h2>{{ item.location_name }}</h2>
-      </ion-avatar>
-      <ion-avatar item-right>
-        <h2>{{item .bunch_count}}</h2>
-      </ion-avatar>
-    </ion-item>
-  </ion-list>
-
-  <ion-list>
-    <h4>{{ "_ONLINE_DATA_HEADER" | translate }}</h4>
-    <ion-list-header>
-      <ion-avatar item-left>
-        <h2>{{ "_S_NO_LBL" | translate }}</h2>
-      </ion-avatar>
-      <ion-avatar item-left>
-        <h2>{{ "_MONTH_LBL" | translate }}</h2>
-      </ion-avatar>
-      <ion-avatar item-right>
-        <h2>{{ "_LOCATION_LBL" | translate }}</h2>
-      </ion-avatar>
-      <ion-avatar item-right>
-        <h2>{{ "_TOTAL_BUNCHES_LBL" | translate }}</h2>
-      </ion-avatar>
-    </ion-list-header>
-    <ion-item *ngFor="let item of countHistoryData; let i = index;" (click)="itemSelected(item)">
-      <ion-avatar item-left>
-        <button ion-button color="light"> {{i+1}} </button>
-      </ion-avatar>
-      <ion-avatar item-left>
-        <h2>{{ "_MONTH." + item.month | translate }}</h2>
-      </ion-avatar>
-      <ion-avatar item-right>
-        <h2>{{ item.location_name }}</h2>
-      </ion-avatar>
-      <ion-avatar item-right>
-        <h2>{{item .bunch_count}}</h2>
-      </ion-avatar>
-    </ion-item>
-  </ion-list>
-
+<ion-header>
+  <ion-navbar class="bgColor-darkBlue">
+    <ion-avatar class="logoSize" item-start>
+      <img src="../assets/img/eSawitLogo.png">
+    </ion-avatar>
+
+    <div class="headerInfo">
+
+      <ion-fab top right edge class="topZero rightZero">
+        <button ion-fab mini class="btnClear"><ion-icon name="settings"></ion-icon></button>
+        <ion-fab-list class="settingBtnFab" side="left">
+          <button ion-fab class="bgColor-green" [class.menuHide]="translateToMalayClicked" (click)="translateToMalay()">BM</button>
+          <button ion-fab class="bgColor-green" [class.menuHide]="translateToEnglishClicked" (click)="translateToEnglish()">EN</button>
+        </ion-fab-list>
+      </ion-fab>
+
+    </div>
+
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="bgColor-lightGrey">
+
+  <div class="headerBox bgColor-gradOrange">
+    <div class="headerBoxTitle2">{{ "_COUNT_BUNCHES_HISTORY_HEADER" | translate }}</div>
+  </div>
+
+  <!--<ion-list>
+    <h4>{{ "_LOCAL_DATA_HEADER" | translate }}</h4>
+    <ion-list-header>
+      <ion-avatar item-left>
+        <h2>{{ "_S_NO_LBL" | translate }}</h2>
+      </ion-avatar>
+      <ion-avatar item-left>
+        <h2>{{ "_MONTH_LBL" | translate }}</h2>
+      </ion-avatar>
+      <ion-avatar item-right>
+        <h2>{{ "_LOCATION_LBL" | translate }}</h2>
+      </ion-avatar>
+      <ion-avatar item-right>
+        <h2>{{ "_TOTAL_BUNCHES_LBL" | translate }}</h2>
+      </ion-avatar>
+    </ion-list-header>
+    <ion-item *ngFor="let item of localHistoryData; let i = index;" (click)="itemSelected(item)">
+      <ion-avatar item-left>
+        <button ion-button color="light"> {{i+1}} </button>
+      </ion-avatar>
+      <ion-avatar item-left>
+        <h2>{{ "_MONTH." + item.month | translate }}</h2>
+      </ion-avatar>
+      <ion-avatar item-right>
+        <h2>{{ item.location_name }}</h2>
+      </ion-avatar>
+      <ion-avatar item-right>
+        <h2>{{item .bunch_count}}</h2>
+      </ion-avatar>
+    </ion-item>
+  </ion-list>-->
+
+  <!--<ion-list>
+    <h4>{{ "_ONLINE_DATA_HEADER" | translate }}</h4>
+    <ion-list-header>
+      <ion-avatar item-left>
+        <h2>{{ "_S_NO_LBL" | translate }}</h2>
+      </ion-avatar>
+      <ion-avatar item-left>
+        <h2>{{ "_MONTH_LBL" | translate }}</h2>
+      </ion-avatar>
+      <ion-avatar item-right>
+        <h2>{{ "_LOCATION_LBL" | translate }}</h2>
+      </ion-avatar>
+      <ion-avatar item-right>
+        <h2>{{ "_TOTAL_BUNCHES_LBL" | translate }}</h2>
+      </ion-avatar>
+    </ion-list-header>
+    <ion-item *ngFor="let item of countHistoryData; let i = index;" (click)="itemSelected(item)">
+      <ion-avatar item-left>
+        <button ion-button color="light"> {{i+1}} </button>
+      </ion-avatar>
+      <ion-avatar item-left>
+        <h2>{{ "_MONTH." + item.month | translate }}</h2>
+      </ion-avatar>
+      <ion-avatar item-right>
+        <h2>{{ item.location_name }}</h2>
+      </ion-avatar>
+      <ion-avatar item-right>
+        <h2>{{item .bunch_count}}</h2>
+      </ion-avatar>
+    </ion-item>
+  </ion-list>-->
+
+
+<div class="contentBox">
+
+  <ion-row>
+    <ion-segment [(ngModel)]="Bunch" [ngModelOptions]="{standalone:true}" color="earth">
+      <ion-segment-button value="Local" isActive>
+        {{ "_LOCAL_DATA_HEADER" | translate }}
+      </ion-segment-button>
+      <ion-segment-button value="Online">
+        {{ "_ONLINE_DATA_HEADER" | translate }}
+      </ion-segment-button>
+    </ion-segment>
+  </ion-row>
+
+  <div [ngSwitch]="Bunch">
+    <ion-list *ngSwitchDefault>
+
+      <ion-card class="listItemCard" *ngFor="let item of localHistoryData; let i = index;" (click)="itemSelected(item)">
+        <div class="listItemNo">
+          <div class="litsItemNoValue bgColor-green fontColor-white">{{i+1}}</div>
+        </div>
+        <div class="listItemContent">
+          <div class="listItemVehicle">
+            <div class="listItemIcon">
+              <ion-icon class="fontColor-purple" item-start name="calendar"></ion-icon>
+            </div>
+            <div class="listItemLabel fontColor-dark"><b>{{ "_MONTH." + item.month | translate }}</b></div>
+          </div>
+          <div class="listItemLocation">
+            <div class="listItemIcon">
+              <ion-icon class="fontColor-yellow" item-start name="pin"></ion-icon>
+            </div>
+            <div class="listItemLabel fontColor-grey">{{ item.location_name }}</div>
+          </div>
+        </div>
+        <div class="listItemTotal">
+          <div class="listItemValue fontColor-brown">
+            {{item .bunch_count}}
+          </div>
+        </div>
+      </ion-card>
+
+    </ion-list>
+
+    <ion-list *ngSwitchCase="'Online'">
+
+      <ion-card class="listItemCard" *ngFor="let item of countHistoryData; let i = index;" (click)="itemSelected(item)">
+        <div class="listItemNo">
+          <div class="litsItemNoValue bgColor-green fontColor-white">{{i+1}}</div>
+        </div>
+        <div class="listItemContent">
+          <div class="listItemVehicle">
+            <div class="listItemIcon">
+              <ion-icon class="fontColor-purple" item-start name="calendar"></ion-icon>
+            </div>
+            <div class="listItemLabel fontColor-dark"><b>{{ "_MONTH." + item.month | translate }}</b></div>
+          </div>
+          <div class="listItemLocation">
+            <div class="listItemIcon">
+              <ion-icon class="fontColor-yellow" item-start name="pin"></ion-icon>
+            </div>
+            <div class="listItemLabel fontColor-grey">{{ item.location_name }}</div>
+          </div>
+        </div>
+        <div class="listItemTotal">
+          <div class="listItemValue fontColor-brown">
+            {{item .bunch_count}}
+          </div>
+        </div>
+      </ion-card>
+
+    </ion-list>
+
+  </div>
+
+</div>
+
+
 </ion-content>

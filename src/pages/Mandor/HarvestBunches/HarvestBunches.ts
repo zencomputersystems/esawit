@@ -3,6 +3,7 @@ import { NavController, NavParams, Platform, AlertController, ActionSheetControl
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HarvestBunchesModel } from '../../../models/HarvestBunchesModel';
+import { TranslateService } from '@ngx-translate/core';
 import { LoadBunchesModel } from '../../../models/LoadBunchesModel';
 import * as constants from '../../../config/constants';
 import { SharedFunctions } from '../../../providers/Shared/Functions';
@@ -19,6 +20,15 @@ import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
     })
 
 export class HarvestBunchesPage {
+
+    public LocationClicked: any; //Whatever you want to initialise it as
+
+    public LocationClick(locID) {
+        this.LocationClicked = locID;
+        console.log(locID + "|" + this.LocationClicked)
+    }
+
+
     harvestAuthForm: FormGroup;
     loadAuthForm: FormGroup;
     locationFromDB: any;
@@ -35,7 +45,10 @@ export class HarvestBunchesPage {
     localHarvestHistory: any;
 
     constructor(private myCloud: StorageService, private sqlite: SQLite, private network: Network, public actionsheetCtrl: ActionSheetController, public global: SharedFunctions,
-        public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public fb: FormBuilder, public navParams: NavParams, public alertCtrl: AlertController) {
+        public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public fb: FormBuilder, public navParams: NavParams, public alertCtrl: AlertController, public translate: TranslateService, public translateService: TranslateService) {
+
+        this.translateToEnglish();
+        this.translateToMalay();
 
         this.harvestAuthForm = fb.group({
             'harvestedBunchCount': [null, Validators.compose([Validators.pattern('^((?!(0))[0-9])*'), Validators.required])]
@@ -79,6 +92,7 @@ export class HarvestBunchesPage {
             this.harvestedHistoryData = this.myCloud.getHarvestHistoryFromSQLite(locationSelected);
             this.localHarvestHistory = this.myCloud.getHarvestFromSQLite(locationSelected);
         } else {
+            console.log("transact_harvest_view");
             var url = constants.DREAMFACTORY_TABLE_URL + "/transact_harvest_view?filter=(location_name=" + locationSelected + ")AND(user_GUID=" + this.UserGUID + ")&limit=20&api_key=" + constants.DREAMFACTORY_API_KEY;
             this.http.get(url).map(res => res.json()).subscribe(data => {
                 this.harvestedHistoryData = data["resource"]
@@ -221,6 +235,27 @@ export class HarvestBunchesPage {
     onLink(url: string) {
         window.open(url);
     }
+
+    //---------------------header button start---------------------//
+    public translateToEnglishClicked: boolean = true; //Whatever you want to initialise it as
+    public translateToMalayClicked: boolean = false; //Whatever you want to initialise it as
+
+    public translateToEnglish() {
+        this.translateService.use('en');
+        this.translateToMalayClicked = !this.translateToMalayClicked;
+        this.translateToEnglishClicked = !this.translateToEnglishClicked;
+        console.log("ms : " + this.translateToMalayClicked);
+        console.log("en : " + this.translateToEnglishClicked);
+    }
+
+    public translateToMalay() {
+        this.translateService.use('ms');
+        this.translateToEnglishClicked = !this.translateToEnglishClicked;
+        this.translateToMalayClicked = !this.translateToMalayClicked;
+        console.log("ms : " + this.translateToMalayClicked);
+        console.log("en : " + this.translateToEnglishClicked);
+    }
+    //---------------------header button end---------------------//
 }
 
 

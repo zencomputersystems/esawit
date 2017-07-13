@@ -1,16 +1,71 @@
-<ion-header>
-  <ion-navbar>
-    <ion-title>{{"_TITLE" | translate}}</ion-title>
-    <!--<ion-buttons end>
-      <button ion-right ion-button icon-only (click)="openGlobalMenu()">
-        <ion-icon name='menu'></ion-icon>
-      </button>
-    </ion-buttons>-->
-  </ion-navbar>
-</ion-header>
-<ion-content padding>
-  <button ion-button icon-left color="dark" block (click)="NewAcceptance()">
-                <ion-icon name="cut" ></ion-icon>{{"_ACCEPT_BUNCHES_BTN" | translate}}</button>
-  <button ion-button icon-left color="dark" block (click)="GetHistory()">
-            <ion-icon name="bus" ></ion-icon>{{"_ACCEPTED_BUNCHES_HISTORY_BTN" | translate}}</button>
+<ion-header>
+  <ion-navbar class="bgColor-darkBlue">
+    <ion-avatar class="logoSize" item-start>
+      <img src="../assets/img/eSawitLogo.png">
+    </ion-avatar>
+
+    <div class="headerInfo">
+
+      <ion-fab top right edge class="topZero rightZero">
+        <button ion-fab mini class="btnClear"><ion-icon name="settings"></ion-icon></button>
+        <ion-fab-list class="settingBtnFab" side="left">
+          <button ion-fab class="bgColor-green" [class.menuHide]="translateToMalayClicked" (click)="translateToMalay()">BM</button>
+          <button ion-fab class="bgColor-green" [class.menuHide]="translateToEnglishClicked" (click)="translateToEnglish()">EN</button>
+        </ion-fab-list>
+      </ion-fab>
+
+    </div>
+
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="bgColor-gradOrange">
+
+  <div class="headerBox2">
+    <div class="headerBoxTitle1">{{"_ACCEPTED_LBL" | translate}}</div>
+    <div class="headerBoxText">Lorem ipsum dolor sit amet</div>
+  </div>
+
+  <!--<div class="contentBox">-->
+    
+      <div class="cardBox2 posRelative" (click)="NewAcceptance()">
+        <div class="btnMainIcon2">
+          <ion-icon name="cut" class="fontColor-white"></ion-icon>
+        </div>
+        <div class="btnMainTitle2 fontColor-white">{{"_ACCEPT_BUNCHES_BTN" | translate}}</div>
+      </div>
+      
+      <div class="cardBox2 posRelative" (click)="GetHistory()">
+        <div class="btnMainIcon2">
+          <ion-icon name="bus" class="fontColor-white"></ion-icon>
+        </div>
+        <div class="btnMainTitle2 fontColor-white">{{"_ACCEPTED_BUNCHES_HISTORY_BTN" | translate}}</div>
+      </div>
+
+  <!--</div>-->
+
+  <!--<ion-card class="cardBox posRelative" (click)="NewAcceptance()">
+    <ion-item>
+      <div class="btnMainIcon bgColor-green fontColor-white">
+        <ion-icon name="cut" class="hdIcon"></ion-icon>
+      </div>
+      <div class="btnMainTitle fontColor-grey">{{ "_ACCEPT_BUNCHES_BTN" | translate }}</div>
+      <ion-icon class="fontColor-grey" item-end name="arrow-forward"></ion-icon>
+    </ion-item>
+  </ion-card>
+
+  <ion-card class="cardBox posRelative" (click)="GetHistory()">
+    <ion-item>
+      <div class="btnMainIcon bgColor-green fontColor-white">
+        <ion-icon name="bus" class="hdIcon"></ion-icon>
+      </div>
+      <div class="btnMainTitle fontColor-grey">{{ "_ACCEPTED_BUNCHES_HISTORY_BTN" | translate }}</div>
+      <ion-icon class="fontColor-grey" item-end name="arrow-forward"></ion-icon>
+    </ion-item>
+  </ion-card>-->
+
+  <!--<button ion-button icon-left color="dark" block (click)="NewAcceptance()">
+                <ion-icon name="cut" ></ion-icon>{{"_ACCEPT_BUNCHES_BTN" | translate}}</button>
+  <button ion-button icon-left color="dark" block (click)="GetHistory()">
+            <ion-icon name="bus" ></ion-icon>{{"_ACCEPTED_BUNCHES_HISTORY_BTN" | translate}}</button>-->
 </ion-content>
