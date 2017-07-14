@@ -61,7 +61,7 @@ export class MyApp {
             this.rootPage = HarvestBunchesPage;          
             break;
           case 3: this.rootPage = FactoryHomePage; break;
-         default:         this.rootPage = SurveyorHomePage;
+         default:         this.rootPage = UnAuthorizedUserPage;
 
         }
       },err=>{

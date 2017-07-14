@@ -44,7 +44,7 @@
     <div class="posRelative" *ngFor="let location of locationFromDB; let i = index;">
 
       <div class="harvestContent MandorListRow borderColor-lightGrey" *ngIf="LocationClicked == location.location_GUID">
-        <ion-segment [(ngModel)]="location.h1" color="earth">
+        <ion-segment [(ngModel)]="locationData" color="earth">
           <ion-segment-button value="seg_info" (click)="getSummaryByLocation(location.location_GUID)">
             {{"_INFO_LBL" | translate }}
           </ion-segment-button>
@@ -56,9 +56,9 @@
           </ion-segment-button>
         </ion-segment>
 
-        <div [ngSwitch]="location.h1">
+        <div [ngSwitch]="locationData">
 
-          <div *ngSwitchDefault>
+          <div *ngSwitchCase="'seg_info'">
 
             <div class="posRelative MandorListRow borderColor-lightGrey">
               <div class="MandorListLabel">{{"_HARVESTED_LBL"| translate}}</div>
@@ -74,7 +74,7 @@
             </div>
           </div>
 
-          <div *ngSwitchCase="'seg_harvest'">
+          <div *ngSwitchDefault>
 
             <div class="popupForm posRelative">
               <form [formGroup]="harvestAuthForm" (ngSubmit)="submitHarvestForm(harvestAuthForm.value,location.location_GUID,location.location_name)">

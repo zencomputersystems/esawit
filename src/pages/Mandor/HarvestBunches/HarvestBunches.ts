@@ -28,6 +28,8 @@ export class HarvestBunchesPage {
         console.log(locID + "|" + this.LocationClicked)
     }
 
+    locationData: string = "seg_harvest";
+
 
     harvestAuthForm: FormGroup;
     loadAuthForm: FormGroup;
