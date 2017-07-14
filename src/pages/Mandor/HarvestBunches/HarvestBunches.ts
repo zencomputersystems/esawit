@@ -32,7 +32,7 @@ export class HarvestBunchesPage {
     loadAuthForm: FormGroup;
     locationFromDB: any;
     vehicleFromDB: any;
-    totalHarvested: number; totalLoaded: number; balanceHarvested: number;
+    totalHarvested: number; totalLoaded: number; balanceHarvested: number; harvestInfo: any;
     driverFromDB: any;
     UserGUID: string;
     UIDFromMobile: string;
@@ -43,8 +43,8 @@ export class HarvestBunchesPage {
     ifConnect: Subscription;
     localHarvestHistory: any;
 
-    constructor(private myCloud: StorageService, private sqlite: SQLite, private network: Network, public actionsheetCtrl: ActionSheetController, public global: SharedFunctions,
-        public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public fb: FormBuilder, public navParams: NavParams, public alertCtrl: AlertController, public translate: TranslateService, public translateService: TranslateService) {
+    constructor(private sqlite: SQLite, private network: Network, public actionsheetCtrl: ActionSheetController, public global: SharedFunctions,
+        private myCloud: StorageService, public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public fb: FormBuilder, public navParams: NavParams, public alertCtrl: AlertController, public translate: TranslateService, public translateService: TranslateService) {
 
         this.translateToEnglish();
 
@@ -100,6 +100,7 @@ export class HarvestBunchesPage {
                 this.harvestedHistoryData = data["resource"]
             });
         }
+        // this.harvestInfo = this.myCloud.getMandorHarvestInfoLocal();
     }
 
     getLoadedHistory(locationSelected: any) {
@@ -116,6 +117,9 @@ export class HarvestBunchesPage {
     }
 
     getSummaryByLocation(locationSelected: any) {
+
+        //--------------------------It is synced data maintained locally -----------------Depricated
+        // {
         if (this.network.type == "none") {
             this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
                 this.totalHarvested = 0;
@@ -164,6 +168,9 @@ export class HarvestBunchesPage {
             });
             this.balanceHarvested = this.totalHarvested - this.totalLoaded
         }
+        // }
+        //--------------------------It is synced data maintained locally -----------------Depricated
+
     }
 
     getDataByLocation(locationSelected: any) {
@@ -197,6 +204,7 @@ export class HarvestBunchesPage {
             this.global.showConfirm('cloud', constants.DREAMFACTORY_TABLE_URL + '/transact_harvest', this.harvestModel.toJson(true));
             this.myCloud.syncHarvestHistoryCloudToSQLite();
         }
+        // this.myCloud.saveMandorHarvestInfoLocal(this.harvestModel);
         this.harvestAuthForm.reset();
     }
 
