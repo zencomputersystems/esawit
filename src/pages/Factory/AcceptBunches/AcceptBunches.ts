@@ -1,9 +1,7 @@
 ﻿import { Component } from '@angular/core';
-import { NavController, NavParams, ModalController, ViewController, Platform, AlertController, ActionSheetController, ToastController } from 'ionic-angular';
-import { Http, Headers, RequestOptions } from '@angular/http';
+import { NavController, NavParams, Platform, AlertController, ActionSheetController, ToastController } from 'ionic-angular';
+import { Http } from '@angular/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-// import { AcceptedBunchesHistoryPage } from '../AcceptedBunchesHistory/AcceptedBunchesHistory';
-// import { Observable } from 'rxjs/Observable';
 import * as constants from '../../../config/constants';
 import { AcceptBunchesModel } from '../../../models/AcceptBunchesModel';
 import { SharedFunctions } from '../../../providers/Shared/Functions';
@@ -18,7 +16,6 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class AcceptBunchesPage {
     ifConnect: Subscription;
-
     authForm: FormGroup;
     locationFromDb: any;
     vehicleFromDb: any;
@@ -30,26 +27,28 @@ export class AcceptBunchesPage {
 
     constructor(private myCloud: StorageService, private network: Network, public actionsheetCtrl: ActionSheetController, public global: SharedFunctions,
         public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public fb: FormBuilder, public navParams: NavParams, public alertCtrl: AlertController, public translate: TranslateService, public translateService: TranslateService) {
-        
         this.translateToEnglish();
-        this.translateToMalay();
 
+        if (this.network.type != "none") {
+            this.myCloud.saveUnloadToCloudFromSQLite();
+            this.myCloud.syncUnloadHistoryCloudToSQLite();
+        }
+        this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
         this.authForm = fb.group({
-            'bunchCount': [null, Validators.compose([Validators.pattern('[0-9]*'), Validators.required])],
+            'bunchCount': [null, Validators.compose([Validators.pattern('^(?!(0))[0-9]*'), Validators.required])],
             'driverSelect': [null, Validators.compose([Validators.required])],
             'vehicleSelect': [null, Validators.compose([Validators.required])],
             'locationSelect': [null, Validators.compose([Validators.required])],
         })
-        this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
         //-----------------------------------------Web Design Purpose------------------------------------
-        //   this.locationFromDb = this.myCloud.getSQLiteMasterLocations();
-        var url = constants.DREAMFACTORY_TABLE_URL + "/master_location?api_key=" + constants.DREAMFACTORY_API_KEY;
-        this.http.get(url).map(res => res.json()).subscribe(data => {
-            this.locationFromDb = data["resource"];
-        });
+        this.locationFromDb = this.myCloud.getSQLiteMasterLocations();
+        // var url = constants.DREAMFACTORY_TABLE_URL + "/master_location?api_key=" + constants.DREAMFACTORY_API_KEY;
+        // this.http.get(url).map(res => res.json()).subscribe(data => {
+        //     this.locationFromDb = data["resource"];
+        // });
         //-----------------------------------------Web Design Purpose------------------------------------
-
     }
+    
     submitForm(value: any) {
         this.factoryModel.loading_location_GUID = value.locationSelect;
         this.factoryModel.vehicle_GUID = value.vehicleSelect;
@@ -58,12 +57,11 @@ export class AcceptBunchesPage {
         this.factoryModel.bunch_count = value.bunchCount;
         this.factoryModel.updated_ts = this.factoryModel.created_ts = this.global.getStringTimeStamp();
         if (this.network.type == "none") {
-            alert('No Network. Saving data to SQLite');
             this.global.showConfirm('sqlite', '4', this.factoryModel);
         }
         else {
-            alert('Network exists. Saving data to Cloud');
             this.global.showConfirm('cloud', constants.DREAMFACTORY_TABLE_URL + '/transact_unloading', this.factoryModel.toJson(true));
+            this.myCloud.syncUnloadHistoryCloudToSQLite();
         }
         this.authForm.reset();
 
@@ -71,9 +69,8 @@ export class AcceptBunchesPage {
 
     ionViewDidEnter() {
         this.ifConnect = this.network.onConnect().subscribe(data => {
-            alert('Network exists. Saving data to Cloud');
             this.myCloud.saveUnloadToCloudFromSQLite();
-            // alert(data.type);
+            this.myCloud.syncUnloadHistoryCloudToSQLite();
         }, error => console.error(error));
     }
 
@@ -83,43 +80,36 @@ export class AcceptBunchesPage {
 
     onLocationSelect(locationSelected: string) {
         //-----------------------------------------Web Design Purpose------------------------------------
-        // this.driverFromDb= this.myCloud.getDriverLocationsFromSQLite(locationSelected);
-        // this.vehicleFromDb = this.myCloud.getVehicleLocationsFromSQLite(locationSelected);
-        var url = constants.DREAMFACTORY_TABLE_URL + "/active_vehicle_location_view?filter=location_GUID=" + locationSelected + "&api_key=" + constants.DREAMFACTORY_API_KEY;
-        this.http.get(url).map(res => res.json()).subscribe(data => {
-            this.vehicleFromDb = data["resource"];
-        });
-        url = constants.DREAMFACTORY_TABLE_URL + "/active_driver_location_view?filter=location_GUID=" + locationSelected + "&api_key=" + constants.DREAMFACTORY_API_KEY;
-        this.http.get(url).map(res => res.json()).subscribe(data => {
-            this.driverFromDb = data["resource"];
-        });
+        this.driverFromDb = this.myCloud.getDriverLocationsFromSQLite(locationSelected);
+        this.vehicleFromDb = this.myCloud.getVehicleLocationsFromSQLite(locationSelected);
+
+        // var url = constants.DREAMFACTORY_TABLE_URL + "/active_vehicle_location_view?filter=location_GUID=" + locationSelected + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+        // this.http.get(url).map(res => res.json()).subscribe(data => {
+        //     this.vehicleFromDb = data["resource"];
+        // });
+        // url = constants.DREAMFACTORY_TABLE_URL + "/active_driver_location_view?filter=location_GUID=" + locationSelected + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+        // this.http.get(url).map(res => res.json()).subscribe(data => {
+        //     this.driverFromDb = data["resource"];
+        // });
         //-----------------------------------------Web Design Purpose------------------------------------
     }
 
-    onLink(url: string) {
-        window.open(url);
-    }
-
-    //---------------------header button start---------------------//
-    public translateToEnglishClicked: boolean = true; //Whatever you want to initialise it as
-    public translateToMalayClicked: boolean = false; //Whatever you want to initialise it as
+    //---------------------Language module start---------------------//
+    public translateToEnglishClicked: boolean = false;
+    public translateToMalayClicked: boolean = true;
 
     public translateToEnglish() {
         this.translateService.use('en');
         this.translateToMalayClicked = !this.translateToMalayClicked;
         this.translateToEnglishClicked = !this.translateToEnglishClicked;
-        console.log("ms : " + this.translateToMalayClicked);
-        console.log("en : " + this.translateToEnglishClicked);
     }
 
     public translateToMalay() {
         this.translateService.use('ms');
         this.translateToEnglishClicked = !this.translateToEnglishClicked;
         this.translateToMalayClicked = !this.translateToMalayClicked;
-        console.log("ms : " + this.translateToMalayClicked);
-        console.log("en : " + this.translateToEnglishClicked);
     }
-    //---------------------header button end---------------------//
+    //---------------------Language module end---------------------//
 }
 
 
