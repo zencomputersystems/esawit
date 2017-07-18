@@ -1,13 +1,41 @@
-
-<ion-header>
+<!--<ion-header>
 
   <ion-navbar>
     <ion-title>Guest Page</ion-title>
   </ion-navbar>
 
-</ion-header>
+</ion-header>-->
 
 
-<ion-content padding>
-<b>{{ "_DEVICE_ID_LBL" | translate }}{{device_UUID}}</b><p>{{ "_CONTACT_ADMIN_LBL" | translate }}</p>
+<ion-content padding class="bgColor-red">
+
+  <div class="unauthorizedIcon fontColor-lightYellow" >
+    <ion-icon name="ios-warning"></ion-icon>
+  </div>
+
+  <ion-card class="unauthorizedCard">
+    <ion-card-header class="unauthorizedHeader">
+      {{ "_DEVICE_ID_LBL" | translate }}
+    </ion-card-header>
+    <ion-card-content class="paddingZero">
+      <ion-item class="unauthorizedIMEI">{{device_UUID}}</ion-item>
+    </ion-card-content>
+  </ion-card>
+
+  <!--<ion-card>
+    <ion-item>{{ "_CONTACT_ADMIN_LBL" | translate }}</ion-item>
+  </ion-card>-->
+
+  <div class="bodyLabel">
+    <p>Your phone is not an authorized device on this application.</p> 
+    <p>kindly contact Administrator for the registration.</p>    
+    <p>Thank you</p>
+  </div>
+
+  <div class="textCenter">
+    <button ion-button class="unauthorizedBtn bgColor-red">
+    Contact Admin
+  </button>
+  </div>
+
 </ion-content>

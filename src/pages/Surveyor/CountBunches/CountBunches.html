@@ -1,28 +1,44 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title> {{ "_TITLE" | translate }}</ion-title>
-    <ion-buttons end>
-      <button ion-right ion-button icon-only (click)="openMenu()">
-        <ion-icon name='menu'></ion-icon>
-      </button>
-    </ion-buttons>
+  <ion-navbar class="bgColor-darkBlue">
+    <ion-avatar class="logoSize" item-start>
+      <img src="../../../assets/img/eSawitLogo.png">
+    </ion-avatar>
+
+    <div class="headerInfo">
+
+      <ion-fab top right edge class="topZero rightZero">
+        <button ion-fab mini class="btnClear"><ion-icon name="settings"></ion-icon></button>
+        <ion-fab-list class="settingBtnFab" side="left">
+          <button ion-fab class="bgColor-green" [class.menuHide]="translateToMalayClicked" (click)="translateToMalay()">BM</button>
+          <button ion-fab class="bgColor-green" [class.menuHide]="translateToEnglishClicked" (click)="translateToEnglish()">EN</button>
+        </ion-fab-list>
+      </ion-fab>
+
+    </div>
+
   </ion-navbar>
 </ion-header>
-<ion-content>
+
+<ion-content class="bgColor-lightGrey">
+
+  <div class="headerBox bgColor-gradOrange">
+    <div class="headerBoxTitle2">{{ "_ABOUT_BUNCHES_HEADER" | translate }}</div>
+  </div>
+
+  <div class="contentBox">
   <ion-list>
-    <h1>{{ "_ABOUT_BUNCHES_HEADER" | translate }}</h1>
     <form [formGroup]="authForm" (ngSubmit)="submitForm(authForm.value)">
       <ion-item>
-        <ion-label>{{ "_MONTH_LBL" | translate }}</ion-label>
-        <ion-select formControlName="monthSelect" interface="popover" placeholder='{{"_SELECT_MONTH_HINT" | translate}}'>
+        <ion-label floating>{{ "_MONTH_LBL" | translate }}</ion-label>
+        <ion-select formControlName="monthSelect" interface="popover">
           <ion-option *ngFor="let month of monthsFromStorage" value={{month.value}}>{{ "_MONTH." + month.value | translate }}</ion-option>
         </ion-select>
       </ion-item>
       <!--<div class="error-box" *ngIf="authForm.controls['monthSelect'].hasError('required')">{{ "_MONTH_SELECT_VLD" | translate }}</div>-->
 
       <ion-item>
-        <ion-label>{{ "_LOCATION_LBL" | translate }}</ion-label>
-        <ion-select formControlName="locationSelect" interface="popover" placeholder='{{"_SELECT_LOCATION_HINT" | translate}}'>
+        <ion-label floating>{{ "_LOCATION_LBL" | translate }}</ion-label>
+        <ion-select formControlName="locationSelect" interface="popover">
           <ion-option *ngFor="let item of locationListFromDb" value={{item.location_GUID}}>{{item.location_name}}</ion-option>
         </ion-select>
       </ion-item>
@@ -34,9 +50,10 @@
       </ion-item>
       <!--<div class="error-box" *ngIf="authForm.controls['bunchCount'].hasError('required')">{{ "_BUNCH_COUNT_VLD" | translate }}</div>-->
 
-      <button type="submit" ion-button full [disabled]="!authForm.valid">{{ "_SUBMIT_BTN" | translate }}</button>
+      <button class="formBtnCircle" type="submit" ion-button full [disabled]="!authForm.valid">{{ "_SUBMIT_BTN" | translate }}</button>
 
 
     </form>
   </ion-list>
+  </div>
 </ion-content>

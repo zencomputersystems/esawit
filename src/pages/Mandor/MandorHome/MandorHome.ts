@@ -1,5 +1,6 @@
 ﻿import { Component } from '@angular/core';
 import { NavController, Platform, ActionSheetController } from 'ionic-angular';
+import { TranslateService } from '@ngx-translate/core';
 import { HarvestedHistoryPage } from '../HarvestedHistory/HarvestedHistory';
 import { HarvestBunchesPage } from '../HarvestBunches/HarvestBunches';
 import { SharedFunctions } from '../../../providers/Shared/Functions';
@@ -8,7 +9,7 @@ import { Network } from '@ionic-native/network';
 import { Subscription } from 'rxjs/Subscription';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import * as constants from '../../../config/constants';
-import { Http, Headers, RequestOptions } from '@angular/http';
+import { Http } from '@angular/http';
 
 @Component({
     selector: 'page-home',
@@ -18,7 +19,16 @@ export class MandorHomePage {
     ifConnect: Subscription;
     UserGUID: string;
     totalHarvested: number; totalLoaded: number; balanceHarvested: number;
-    constructor(private network: Network, public global: SharedFunctions, public http: Http, private sqlite: SQLite, private myCloud: StorageService, private mainMenu: SharedFunctions, public navCtrl: NavController, public platform: Platform, public actionsheetCtrl: ActionSheetController) {
+    constructor(private network: Network, public global: SharedFunctions, public http: Http, private sqlite: SQLite, private myCloud: StorageService, private mainMenu: SharedFunctions, public navCtrl: NavController, public platform: Platform, public actionsheetCtrl: ActionSheetController, public translate: TranslateService, public translateService: TranslateService) {
+        this.translateToEnglish();
+
+        if (this.network.type != "none") {
+            this.myCloud.syncMandorInfoCloudToSQLite(this.UserGUID, this.global.getStringDate());
+            this.myCloud.saveHarvestToCloudFromSQLite();
+            this.myCloud.syncHarvestHistoryCloudToSQLite();
+            this.myCloud.saveLoadToCloudFromSQLite();
+            this.myCloud.syncLoadHistoryCloudToSQLite();
+        }
         this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
         this.getSummary();
     }
@@ -26,12 +36,11 @@ export class MandorHomePage {
     //-----------------------Offline Sync---------------------------
     ionViewDidEnter() {
         this.ifConnect = this.network.onConnect().subscribe(data => {
+            this.myCloud.syncMandorInfoCloudToSQLite(this.UserGUID, this.global.getStringDate());
             this.myCloud.saveHarvestToCloudFromSQLite();
             this.myCloud.syncHarvestHistoryCloudToSQLite();
-
             this.myCloud.saveLoadToCloudFromSQLite();
             this.myCloud.syncLoadHistoryCloudToSQLite();
-
         }, error => alert('Error In SurveyorHistory :' + error));
     }
     ionViewWillLeave() {
@@ -44,17 +53,11 @@ export class MandorHomePage {
                 this.totalHarvested = 0;
                 this.totalLoaded = 0;
                 var query = "select * from mandor_harvested_info";
-                // alert(query)
                 db.executeSql(query, {}).then((data) => {
-                    // alert('Selecting Inserted list from Sqlite');		
-                    // alert('push :' + data.rows.item(0).total_harvested)
                     this.totalHarvested = data.rows.item(0).total_harvested;
                     this.balanceHarvested = this.totalHarvested - this.totalLoaded
                     query = "select * from mandor_loaded_info";
-                    // alert(query)
                     db.executeSql(query, {}).then((data) => {
-                        // alert('Selecting Inserted list from Sqlite');	
-                        // alert('push :' + data.rows.item(0).total_loaded)
                         this.totalLoaded = data.rows.item(0).total_loaded;
                         this.balanceHarvested = this.totalHarvested - this.totalLoaded
                     }, (err) => {
@@ -63,9 +66,7 @@ export class MandorHomePage {
                 }, (err) => {
                     alert('getMandorInfoFromSQLite: ' + JSON.stringify(err));
                 });
-                // alert('Harvest'+this.totalHarvested); alert('Loaded'+this.totalLoaded)
                 this.balanceHarvested = this.totalHarvested - this.totalLoaded
-                // alert('balance'+this.balanceHarvested)
             }).catch(e => alert("getMandorInfoFromSQLite: " + JSON.stringify(e)));
         }
         else {
@@ -115,4 +116,21 @@ export class MandorHomePage {
     public GetHistory() {
         this.navCtrl.push(HarvestedHistoryPage, {});
     }
+
+    //---------------------Language module start---------------------//
+    public translateToEnglishClicked: boolean = false;
+    public translateToMalayClicked: boolean = true;
+
+    public translateToEnglish() {
+        this.translateService.use('en');
+        this.translateToMalayClicked = !this.translateToMalayClicked;
+        this.translateToEnglishClicked = !this.translateToEnglishClicked;
+    }
+
+    public translateToMalay() {
+        this.translateService.use('ms');
+        this.translateToEnglishClicked = !this.translateToEnglishClicked;
+        this.translateToMalayClicked = !this.translateToMalayClicked;
+    }
+    //---------------------Language module end---------------------//
 }

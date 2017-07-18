@@ -1,3 +1,41 @@
 page-UnAuthorizedUser {
 
 }
+
+.bodyLabel {
+    padding: 15px;
+    text-align: center;
+    font-weight: 100;
+    letter-spacing: 1px;
+}
+
+.unauthorizedCard {
+    border-radius: 10px;
+}
+
+.unauthorizedHeader {
+    background: #e05656;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 100;
+    padding: 5px;
+    color: white;
+}
+.unauthorizedIMEI {
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 0 !important;
+    color: #ababab;
+}
+.unauthorizedIcon {
+    font-size: 100px;
+    text-align: center;
+}
+
+.unauthorizedBtn {
+    border-radius: 25px;
+    border: 2px solid rgb(255, 255, 255);
+    font-size: 15px;
+    box-shadow: none;
+    text-transform: none;
+}

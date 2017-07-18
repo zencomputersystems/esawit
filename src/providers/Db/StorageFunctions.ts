@@ -17,6 +17,9 @@ import { HarvestHistoryModel } from '../../models/HarvestHistoryModel';
 import { LoadBunchesModel } from '../../models/LoadBunchesModel';
 import { LoadHistoryModel } from '../../models/LoadHistoryModel';
 import { MandorInfoModel } from '../../models/MandorInfoModel';
+import { HarvestInfoLocal } from '../../models//SQLiteSync/HarvestInfoLocal';
+
+import { SharedFunctions } from '../../providers/Shared/Functions';
 
 import { App, Platform, ActionSheetController, ToastController, AlertController } from 'ionic-angular';
 import { AcceptBunchesModel } from '../../models/AcceptBunchesModel';
@@ -38,7 +41,7 @@ export class StorageService {
 	failedToast = this.translate.get("_FAILED_TOAST_LBL")["value"];
 	module: any;
 	// public masterLocationList: MasterLocationModel[] = [];
-	constructor(public toastCtrl: ToastController, public translate: TranslateService, private sqlite: SQLite, private http: Http, private network: Network) {
+	constructor( public toastCtrl: ToastController, public translate: TranslateService, private sqlite: SQLite, private http: Http, private network: Network) {
 	}
 
 
@@ -448,7 +451,7 @@ export class StorageService {
 		// alert('Inside Get From Lite Function');
 		var surveyItems = [];
 		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
-			var query = 'select B.location_name,A.bunch_count,A.month from transact_survey AS  A INNER JOIN master_location AS B where A.location_GUID = B.location_GUID';
+			var query = 'select B.location_name,A.bunch_count,A.month from transact_survey AS  A INNER JOIN user_location AS B where A.location_GUID = B.location_GUID';
 			// alert('Selecting Inserted list from Sqlite'+query);
 			db.executeSql(query, {}).then((data) => {
 				// alert(data.rows.length);
@@ -531,7 +534,7 @@ export class StorageService {
 	}
 
 	syncHistoryCloudToSQLite() {
-		alert('Network exists. Saving data to Cloud');
+		// alert('Network exists. Saving data to Cloud');
 		var url = constants.DREAMFACTORY_TABLE_URL + "/transact_survey_view?filter=user_GUID=" + localStorage.getItem('loggedIn_user_GUID') + "&limit=20&api_key=" + constants.DREAMFACTORY_API_KEY;
 		this.http.get(url).map(res => res.json()).subscribe(data => {
 			var modelFromCloud = data["resource"];
@@ -550,7 +553,63 @@ export class StorageService {
 
 
 	//--------------------------Mandor Module-------------------------------------
+  getStringDate() {
+    var myDate = new Date();
+    var day: string = null;
+    var month: string = null;
+    var temp = myDate.getDate();
+    if (temp < 10) { day = "0" + temp; } else { day = temp + ""; }
+    temp = (myDate.getMonth() + 1);
+    if (temp < 10) { month = "0" + temp; } else { month = temp + ""; }
+    return (myDate.getFullYear() + "-" + month + "-" + day);
+  }
+	saveMandorHarvestInfoLocal(myModel: any) {
+		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
+			db.executeSql('CREATE TABLE IF NOT EXISTS mandor_harvested_info(harvest_date TEXT,location_GUID TEXT,bunch_count INTEGER)', {})
+				.then(() => {
+					alert('Saving Harvest Sync:' )
+					db.executeSql('INSERT INTO mandor_harvested_info(harvest_date,location_GUID,bunch_count) VALUES(?,?,?)', ["this.getStringDate()", myModel.location_GUID, myModel.bunch_count])
+						.then(() => {
+							// this.showToast('bottom', 'Saved Successfully');
+							alert('Record Inserted to SQLite' + myModel.bunch_count);
+						}).catch(e => {
+							alert('syncMandorInfoCloudToSQLite-Harvest :' + JSON.stringify(e))
+						});
+				}).catch(e => {
+					alert('syncMandorInfoCloudToSQLite- Harvest: ' + JSON.stringify(e))
+				});
+		}).catch(e => {
+			alert("syncMandorInfoCloudToSQLite- Harvest :" + JSON.stringify(e))
+		});
+	}
 
+	getMandorHarvestInfoLocal() {
+		alert('Inside Get From Lite Function');
+		var mandorInfo: HarvestInfoLocal = new HarvestInfoLocal();
+		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
+			var query = "select * from mandor_harvested_info";
+			alert(query)
+			db.executeSql(query, {}).then((data) => {
+				alert('Selecting Inserted list from Sqlite');		
+				// alert('push :' + data.rows.item(0).total_harvested)
+				mandorInfo.harvest_date = (data.rows.item(0).harvest_date);
+				mandorInfo.location_GUID = (data.rows.item(0).location_GUID);
+				mandorInfo.bunch_count = (data.rows.item(0).bunch_count);
+				alert(JSON.stringify(mandorInfo))
+			}, (err) => {
+				alert('getMandorInfoFromSQLite: ' + JSON.stringify(err));
+			});
+			// alert('list:' + mandorInfo.total_harvested + " , " + mandorInfo.total_loaded)
+			return mandorInfo;
+		}).catch(e => {
+			 alert("getMandorInfoFromSQLite: " + JSON.stringify(e))
+		});
+		// alert('list:' + mandorInfo.total_harvested + " , " + mandorInfo.total_loaded)
+		return mandorInfo;
+	}
+
+
+	//--------------------------It is synced data maintained locally -----------------Depricated
 	syncMandorInfoCloudToSQLite(user: string, today: string) {
 		//Todo: Inject into a global function
 		var url = constants.DREAMFACTORY_TABLE_URL + "/harvested_count_loc_date_view?filter=(user_GUID=" + user + ")AND(harvested_date=" + today + ")&api_key=" + constants.DREAMFACTORY_API_KEY;
@@ -616,16 +675,12 @@ export class StorageService {
 			});
 
 
-			// if (cloudData.length == 0) {
-			// 	totalLoaded = "0"
-			// }
-			// else {
-			// 	totalLoaded = cloudData[0].total_bunches
-			// }
+
 		});
 
 
 	}
+	//--------------------------It is synced data maintained locally -----------------Depricated
 
 	getMandorInfoFromSQLite(location: string) {
 		// alert('Inside Get From Lite Function');
@@ -770,32 +825,36 @@ export class StorageService {
 
 	getHarvestFromSQLite(locationSelected: string) {
 		// alert('Inside Get From Lite Function');
-		var unloadItems = [];
+		var harvestItems = [];
 		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
-			db.executeSql("select * from harvest_history where location_name='" + locationSelected + "'", {}).then((data) => {
+			var query = "select B.location_name,A.bunch_count,A.created_ts from transact_harvest AS A INNER JOIN user_location AS B on A.location_GUID = B.location_GUID where B.location_name='" + locationSelected + "'";
+			// alert(query)
+			db.executeSql(query, {}).then((data) => {
 				// alert('Selecting Inserted list from Sqlite');
+				// alert(query + '   ' + data.rows.length)
 				if (data.rows.length > 0) {
+					// alert(query)
 					// alert(data.rows.length);
 					for (var i = 0; i < data.rows.length; i++) {
 						// alert('Record '+(i+1)+" :"+data.rows.item(i).location_name);
 						var survey: HarvestHistoryModel = new HarvestHistoryModel();
-						survey.location_name = data.rows.item(i).location_name;
 						survey.bunch_count = data.rows.item(i).bunch_count;
 						survey.created_ts = data.rows.item(i).created_ts;
-						unloadItems.push(survey);
+						harvestItems.push(survey);
 					}
 				}
 			}, (err) => {
-				// alert('getHarvestHistoryFromSQLite: ' + JSON.stringify(err));
+				alert('getHarvestFromSQLite: ' + JSON.stringify(err));
 			});
 		}).catch(e => {
-			// alert("getHarvestHistoryFromSQLite: " + JSON.stringify(e))
+			alert("getHarvestFromSQLite: " + JSON.stringify(e))
 		});
-		return unloadItems;
+		return harvestItems;
 	}
 	syncHarvestHistoryCloudToSQLite() {
-		alert('Network exists. Saving data to SQLite');
-		var url = constants.DREAMFACTORY_TABLE_URL + "/transact_harvest_view?filter=user_GUID=" + localStorage.getItem('loggedIn_user_GUID') + "&limit=20&api_key=" + constants.DREAMFACTORY_API_KEY;
+		// alert('Network exists. Saving data to SQLite');
+		var url = constants.DREAMFACTORY_TABLE_URL + "/transact_harvest_view?filter=user_GUID=" + localStorage.getItem('loggedIn_user_GUID') + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+		// var url = constants.DREAMFACTORY_TABLE_URL + "/transact_harvest_view?filter=user_GUID=" + localStorage.getItem('loggedIn_user_GUID') + "&limit=20&api_key=" + constants.DREAMFACTORY_API_KEY;
 		this.http.get(url).map(res => res.json()).subscribe(data => {
 			var modelFromCloud = data["resource"];
 			var surveyHistoryList: HarvestHistoryModel[] = [];
@@ -909,7 +968,6 @@ export class StorageService {
 					for (var i = 0; i < data.rows.length; i++) {
 						// alert('Record '+(i+1)+" :"+data.rows.item(i).location_name);
 						var survey: LoadHistoryModel = new LoadHistoryModel();
-						survey.location_name = data.rows.item(i).location_name;
 						survey.bunch_count = data.rows.item(i).bunch_count;
 						survey.registration_no = data.rows.item(i).registration_no;
 						unloadItems.push(survey);
@@ -923,9 +981,40 @@ export class StorageService {
 		});
 		return unloadItems;
 	}
+
+	getLoadFromSQLite(locationSelected: string) {
+		// alert('Inside Get From Lite Function');
+		var loadItems = [];
+		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
+			var query = "select Distinct C.vehicle_no AS registration_no ,A.bunch_count from transact_loading AS A INNER JOIN user_location AS B on A.location_GUID = B.location_GUID INNER JOIN vehicle_location AS C on A.vehicle_GUID = C.vehicle_GUID   where B.location_name='" + locationSelected + "'";
+			// alert(query)
+			db.executeSql(query, {}).then((data) => {
+				// alert('Selecting Inserted list from Sqlite');
+				// alert(query + '   ' + data.rows.length)
+				if (data.rows.length > 0) {
+					// alert(query)
+					// alert(data.rows.length);
+					for (var i = 0; i < data.rows.length; i++) {
+						// alert('Record '+(i+1)+" :"+data.rows.item(i).location_name);
+						var load: LoadHistoryModel = new LoadHistoryModel();
+						load.bunch_count = data.rows.item(i).bunch_count;
+						load.registration_no = data.rows.item(i).registration_no;
+						loadItems.push(load);
+					}
+				}
+			}, (err) => {
+				alert('getHarvestFromSQLite: ' + JSON.stringify(err));
+			});
+		}).catch(e => {
+			alert("getHarvestFromSQLite: " + JSON.stringify(e))
+		});
+		return loadItems;
+	}
+
 	syncLoadHistoryCloudToSQLite() {
-		alert('Network exists. Saving data to SQLite');
-		var url = constants.DREAMFACTORY_TABLE_URL + "/transact_loading_view?filter=user_GUID=" + localStorage.getItem('loggedIn_user_GUID') + "&limit=20&api_key=" + constants.DREAMFACTORY_API_KEY;
+		// alert('Network exists. Saving data to SQLite');
+		var url = constants.DREAMFACTORY_TABLE_URL + "/transact_loading_view?filter=user_GUID=" + localStorage.getItem('loggedIn_user_GUID') + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+		// var url = constants.DREAMFACTORY_TABLE_URL + "/transact_loading_view?filter=user_GUID=" + localStorage.getItem('loggedIn_user_GUID') + "&limit=20&api_key=" + constants.DREAMFACTORY_API_KEY;
 		this.http.get(url).map(res => res.json()).subscribe(data => {
 			var modelFromCloud = data["resource"];
 			var surveyHistoryList: LoadHistoryModel[] = [];
@@ -1081,7 +1170,7 @@ export class StorageService {
 		return unloadItems;
 	}
 	syncUnloadHistoryCloudToSQLite() {
-		alert('Network exists. Saving data to SQLite');
+		// alert('Network exists. Saving data to SQLite');
 		var url = constants.DREAMFACTORY_TABLE_URL + "/transact_unloading_view?filter=user_GUID=" + localStorage.getItem('loggedIn_user_GUID') + "&limit=20&api_key=" + constants.DREAMFACTORY_API_KEY;
 		this.http.get(url).map(res => res.json()).subscribe(data => {
 			var modelFromCloud = data["resource"];
