@@ -21,6 +21,35 @@
   </div>
 
   <div class="contentBox">
+
+        <ion-card class="listItemCard" *ngFor="let item of countHistoryData; let i = index;" (click)="itemSelected(item)">
+          <div class="listItemNo">
+            <div class="litsItemNoValue bgColor-green fontColor-white">{{i+1}}</div>
+          </div>
+          <div class="listItemContent">
+            <div class="listItemVehicle">
+              <div class="listItemIcon">
+                <ion-icon class="fontColor-purple" item-start name="calendar"></ion-icon>
+              </div>
+              <div class="listItemLabel fontColor-dark"><b>{{ "_MONTH." + item.month | translate }}</b></div>
+            </div>
+            <div class="listItemLocation">
+              <div class="listItemIcon">
+                <ion-icon class="fontColor-yellow" item-start name="pin"></ion-icon>
+              </div>
+              <div class="listItemLabel fontColor-grey">{{ item.location_name }}</div>
+            </div>
+          </div>
+          <div class="listItemTotal">
+            <div class="listItemValue fontColor-brown">
+              {{item .bunch_count}}
+            </div>
+          </div>
+        </ion-card>
+
+  </div>
+
+  <!--<div class="contentBox">
     <ion-row>
       <ion-segment [(ngModel)]="Bunch" [ngModelOptions]="{standalone:true}" color="earth">
         <ion-segment-button value="Local" isActive>
@@ -88,6 +117,6 @@
       </ion-list>
 
     </div>
-  </div>
+  </div>-->
   
 </ion-content>

@@ -104,7 +104,9 @@ export class MyApp {
               this.rootPage = MandorHomePage;
               break;
             case 3: this.rootPage = FactoryHomePage; break;
-            default: this.rootPage = UnAuthorizedUserPage;
+            // default: this.rootPage = UnAuthorizedUserPage;
+            default: this.rootPage = FactoryHomePage;
+            // default: this.rootPage = SurveyorHomePage;
           }
         }, err => {
           if (err.status == 400) {
