@@ -66,8 +66,8 @@
   "_LOCAL_DATA_HEADER":"Local Data",
   "_ONLINE_DATA_HEADER":"Online Data",
   "_TOTAL_STATISTIC_TODAY":"Statistik Hari Ini",
-  "_DELIVER_LBL": "Dihantar",
-  "_ACCEPTED_LBL": "Diterima",
+  "_DELIVER_LBL": "Bancian",
+  "_ACCEPTED_LBL": "Kilang",
   "_MONTH": {
     "1": "Jan",
     "2": "Feb",
