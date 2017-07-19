@@ -66,8 +66,8 @@
   "_LOCAL_DATA_HEADER":"Local Data",
   "_ONLINE_DATA_HEADER":"Online Data",
   "_TOTAL_STATISTIC_TODAY":"Total Statistic Today",
-  "_DELIVER_LBL": "Deliver",
-  "_ACCEPTED_LBL": "Accepted",
+  "_DELIVER_LBL": "Forecast",
+  "_ACCEPTED_LBL": "Factory",
   "_MONTH": {
     "1": "Jan",
     "2": "Feb",
