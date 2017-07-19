@@ -38,6 +38,7 @@
 .fontColor-red {color: #F44337 !important;}
 .fontColor-green {color: #6bc801 !important;}
 .fontColor-yellow {color: #f8cb00 !important;}
+.fontColor-lightYellow {color: #fff070 !important;}
 .fontColor-blue {color: #65c3df !important;}
 .fontColor-purple {color: #9c27b0 !important;}
 .fontColor-brown {color: #795548 !important;}
@@ -254,7 +255,7 @@
 .listItemValue {
     font-size: 20px;
     font-weight: 100;
-    padding: 19px;
+    padding: 19px 0;
     text-align: right;
 }
 .litsItemNoValue, .harvestListItemNoValue {
