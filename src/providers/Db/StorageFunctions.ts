@@ -10,6 +10,8 @@ import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { CountBunchesModel } from '../../models/CountBunchesModel';
 import { SurveyHistoryModel } from '../../models/SurveyHistoryModel';
 import { DriverLocationModel } from '../../models/SQLiteSync/DriverLocationModel';
+import { VehicleDriverModel } from '../../models/SQLiteSync/VehicleDriverModel';
+
 import { HarvestBunchesModel } from '../../models/HarvestBunchesModel';
 import { VehicleLocationModel } from '../../models/SQLiteSync/VehicleLocationModel';
 import { MasterVehicleModel } from '../../models/SQLiteSync/MasterVehicleModel';
@@ -41,7 +43,7 @@ export class StorageService {
 	failedToast = this.translate.get("_FAILED_TOAST_LBL")["value"];
 	module: any;
 	// public masterLocationList: MasterLocationModel[] = [];
-	constructor( public toastCtrl: ToastController, public translate: TranslateService, private sqlite: SQLite, private http: Http, private network: Network) {
+	constructor(public toastCtrl: ToastController, public translate: TranslateService, private sqlite: SQLite, private http: Http, private network: Network) {
 	}
 
 
@@ -203,6 +205,8 @@ export class StorageService {
 		});
 		return storageLocationItems;
 	}
+
+
 	syncDriverLocationToSQLite(masterLocationList: DriverLocationModel[]) {
 		// alert('In Sync Function');
 		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
@@ -245,6 +249,57 @@ export class StorageService {
 				driverLocationList.push(masterLocation);
 			});
 			this.syncDriverLocationToSQLite(driverLocationList);
+			// console.table(this.masterLocationList);
+			// return this.masterLocationList;
+		});
+		// });
+		// console.table(this.masterLocationList);
+		// return this.masterLocationList;
+	}
+
+	syncVehicleDriverToSQLite(masterLocationList: VehicleDriverModel[]) {
+		// alert('In Sync Function');
+		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
+			db.executeSql('CREATE TABLE IF NOT EXISTS driver_location(id INTEGER  ,location_GUID TEXT,location_name  TEXT,driver_GUID TEXT,driver_name  TEXT)', {})
+				.then(() =>
+					db.executeSql('DELETE FROM driver_location', null)).then(() => {
+						// alert('Table Deleted');
+						// alert('Locations Count' + masterLocationList.length);
+						if (masterLocationList.length > 0) {
+							masterLocationList.forEach(locationRec => {
+								// alert('Record'+locationRec.Id+" :"+locationRec.Id+"."+locationRec.location_GUID+"=>"+locationRec.location_name);
+								db.executeSql('INSERT INTO driver_location(id,location_GUID,location_name,driver_GUID,driver_name) VALUES(?,?,?,?,?)', [locationRec.Id, locationRec.vehicle_GUID, locationRec.vehicle_no, locationRec.driver_GUID, locationRec.driver_name])
+									.then(() => {
+										// alert('Record Inserted' + locationRec.location_name);	
+									}).catch(e => {
+										// alert('syncDriverLocationToSQLite :' + JSON.stringify(e))
+									});
+							});
+						}
+					}).catch(e => {
+						//  alert('syncDriverLocationToSQLite :' + JSON.stringify(e))
+					});
+		}).catch(e => {
+			//  alert('syncDriverLocationToSQLite :' + JSON.stringify(e))
+		});
+	}
+
+	getVehicleDriverListFromCloud() {
+		// alert(UserGUID)
+		var url = constants.DREAMFACTORY_TABLE_URL + "/active_vehicle_driver_view?api_key=" + constants.DREAMFACTORY_API_KEY;
+		var vehicleDriverList: VehicleDriverModel[] = [];
+		this.http.get(url).map(res => res.json()).subscribe(data => {
+			var locationListFromDb = data["resource"];
+			locationListFromDb.forEach(element => {
+				var masterLocation: VehicleDriverModel = new VehicleDriverModel();
+				masterLocation.Id = element.h1;
+				masterLocation.vehicle_GUID = element.vehicle_GUID;
+				masterLocation.vehicle_no = element.registration_no;
+				masterLocation.driver_GUID = element.driver_GUID;
+				masterLocation.driver_name = element.fullname;
+				vehicleDriverList.push(masterLocation);
+			});
+			this.syncVehicleDriverToSQLite(vehicleDriverList);
 			// console.table(this.masterLocationList);
 			// return this.masterLocationList;
 		});
@@ -553,21 +608,21 @@ export class StorageService {
 
 
 	//--------------------------Mandor Module-------------------------------------
-  getStringDate() {
-    var myDate = new Date();
-    var day: string = null;
-    var month: string = null;
-    var temp = myDate.getDate();
-    if (temp < 10) { day = "0" + temp; } else { day = temp + ""; }
-    temp = (myDate.getMonth() + 1);
-    if (temp < 10) { month = "0" + temp; } else { month = temp + ""; }
-    return (myDate.getFullYear() + "-" + month + "-" + day);
-  }
+	getStringDate() {
+		var myDate = new Date();
+		var day: string = null;
+		var month: string = null;
+		var temp = myDate.getDate();
+		if (temp < 10) { day = "0" + temp; } else { day = temp + ""; }
+		temp = (myDate.getMonth() + 1);
+		if (temp < 10) { month = "0" + temp; } else { month = temp + ""; }
+		return (myDate.getFullYear() + "-" + month + "-" + day);
+	}
 	saveMandorHarvestInfoLocal(myModel: any) {
 		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
 			db.executeSql('CREATE TABLE IF NOT EXISTS mandor_harvested_info(harvest_date TEXT,location_GUID TEXT,bunch_count INTEGER)', {})
 				.then(() => {
-					alert('Saving Harvest Sync:' )
+					alert('Saving Harvest Sync:')
 					db.executeSql('INSERT INTO mandor_harvested_info(harvest_date,location_GUID,bunch_count) VALUES(?,?,?)', ["this.getStringDate()", myModel.location_GUID, myModel.bunch_count])
 						.then(() => {
 							// this.showToast('bottom', 'Saved Successfully');
@@ -590,7 +645,7 @@ export class StorageService {
 			var query = "select * from mandor_harvested_info";
 			alert(query)
 			db.executeSql(query, {}).then((data) => {
-				alert('Selecting Inserted list from Sqlite');		
+				alert('Selecting Inserted list from Sqlite');
 				// alert('push :' + data.rows.item(0).total_harvested)
 				mandorInfo.harvest_date = (data.rows.item(0).harvest_date);
 				mandorInfo.location_GUID = (data.rows.item(0).location_GUID);
@@ -602,7 +657,7 @@ export class StorageService {
 			// alert('list:' + mandorInfo.total_harvested + " , " + mandorInfo.total_loaded)
 			return mandorInfo;
 		}).catch(e => {
-			 alert("getMandorInfoFromSQLite: " + JSON.stringify(e))
+			alert("getMandorInfoFromSQLite: " + JSON.stringify(e))
 		});
 		// alert('list:' + mandorInfo.total_harvested + " , " + mandorInfo.total_loaded)
 		return mandorInfo;
