@@ -68,7 +68,7 @@ export class HarvestBunchesPage {
         });
         //-----------------------------------------Web Design Purpose------------------------------------
         this.locationFromDB = this.myCloud.getUserLocationsFromSQLite();
-        // var url = constants.DREAMFACTORY_TABLE_URL + "/master_location?api_key=" + constants.DREAMFACTORY_API_KEY;
+		// var url = constants.DREAMFACTORY_TABLE_URL + "/active_users_location_view?filter=user_GUID=" + this.UserGUID + "&api_key=" + constants.DREAMFACTORY_API_KEY;
         // this.http.get(url).map(res => res.json()).subscribe(data => {
         //     this.locationFromDB = data["resource"];
         // });

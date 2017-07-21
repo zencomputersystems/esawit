@@ -1,4 +1,4 @@
-import { UserImeiModel } from '../models/UserImeiModel';
+import { MasterImeiModel } from '../models/UserImeiModel';
 import { Component } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -31,7 +31,7 @@ export class MyApp {
   UIDFromMobile: string;
   locationListFromDb: any;
   module: number;
-  userImei: UserImeiModel = new UserImeiModel();
+  userImei: MasterImeiModel = new MasterImeiModel();
   constructor(public global: SharedFunctions, private network: Network, private device: Device, private myCloud: StorageService, public http: Http, platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, translate: TranslateService) {
     translate.setDefaultLang('en');
     platform.ready().then(() => {
@@ -74,8 +74,8 @@ export class MyApp {
             //----------------------First Time App is installed----------------------
             this.userImei.user_IMEI = this.UIDFromMobile;
             this.userImei.active = 2;
-            this.userImei.user_GUID = this.userImei.updated_ts = this.userImei.created_ts = this.global.getStringTimeStamp();
-            this.myCloud.saveToCloud(constants.DREAMFACTORY_TABLE_URL + '/user_imei', this.userImei.toJson(true));
+            // this.userImei.user_GUID = this.userImei.updated_ts = this.userImei.created_ts = this.global.getStringTimeStamp();
+            this.myCloud.saveToCloud(constants.DREAMFACTORY_TABLE_URL + '/master_imei', this.userImei.toJson(true));
             this.module = 0;
             //----------------------First Time App is installed---------------------
           }

@@ -19,7 +19,7 @@
 <ion-content class="bgColor-lightGrey">
 
   <div class="headerBox bgColor-gradOrange">
-     <div class="headerBoxTitle2">{{ "_COUNT_BUNCHES_HISTORY_HEADER" | translate }}</div>
+    <div class="headerBoxTitle2">{{ "_COUNT_BUNCHES_HISTORY_HEADER" | translate }}</div>
   </div>
   <div class="contentBox">
 
@@ -37,7 +37,7 @@
 
       <div class="harvestContent MandorListRow borderColor-lightGrey" *ngIf="LocationClicked == location.location_GUID">
 
-        <ion-segment [(ngModel)]="location.h1" color="earth">
+        <ion-segment [(ngModel)]="locationData" color="earth">
           <ion-segment-button value="seg_info" (click)="getSummaryByLocation(location.location_GUID)">
             {{"_INFO_LBL" | translate }}
           </ion-segment-button>
@@ -51,7 +51,7 @@
 
         <div [ngSwitch]="locationData">
 
-          <div *ngSwitchDefault>
+          <div *ngSwitchCase="'seg_info'">
 
             <div class="posRelative MandorListRow borderColor-lightGrey">
               <div class="MandorListLabel">{{"_HARVESTED_LBL"| translate}}</div>
@@ -109,19 +109,19 @@
                     </div>
                     <div class="harvestListItemContent">
                       <div class="listItemLabel fontColor-dark"><b>{{hinfo .harvest_date}}</b></div>
-                      </div>
-                      <div class="harvestListItemContent">
-                        <div class="listItemLabel fontColor-dark"><b>{{hinfo .location_GUID}}</b></div>
-                      </div>
-                      <div class="harvestListItemTotal">
-                        <div class="harvestListItemValue fontColor-brown">
-                          {{hinfo .bunch_count}}
-                        </div>
-                      </div>
-                    </div>
-                    </ion-list> -->
-                       <!-- Local Mandor Info purpose -->
-                    </b>
+          </div>
+          <div class="harvestListItemContent">
+            <div class="listItemLabel fontColor-dark"><b>{{hinfo .location_GUID}}</b></div>
+          </div>
+          <div class="harvestListItemTotal">
+            <div class="harvestListItemValue fontColor-brown">
+              {{hinfo .bunch_count}}
+            </div>
+          </div>
+        </div>
+        </ion-list> -->
+        <!-- Local Mandor Info purpose -->
+        </b>
 
 
         </ion-card-content>
@@ -131,7 +131,7 @@
 
     <div *ngSwitchCase="'seg_load'">
 
-      <div class="popupForm posRelative">      
+      <div class="popupForm posRelative">
 
         <form [formGroup]="loadAuthForm" (ngSubmit)="submitLoadForm(loadAuthForm.value,location.location_GUID)">
           <ion-item>
@@ -154,7 +154,7 @@
           </ion-item>
           <button class="formBtnCircle" type="submit" ion-button full [disabled]="!loadAuthForm.valid">{{ "_SUBMIT_BTN" | translate }}</button>
         </form>
-        
+
         <button class="historyBtn" (click)="location.h3 = !location.h3;getLoadedHistory(location.location_name)">{{ "_LOADED_HISTORY_BTN" | translate }}</button>
       </div>
 
