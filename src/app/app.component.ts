@@ -5,11 +5,8 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import * as constants from '../config/constants';
 import { SharedFunctions } from "../providers/Shared/Functions";
-import { LoginPage } from '../pages/Shared/Login/Login';
-import { Http, Headers, RequestOptions } from '@angular/http';
+import { Http, } from '@angular/http';
 import { StorageService } from '../providers/Db/StorageFunctions';
-import { SurveyHistoryModel } from '../models/SurveyHistoryModel'
-import { HarvestBunchesPage } from '../pages/Mandor/HarvestBunches/HarvestBunches';
 import { FactoryHomePage } from '../pages/Factory/FactoryHome/FactoryHome';
 import { MandorHomePage } from '../pages/Mandor/MandorHome/MandorHome';
 import { SurveyorHomePage } from '../pages/Surveyor/SurveyorHome/SurveyorHome';
@@ -18,9 +15,6 @@ import { UnAuthorizedUserPage } from '../pages/Shared/UnAuthorizedUser/UnAuthori
 // Translation Service:
 import { TranslateService } from '@ngx-translate/core';
 import { Network } from '@ionic-native/network';
-
-
-
 
 @Component({
   templateUrl: 'app.html',

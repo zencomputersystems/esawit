@@ -21,15 +21,11 @@ import { LoadHistoryModel } from '../../models/LoadHistoryModel';
 import { MandorInfoModel } from '../../models/MandorInfoModel';
 import { HarvestInfoLocal } from '../../models//SQLiteSync/HarvestInfoLocal';
 
-import { SharedFunctions } from '../../providers/Shared/Functions';
-
-import { App, Platform, ActionSheetController, ToastController, AlertController } from 'ionic-angular';
+import {  ToastController } from 'ionic-angular';
 import { AcceptBunchesModel } from '../../models/AcceptBunchesModel';
 import { FactoryHistoryModel } from '../../models/FactoryHistoryModel';
 // Translation Service:
 import { TranslateService } from '@ngx-translate/core';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 class ServerResponse {
 	constructor(public resource: any) {
@@ -1274,9 +1270,9 @@ export class StorageService {
 
 
 	//----------------------Obsolete Functions------------------------
-	private storeToken(data) {
-		localStorage.setItem('session_token', data.session_token);
-	}
+	// private storeToken(data) {
+	// 	localStorage.setItem('session_token', data.session_token);
+	// }
 	GenerateToken() {
 		// var queryHeaders = new Headers();
 		// queryHeaders.append('Content-Type', 'application/json');
