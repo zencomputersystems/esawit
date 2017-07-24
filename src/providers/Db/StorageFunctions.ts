@@ -261,9 +261,9 @@ export class StorageService {
 			db.executeSql(query, {}).then((data) => {
 				console.log('Selecting Inserted list from Sqlite');
 				if (data.rows.length > 0) {
-				console.log(data.rows.length);
+					console.log(data.rows.length);
 					for (var i = 0; i < data.rows.length; i++) {
-						console.log('Record '+(i+1)+" :"+data.rows.item(i).vehicle_no);
+						console.log('Record ' + (i + 1) + " :" + data.rows.item(i).vehicle_no);
 						storageLocationItems.push({ id: data.rows.item(i).id, location_name: data.rows.item(i).location_name, location_GUID: data.rows.item(i).location_GUID, driver_GUID: data.rows.item(i).driver_GUID, driver_name: data.rows.item(i).driver_name });
 					}
 				}
@@ -291,7 +291,7 @@ export class StorageService {
 								console.log('Record' + locationRec.Id + " :" + locationRec.Id + "." + locationRec.vehicle_GUID + "=>" + locationRec.vehicle_no);
 								db.executeSql('INSERT INTO vehicle_driver(id,vehicle_GUID,vehicle_no,driver_GUID,driver_name) VALUES(?,?,?,?,?)', [locationRec.Id, locationRec.vehicle_GUID, locationRec.vehicle_no, locationRec.driver_GUID, locationRec.driver_name])
 									.then(() => {
-										console.log('Record Inserted' + locationRec.vehicle_no);	
+										console.log('Record Inserted' + locationRec.vehicle_no);
 									}).catch(e => {
 										console.log('syncVehicleDriverToSQLite :' + JSON.stringify(e))
 									});
@@ -529,7 +529,7 @@ export class StorageService {
 		// alert('Inside Get From Lite Function');
 		var surveyItems = [];
 		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
-			var query = 'select B.location_name,A.bunch_count,A.month from transact_survey AS  A INNER JOIN user_location AS B where A.location_GUID = B.location_GUID';
+			var query = 'select B.location_name,A.bunch_count,A.month from transact_survey AS  A INNER JOIN user_location AS B where A.location_GUID = B.location_GUID ORDER BY A.created_ts DESC';
 			// alert('Selecting Inserted list from Sqlite'+query);
 			db.executeSql(query, {}).then((data) => {
 				// alert(data.rows.length);
@@ -905,8 +905,9 @@ export class StorageService {
 		// alert('Inside Get From Lite Function');
 		var harvestItems = [];
 		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
-			var query = "select B.location_name,A.bunch_count,A.created_ts from transact_harvest AS A INNER JOIN user_location AS B on A.location_GUID = B.location_GUID where B.location_name='" + locationSelected + "'";
-			// alert(query)
+			//------------Change Now to real time-------------
+			var query = "select B.location_name,A.bunch_count,strftime('%d/%m/%Y','now') AS created_ts from transact_harvest AS A INNER JOIN user_location AS B on A.location_GUID = B.location_GUID where B.location_name='" + locationSelected + "' ORDER BY A.created_ts DESC";
+			console.log(query)
 			db.executeSql(query, {}).then((data) => {
 				// alert('Selecting Inserted list from Sqlite');
 				// alert(query + '   ' + data.rows.length)
@@ -920,6 +921,7 @@ export class StorageService {
 						survey.created_ts = data.rows.item(i).created_ts;
 						harvestItems.push(survey);
 					}
+					console.table(harvestItems)
 				}
 			}, (err) => {
 				alert('getHarvestFromSQLite: ' + JSON.stringify(err));
@@ -1064,7 +1066,7 @@ export class StorageService {
 		// alert('Inside Get From Lite Function');
 		var loadItems = [];
 		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
-			var query = "select Distinct C.vehicle_no AS registration_no ,A.bunch_count from transact_loading AS A INNER JOIN user_location AS B on A.location_GUID = B.location_GUID INNER JOIN vehicle_location AS C on A.vehicle_GUID = C.vehicle_GUID   where B.location_name='" + locationSelected + "'";
+			var query = "select Distinct C.vehicle_no AS registration_no ,A.bunch_count from transact_loading AS A INNER JOIN user_location AS B on A.location_GUID = B.location_GUID INNER JOIN vehicle_location AS C on A.vehicle_GUID = C.vehicle_GUID   where B.location_name='" + locationSelected + "' ORDER BY A.created_ts DESC";
 			// alert(query)
 			db.executeSql(query, {}).then((data) => {
 				// alert('Selecting Inserted list from Sqlite');
@@ -1225,7 +1227,7 @@ export class StorageService {
 		// alert('Inside Get From Lite Function');
 		var unloadItems = [];
 		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
-			var query = 'select B.location_name,A.bunch_count, C.vehicle_no from transact_unloading AS  A INNER JOIN master_location AS B on  A.location_GUID = B.location_GUID INNER JOIN master_vehicles AS C ON A.vehicle_GUID=C.vehicle_GUID ';
+			var query = 'select B.location_name,A.bunch_count, C.vehicle_no from transact_unloading AS  A INNER JOIN master_location AS B on  A.location_GUID = B.location_GUID INNER JOIN master_vehicles AS C ON A.vehicle_GUID=C.vehicle_GUID ORDER BY A.created_ts DESC';
 			db.executeSql(query, {}).then((data) => {
 				// alert('Selecting Inserted list from Sqlite');
 				if (data.rows.length > 0) {

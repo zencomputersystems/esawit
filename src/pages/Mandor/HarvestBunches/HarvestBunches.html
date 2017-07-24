@@ -83,6 +83,20 @@
             <div [hidden]="location.h2">
               <ion-card-content>
                 <ion-list>
+                  <div class="listItemCard" *ngFor="let local of localHarvestHistory; let i = index;">
+                    <div class="harvestListItemNo">
+                      <div class="litsItemNoValue bgColor-green fontColor-white">{{i+1}}</div>
+                    </div>
+                    <div class="harvestListItemContent">
+                      <div class="listItemLabel fontColor-dark"><b>{{local.created_ts}}</b></div>
+                    </div>
+                    <div class="harvestListItemTotal">
+                      <div class="harvestListItemValue fontColor-brown">
+                        {{local .bunch_count}}
+                      </div>
+                    </div>
+                  </div>
+
                   <div class="listItemCard" *ngFor="let history of harvestedHistoryData; let i = index;">
                     <div class="harvestListItemNo">
                       <div class="litsItemNoValue bgColor-green fontColor-white">{{i+1}}</div>
@@ -136,9 +150,9 @@
         <form [formGroup]="loadAuthForm" (ngSubmit)="submitLoadForm(loadAuthForm.value,location.location_GUID)">
           <ion-item>
             <ion-label floating>{{"_VEHICLE_NO_LBL" | translate}}</ion-label>
-                       <ion-select formControlName="vehicleSelect" interface="popover" [(ngModel)]='vehicleSelect' (ionChange)="onVehicleSelect(vehicleSelect)"> 
+            <ion-select formControlName="vehicleSelect" interface="popover" [(ngModel)]='vehicleSelect' (ionChange)="onVehicleSelect(vehicleSelect)">
 
-            <!-- <ion-select formControlName="vehicleSelect" [(ngModel)]="vehicleSelect" interface="popover"> -->
+              <!-- <ion-select formControlName="vehicleSelect" [(ngModel)]="vehicleSelect" interface="popover"> -->
               <ion-option *ngFor="let vehicle of vehicleFromDB" value={{vehicle.vehicle_GUID}}>{{vehicle.vehicle_no}}</ion-option>
               <!--<ion-option *ngFor="let vehicle of vehicleFromDB" value={{vehicle.vehicle_GUID}}>{{vehicle.vehicle_no}}</ion-option>-->
             </ion-select>
@@ -163,6 +177,20 @@
       <div [hidden]="location.h3">
         <ion-card-content>
           <ion-list>
+            <div class="listItemCard" *ngFor="let local of localLoadHistory; let i = index;">
+              <div class="harvestListItemNo">
+                <div class="litsItemNoValue bgColor-purple fontColor-white">{{i+1}}</div>
+              </div>
+              <div class="harvestListItemContent">
+                <div class="listItemLabel fontColor-dark"><b>{{local .registration_no}}</b></div>
+              </div>
+              <div class="harvestListItemTotal">
+                <div class="harvestListItemValue fontColor-brown">
+                  {{local .bunch_count}}
+                </div>
+              </div>
+            </div>
+
             <div class="listItemCard" *ngFor="let history of loadedHistoryData; let i = index;">
               <div class="harvestListItemNo">
                 <div class="litsItemNoValue bgColor-purple fontColor-white">{{i+1}}</div>

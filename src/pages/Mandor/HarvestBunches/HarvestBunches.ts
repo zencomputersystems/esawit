@@ -201,7 +201,7 @@ export class HarvestBunchesPage {
     submitHarvestForm(value: any, location_GUID: string, location_name: string) {
         this.harvestModel.location_GUID = location_GUID;
         this.harvestModel.bunch_count = value.harvestedBunchCount;
-        this.harvestModel.updated_ts = this.harvestModel.created_ts = this.global.getStringTimeStamp();
+        this.harvestModel.updated_ts = this.harvestModel.created_ts = this.global.getTimeStamp();
         this.harvestModel.user_GUID = this.harvestModel.createdby_GUID = this.harvestModel.updatedby_GUID = this.UserGUID;
         if (this.network.type == "none") {
             this.global.showConfirm('sqlite', '2', this.harvestModel);
@@ -220,7 +220,7 @@ export class HarvestBunchesPage {
         this.loadModel.driver_GUID = value.driverSelect;
         this.loadModel.bunch_count = value.loadedBunchCount;
         this.loadModel.createdby_GUID = this.loadModel.updatedby_GUID = this.loadModel.user_GUID = this.UserGUID;
-        this.loadModel.created_ts = this.loadModel.updated_ts = this.global.getStringTimeStamp();
+        this.loadModel.created_ts = this.loadModel.updated_ts = this.global.getTimeStamp();
         if (this.network.type == "none") {
             this.global.showConfirm('sqlite', '3', this.loadModel);
         }
