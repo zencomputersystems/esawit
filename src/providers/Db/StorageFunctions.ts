@@ -21,7 +21,7 @@ import { LoadHistoryModel } from '../../models/LoadHistoryModel';
 import { MandorInfoModel } from '../../models/MandorInfoModel';
 import { HarvestInfoLocal } from '../../models//SQLiteSync/HarvestInfoLocal';
 
-import {  ToastController } from 'ionic-angular';
+import { ToastController } from 'ionic-angular';
 import { AcceptBunchesModel } from '../../models/AcceptBunchesModel';
 import { FactoryHistoryModel } from '../../models/FactoryHistoryModel';
 // Translation Service:
@@ -202,7 +202,6 @@ export class StorageService {
 		return storageLocationItems;
 	}
 
-
 	syncDriverLocationToSQLite(masterLocationList: DriverLocationModel[]) {
 		// alert('In Sync Function');
 		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
@@ -253,22 +252,48 @@ export class StorageService {
 		// return this.masterLocationList;
 	}
 
-	syncVehicleDriverToSQLite(masterLocationList: VehicleDriverModel[]) {
-		// alert('In Sync Function');
+	getVehicleDriverFromSQLite(vehicleId: string) {
+		// alert('Inside Get From Lite Function');
+		var storageLocationItems = [];
 		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
-			db.executeSql('CREATE TABLE IF NOT EXISTS driver_location(id INTEGER  ,location_GUID TEXT,location_name  TEXT,driver_GUID TEXT,driver_name  TEXT)', {})
+			var query = "select * from vehicle_driver where vehicle_GUID='" + vehicleId + "'";
+			console.log(query);
+			db.executeSql(query, {}).then((data) => {
+				console.log('Selecting Inserted list from Sqlite');
+				if (data.rows.length > 0) {
+				console.log(data.rows.length);
+					for (var i = 0; i < data.rows.length; i++) {
+						console.log('Record '+(i+1)+" :"+data.rows.item(i).vehicle_no);
+						storageLocationItems.push({ id: data.rows.item(i).id, location_name: data.rows.item(i).location_name, location_GUID: data.rows.item(i).location_GUID, driver_GUID: data.rows.item(i).driver_GUID, driver_name: data.rows.item(i).driver_name });
+					}
+				}
+			}, (err) => {
+				console.log('getVehicleDriverFromSQLite :' + JSON.stringify(err));
+			});
+		}).catch(e => {
+			console.log("getVehicleDriverFromSQLite :" + JSON.stringify(e))
+		});
+		return storageLocationItems;
+	}
+
+	syncVehicleDriverToSQLite(masterLocationList: VehicleDriverModel[]) {
+		console.table(masterLocationList)
+		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
+			var tableQuery = 'CREATE TABLE IF NOT EXISTS vehicle_driver(id INTEGER,vehicle_GUID TEXT,vehicle_no TEXT,driver_GUID TEXT,driver_name  TEXT)';
+			console.log(tableQuery)
+			db.executeSql(tableQuery, {})
 				.then(() =>
-					db.executeSql('DELETE FROM driver_location', null)).then(() => {
-						// alert('Table Deleted');
-						// alert('Locations Count' + masterLocationList.length);
+					db.executeSql('DELETE FROM vehicle_driver', null)).then(() => {
+						console.log('Table Deleted');
+						console.log('Locations Count' + masterLocationList.length);
 						if (masterLocationList.length > 0) {
 							masterLocationList.forEach(locationRec => {
-								// alert('Record'+locationRec.Id+" :"+locationRec.Id+"."+locationRec.location_GUID+"=>"+locationRec.location_name);
-								db.executeSql('INSERT INTO driver_location(id,location_GUID,location_name,driver_GUID,driver_name) VALUES(?,?,?,?,?)', [locationRec.Id, locationRec.vehicle_GUID, locationRec.vehicle_no, locationRec.driver_GUID, locationRec.driver_name])
+								console.log('Record' + locationRec.Id + " :" + locationRec.Id + "." + locationRec.vehicle_GUID + "=>" + locationRec.vehicle_no);
+								db.executeSql('INSERT INTO vehicle_driver(id,vehicle_GUID,vehicle_no,driver_GUID,driver_name) VALUES(?,?,?,?,?)', [locationRec.Id, locationRec.vehicle_GUID, locationRec.vehicle_no, locationRec.driver_GUID, locationRec.driver_name])
 									.then(() => {
-										// alert('Record Inserted' + locationRec.location_name);	
+										console.log('Record Inserted' + locationRec.vehicle_no);	
 									}).catch(e => {
-										// alert('syncDriverLocationToSQLite :' + JSON.stringify(e))
+										console.log('syncVehicleDriverToSQLite :' + JSON.stringify(e))
 									});
 							});
 						}
@@ -283,9 +308,11 @@ export class StorageService {
 	getVehicleDriverListFromCloud() {
 		// alert(UserGUID)
 		var url = constants.DREAMFACTORY_TABLE_URL + "/active_vehicle_driver_view?api_key=" + constants.DREAMFACTORY_API_KEY;
+		// console.log(url)
 		var vehicleDriverList: VehicleDriverModel[] = [];
 		this.http.get(url).map(res => res.json()).subscribe(data => {
 			var locationListFromDb = data["resource"];
+			// console.table(locationListFromDb);
 			locationListFromDb.forEach(element => {
 				var masterLocation: VehicleDriverModel = new VehicleDriverModel();
 				masterLocation.Id = element.h1;

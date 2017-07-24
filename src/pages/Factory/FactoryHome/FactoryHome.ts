@@ -28,6 +28,12 @@ export class FactoryHomePage {
         this.myCloud.getMasterVehiclesFromSQLite();
         this.myCloud.syncUnloadHistoryCloudToSQLite();
         //-----------------------End Offline Sync---------------------------
+
+        //----------------------Driver Vehicle----------------------
+        this.myCloud.getVehicleDriverListFromCloud();
+
+        //----------------------Driver Vehicle----------------------
+
     }
 
     //-----------------------Offline Sync---------------------------

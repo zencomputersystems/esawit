@@ -136,7 +136,9 @@
         <form [formGroup]="loadAuthForm" (ngSubmit)="submitLoadForm(loadAuthForm.value,location.location_GUID)">
           <ion-item>
             <ion-label floating>{{"_VEHICLE_NO_LBL" | translate}}</ion-label>
-            <ion-select formControlName="vehicleSelect" [(ngModel)]="vehicleSelect" interface="popover">
+                       <ion-select formControlName="vehicleSelect" interface="popover" [(ngModel)]='vehicleSelect' (ionChange)="onVehicleSelect(vehicleSelect)"> 
+
+            <!-- <ion-select formControlName="vehicleSelect" [(ngModel)]="vehicleSelect" interface="popover"> -->
               <ion-option *ngFor="let vehicle of vehicleFromDB" value={{vehicle.vehicle_GUID}}>{{vehicle.vehicle_no}}</ion-option>
               <!--<ion-option *ngFor="let vehicle of vehicleFromDB" value={{vehicle.vehicle_GUID}}>{{vehicle.vehicle_no}}</ion-option>-->
             </ion-select>

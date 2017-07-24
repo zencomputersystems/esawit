@@ -177,7 +177,7 @@ export class HarvestBunchesPage {
 
     getDataByLocation(locationSelected: any) {
         //-----------------------------------------Web Design Purpose------------------------------------
-        this.driverFromDB = this.myCloud.getDriverLocationsFromSQLite(locationSelected);
+        // this.driverFromDB = this.myCloud.getDriverLocationsFromSQLite(locationSelected);
         this.vehicleFromDB = this.myCloud.getVehicleLocationsFromSQLite(locationSelected);
 
         // var url = constants.DREAMFACTORY_TABLE_URL +
@@ -192,6 +192,10 @@ export class HarvestBunchesPage {
         //     this.driverFromDB = data["resource"];
         // });
         //-----------------------------------------Web Design Purpose------------------------------------
+    }
+     onVehicleSelect(vehicleSelected: string) {
+        this.driverFromDB = this.myCloud.getVehicleDriverFromSQLite(vehicleSelected);
+
     }
 
     submitHarvestForm(value: any, location_GUID: string, location_name: string) {
