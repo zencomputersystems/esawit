@@ -15,6 +15,7 @@ import { UnAuthorizedUserPage } from '../pages/Shared/UnAuthorizedUser/UnAuthori
 // Translation Service:
 import { TranslateService } from '@ngx-translate/core';
 import { Network } from '@ionic-native/network';
+import { UUID } from 'angular2-uuid';
 
 @Component({
   templateUrl: 'app.html',
@@ -66,6 +67,7 @@ export class MyApp {
           var loggedInUserFromDB = data["resource"][0];
           if (loggedInUserFromDB == null) {
             //----------------------First Time App is installed----------------------
+            this.userImei.Imei_Id = UUID.UUID();
             this.userImei.user_IMEI = this.UIDFromMobile;
             this.userImei.active = 2;
             this.userImei.user_GUID = this.userImei.updated_ts = this.userImei.created_ts = this.global.getStringTimeStamp();

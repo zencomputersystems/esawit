@@ -68,7 +68,7 @@ export class HarvestBunchesPage {
         });
         //-----------------------------------------Web Design Purpose------------------------------------
         this.locationFromDB = this.myCloud.getUserLocationsFromSQLite();
-		// var url = constants.DREAMFACTORY_TABLE_URL + "/active_users_location_view?filter=user_GUID=" + this.UserGUID + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+        // var url = constants.DREAMFACTORY_TABLE_URL + "/active_users_location_view?filter=user_GUID=" + this.UserGUID + "&api_key=" + constants.DREAMFACTORY_API_KEY;
         // this.http.get(url).map(res => res.json()).subscribe(data => {
         //     this.locationFromDB = data["resource"];
         // });
@@ -102,7 +102,7 @@ export class HarvestBunchesPage {
                 this.harvestedHistoryData = data["resource"]
             });
         }
-        // this.harvestInfo = this.myCloud.getMandorHarvestInfoLocal();
+        // this.harvestInfo = this.myCloud.getHarvestInfoListLocal();
     }
 
     getLoadedHistory(locationSelected: any) {
@@ -118,7 +118,7 @@ export class HarvestBunchesPage {
         }
     }
 
-    getSummaryByLocation(locationSelected: any) {
+    getSummaryByLocationOld(locationSelected: any) {
 
         //--------------------------It is synced data maintained locally -----------------Depricated
         // {
@@ -175,6 +175,33 @@ export class HarvestBunchesPage {
 
     }
 
+    getSummaryByLocation(locationSelected: any) {
+
+        //--------------------------It is synced data maintained locally -----------------Depricated
+        this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
+            this.totalHarvested = 0;
+            this.totalLoaded = 0;
+            var query = "select * from harvested_info where location_GUID='" + locationSelected + "'";
+            db.executeSql(query, {}).then((data) => {
+                this.totalHarvested = data.rows.item(0).total_harvested;
+                this.balanceHarvested = this.totalHarvested - this.totalLoaded
+                query = "select * from mandor_loaded_info where location_GUID='" + locationSelected + "'";
+                db.executeSql(query, {}).then((data) => {
+                    this.totalLoaded = data.rows.item(0).total_loaded;
+                    this.balanceHarvested = this.totalHarvested - this.totalLoaded
+                }, (err) => {
+                    alert('getMandorInfoFromSQLite: ' + JSON.stringify(err));
+                });
+            }, (err) => {
+                alert('getMandorInfoFromSQLite: ' + JSON.stringify(err));
+            });
+            this.balanceHarvested = this.totalHarvested - this.totalLoaded
+        }).catch(e => alert("getMandorInfoFromSQLite: " + JSON.stringify(e)));
+        //--------------------------It is synced data maintained locally -----------------Depricated
+
+    }
+
+
     getDataByLocation(locationSelected: any) {
         //-----------------------------------------Web Design Purpose------------------------------------
         // this.driverFromDB = this.myCloud.getDriverLocationsFromSQLite(locationSelected);
@@ -193,7 +220,7 @@ export class HarvestBunchesPage {
         // });
         //-----------------------------------------Web Design Purpose------------------------------------
     }
-     onVehicleSelect(vehicleSelected: string) {
+    onVehicleSelect(vehicleSelected: string) {
         this.driverFromDB = this.myCloud.getVehicleDriverFromSQLite(vehicleSelected);
 
     }
@@ -210,7 +237,7 @@ export class HarvestBunchesPage {
             this.global.showConfirm('cloud', constants.DREAMFACTORY_TABLE_URL + '/transact_harvest', this.harvestModel.toJson(true));
             this.myCloud.syncHarvestHistoryCloudToSQLite();
         }
-        // this.myCloud.saveMandorHarvestInfoLocal(this.harvestModel);
+        this.myCloud.saveMandorHarvestInfoLocal(this.harvestModel);
         this.harvestAuthForm.reset();
     }
 
