@@ -27,6 +27,31 @@
 
   <div class="contentBox">
 
+<ion-card class="listItemCard" *ngFor="let local of localHistoryData; let i = index;" >
+      <div class="listItemNo">
+        <div class="litsItemNoValue bgColor-green fontColor-white">{{i+1}}</div>
+      </div>
+      <div class="listItemContent">
+        <div class="listItemVehicle">
+          <div class="listItemIcon">
+            <ion-icon class="fontColor-purple" item-start name="bus"></ion-icon>
+          </div>
+          <div class="listItemLabel fontColor-dark"><b>{{ local.vehicle_no }}</b></div>
+        </div>
+        <div class="listItemLocation">
+          <div class="listItemIcon">
+            <ion-icon class="fontColor-yellow" item-start name="pin"></ion-icon>
+          </div>
+          <div class="listItemLabel fontColor-grey">{{local .location_name}}</div>
+        </div>
+      </div>
+      <div class="listItemTotal">
+        <div class="listItemValue fontColor-brown">
+          {{local .bunch_count}}
+        </div>
+      </div>
+    </ion-card>
+
     <ion-card class="listItemCard" *ngFor="let history of acceptedBunchesHistoryData; let i = index;" (click)="itemSelected(history)">
       <div class="listItemNo">
         <div class="litsItemNoValue bgColor-green fontColor-white">{{i+1}}</div>

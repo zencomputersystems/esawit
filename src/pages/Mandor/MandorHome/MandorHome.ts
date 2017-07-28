@@ -28,6 +28,8 @@ export class MandorHomePage {
             this.myCloud.syncHarvestHistoryCloudToSQLite();
             this.myCloud.saveLoadToCloudFromSQLite();
             this.myCloud.syncLoadHistoryCloudToSQLite();
+                    this.myCloud.getVehicleDriverListFromCloud();
+
         }
         this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
         this.getSummary();

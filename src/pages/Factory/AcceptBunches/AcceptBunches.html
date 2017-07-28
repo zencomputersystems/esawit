@@ -1,135 +1,52 @@
 <ion-header>
-
   <ion-navbar class="bgColor-darkBlue">
-
     <ion-avatar class="logoSize" item-start>
-
       <img src="../../../assets/img/eSawitLogo.png">
-
     </ion-avatar>
-
-
-
     <div class="headerInfo">
-
-
-
       <ion-fab top right edge class="topZero rightZero">
-
         <button ion-fab mini class="btnClear"><ion-icon name="settings"></ion-icon></button>
-
         <ion-fab-list class="settingBtnFab" side="left">
-
           <button ion-fab class="bgColor-purple" [class.menuHide]="translateToMalayClicked" (click)="translateToMalay()">BM</button>
-
           <button ion-fab class="bgColor-purple" [class.menuHide]="translateToEnglishClicked" (click)="translateToEnglish()">EN</button>
-
         </ion-fab-list>
-
       </ion-fab>
-
-
-
     </div>
-
-
-
   </ion-navbar>
-
 </ion-header>
 
-
-
 <ion-content class="bgColor-lightGrey">
-
-
-
   <div class="headerBox bgColor-gradOrange">
-
     <div class="headerBoxTitle2">{{ "_ACCEPT_BUNCHES_HEADER" | translate }}</div>
-
   </div>
-
-
-
   <div class="contentBox">
-
-
-
     <ion-list>
-
-
-
       <form [formGroup]="authForm" (ngSubmit)="submitForm(authForm.value)">
-
         <ion-item>
-
           <ion-label floating>{{ "_LOCATION_LBL" | translate }}</ion-label>
-
           <ion-select formControlName="locationSelect" [(ngModel)]='locationSelect' interface="popover" (ionChange)="onLocationSelect(locationSelect)">
-
             <ion-option *ngFor="let location of locationFromDb" value={{location.location_GUID}}>{{location.location_name}}</ion-option>
-
-            <!--<ion-option *ngFor="let location of locationFromDb" value={{location.location_GUID}}>{{location.location_name}}</ion-option>-->
-
           </ion-select>
-
         </ion-item>
-
-
-
         <ion-item>
-
           <ion-label floating>{{ "_VEHICLE_NO_LBL" | translate }}</ion-label>
-
-          <ion-select formControlName="vehicleSelect" interface="popover">
-
+           <ion-select formControlName="vehicleSelect" interface="popover" [(ngModel)]='vehicleSelect' (ionChange)="onVehicleSelect(vehicleSelect)"> 
+          <!-- <ion-select formControlName="vehicleSelect" interface="popover" > -->
             <ion-option *ngFor="let vehicle of vehicleFromDb" value={{vehicle.vehicle_GUID}}>{{vehicle.vehicle_no}}</ion-option>
-
-            <!--<ion-option *ngFor="let vehicle of vehicleFromDb" value={{vehicle.vehicle_GUID}}>{{vehicle.vehicle_no}}</ion-option>-->
-
           </ion-select>
-
         </ion-item>
-
-
-
         <ion-item>
-
           <ion-label floating>{{ "_DRIVER_LBL" | translate }}</ion-label>
-
           <ion-select formControlName="driverSelect" interface="popover">
-
             <ion-option *ngFor="let driver of driverFromDb" value={{driver.driver_GUID}}>{{driver.driver_name}}</ion-option>
-
-            <!--<ion-option *ngFor="let driver of driverFromDb" value={{driver.driver_GUID}}>{{driver.driver_name}}</ion-option>-->
-
           </ion-select>
-
         </ion-item>
-
-
-
         <ion-item>
-
           <ion-label floating>{{ "_TOTAL_BUNCHES_LBL" | translate }}</ion-label>
-
           <ion-input formControlName="bunchCount" highlight-color="energized" type="text"></ion-input>
-
         </ion-item>
-
         <button class="formBtnCircle" type="submit" ion-button full [disabled]="!authForm.valid">{{ "_SUBMIT_BTN" | translate }}</button>
-
-
-
       </form>
-
-
-
     </ion-list>
-
   </div>
-
-
-
 </ion-content>

@@ -68,7 +68,7 @@ export class HarvestBunchesPage {
         });
         //-----------------------------------------Web Design Purpose------------------------------------
         this.locationFromDB = this.myCloud.getUserLocationsFromSQLite();
-        // var url = constants.DREAMFACTORY_TABLE_URL + "/master_location?api_key=" + constants.DREAMFACTORY_API_KEY;
+		// var url = constants.DREAMFACTORY_TABLE_URL + "/active_users_location_view?filter=user_GUID=" + this.UserGUID + "&api_key=" + constants.DREAMFACTORY_API_KEY;
         // this.http.get(url).map(res => res.json()).subscribe(data => {
         //     this.locationFromDB = data["resource"];
         // });
@@ -177,7 +177,7 @@ export class HarvestBunchesPage {
 
     getDataByLocation(locationSelected: any) {
         //-----------------------------------------Web Design Purpose------------------------------------
-        this.driverFromDB = this.myCloud.getDriverLocationsFromSQLite(locationSelected);
+        // this.driverFromDB = this.myCloud.getDriverLocationsFromSQLite(locationSelected);
         this.vehicleFromDB = this.myCloud.getVehicleLocationsFromSQLite(locationSelected);
 
         // var url = constants.DREAMFACTORY_TABLE_URL +
@@ -193,11 +193,15 @@ export class HarvestBunchesPage {
         // });
         //-----------------------------------------Web Design Purpose------------------------------------
     }
+     onVehicleSelect(vehicleSelected: string) {
+        this.driverFromDB = this.myCloud.getVehicleDriverFromSQLite(vehicleSelected);
+
+    }
 
     submitHarvestForm(value: any, location_GUID: string, location_name: string) {
         this.harvestModel.location_GUID = location_GUID;
         this.harvestModel.bunch_count = value.harvestedBunchCount;
-        this.harvestModel.updated_ts = this.harvestModel.created_ts = this.global.getStringTimeStamp();
+        this.harvestModel.updated_ts = this.harvestModel.created_ts = this.global.getTimeStamp();
         this.harvestModel.user_GUID = this.harvestModel.createdby_GUID = this.harvestModel.updatedby_GUID = this.UserGUID;
         if (this.network.type == "none") {
             this.global.showConfirm('sqlite', '2', this.harvestModel);
@@ -216,7 +220,7 @@ export class HarvestBunchesPage {
         this.loadModel.driver_GUID = value.driverSelect;
         this.loadModel.bunch_count = value.loadedBunchCount;
         this.loadModel.createdby_GUID = this.loadModel.updatedby_GUID = this.loadModel.user_GUID = this.UserGUID;
-        this.loadModel.created_ts = this.loadModel.updated_ts = this.global.getStringTimeStamp();
+        this.loadModel.created_ts = this.loadModel.updated_ts = this.global.getTimeStamp();
         if (this.network.type == "none") {
             this.global.showConfirm('sqlite', '3', this.loadModel);
         }

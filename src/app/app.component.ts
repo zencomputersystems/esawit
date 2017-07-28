@@ -1,15 +1,12 @@
-import { UserImeiModel } from '../models/UserImeiModel';
+import { UserImeiModel  } from '../models/UserImeiModel';
 import { Component } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import * as constants from '../config/constants';
 import { SharedFunctions } from "../providers/Shared/Functions";
-import { LoginPage } from '../pages/Shared/Login/Login';
-import { Http, Headers, RequestOptions } from '@angular/http';
+import { Http, } from '@angular/http';
 import { StorageService } from '../providers/Db/StorageFunctions';
-import { SurveyHistoryModel } from '../models/SurveyHistoryModel'
-import { HarvestBunchesPage } from '../pages/Mandor/HarvestBunches/HarvestBunches';
 import { FactoryHomePage } from '../pages/Factory/FactoryHome/FactoryHome';
 import { MandorHomePage } from '../pages/Mandor/MandorHome/MandorHome';
 import { SurveyorHomePage } from '../pages/Surveyor/SurveyorHome/SurveyorHome';
@@ -18,9 +15,6 @@ import { UnAuthorizedUserPage } from '../pages/Shared/UnAuthorizedUser/UnAuthori
 // Translation Service:
 import { TranslateService } from '@ngx-translate/core';
 import { Network } from '@ionic-native/network';
-
-
-
 
 @Component({
   templateUrl: 'app.html',
@@ -31,7 +25,7 @@ export class MyApp {
   UIDFromMobile: string;
   locationListFromDb: any;
   module: number;
-  userImei: UserImeiModel = new UserImeiModel();
+  userImei: UserImeiModel  = new UserImeiModel ();
   constructor(public global: SharedFunctions, private network: Network, private device: Device, private myCloud: StorageService, public http: Http, platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, translate: TranslateService) {
     translate.setDefaultLang('en');
     platform.ready().then(() => {

@@ -19,7 +19,7 @@
 <ion-content class="bgColor-lightGrey">
 
   <div class="headerBox bgColor-gradOrange">
-     <div class="headerBoxTitle2">{{ "_COUNT_BUNCHES_HISTORY_HEADER" | translate }}</div>
+    <div class="headerBoxTitle2">{{ "_COUNT_BUNCHES_HISTORY_HEADER" | translate }}</div>
   </div>
   <div class="contentBox">
 
@@ -37,7 +37,7 @@
 
       <div class="harvestContent MandorListRow borderColor-lightGrey" *ngIf="LocationClicked == location.location_GUID">
 
-        <ion-segment [(ngModel)]="location.h1" color="earth">
+        <ion-segment [(ngModel)]="locationData" color="earth">
           <ion-segment-button value="seg_info" (click)="getSummaryByLocation(location.location_GUID)">
             {{"_INFO_LBL" | translate }}
           </ion-segment-button>
@@ -51,7 +51,7 @@
 
         <div [ngSwitch]="locationData">
 
-          <div *ngSwitchDefault>
+          <div *ngSwitchCase="'seg_info'">
 
             <div class="posRelative MandorListRow borderColor-lightGrey">
               <div class="MandorListLabel">{{"_HARVESTED_LBL"| translate}}</div>
@@ -82,7 +82,21 @@
 
             <div [hidden]="location.h2">
               <ion-card-content>
-                <ion-list>
+                <ion-list >
+                  <div class="listItemCard" *ngFor="let local of localHarvestHistory; let i = index;">
+                    <div class="harvestListItemNo">
+                      <div class="litsItemNoValue bgColor-green fontColor-white">{{i+1}}</div>
+                    </div>
+                    <div class="harvestListItemContent">
+                      <div class="listItemLabel fontColor-dark"><b>{{local.created_ts}}</b></div>
+                    </div>
+                    <div class="harvestListItemTotal">
+                      <div class="harvestListItemValue fontColor-brown">
+                        {{local .bunch_count}}
+                      </div>
+                    </div>
+                  </div>
+
                   <div class="listItemCard" *ngFor="let history of harvestedHistoryData; let i = index;">
                     <div class="harvestListItemNo">
                       <div class="litsItemNoValue bgColor-green fontColor-white">{{i+1}}</div>
@@ -109,19 +123,19 @@
                     </div>
                     <div class="harvestListItemContent">
                       <div class="listItemLabel fontColor-dark"><b>{{hinfo .harvest_date}}</b></div>
-                      </div>
-                      <div class="harvestListItemContent">
-                        <div class="listItemLabel fontColor-dark"><b>{{hinfo .location_GUID}}</b></div>
-                      </div>
-                      <div class="harvestListItemTotal">
-                        <div class="harvestListItemValue fontColor-brown">
-                          {{hinfo .bunch_count}}
-                        </div>
-                      </div>
-                    </div>
-                    </ion-list> -->
-                       <!-- Local Mandor Info purpose -->
-                    </b>
+          </div>
+          <div class="harvestListItemContent">
+            <div class="listItemLabel fontColor-dark"><b>{{hinfo .location_GUID}}</b></div>
+          </div>
+          <div class="harvestListItemTotal">
+            <div class="harvestListItemValue fontColor-brown">
+              {{hinfo .bunch_count}}
+            </div>
+          </div>
+        </div>
+        </ion-list> -->
+        <!-- Local Mandor Info purpose -->
+        </b>
 
 
         </ion-card-content>
@@ -131,12 +145,14 @@
 
     <div *ngSwitchCase="'seg_load'">
 
-      <div class="popupForm posRelative">      
+      <div class="popupForm posRelative">
 
         <form [formGroup]="loadAuthForm" (ngSubmit)="submitLoadForm(loadAuthForm.value,location.location_GUID)">
           <ion-item>
             <ion-label floating>{{"_VEHICLE_NO_LBL" | translate}}</ion-label>
-            <ion-select formControlName="vehicleSelect" [(ngModel)]="vehicleSelect" interface="popover">
+            <ion-select formControlName="vehicleSelect" interface="popover" [(ngModel)]='vehicleSelect' (ionChange)="onVehicleSelect(vehicleSelect)">
+
+              <!-- <ion-select formControlName="vehicleSelect" [(ngModel)]="vehicleSelect" interface="popover"> -->
               <ion-option *ngFor="let vehicle of vehicleFromDB" value={{vehicle.vehicle_GUID}}>{{vehicle.vehicle_no}}</ion-option>
               <!--<ion-option *ngFor="let vehicle of vehicleFromDB" value={{vehicle.vehicle_GUID}}>{{vehicle.vehicle_no}}</ion-option>-->
             </ion-select>
@@ -154,13 +170,27 @@
           </ion-item>
           <button class="formBtnCircle" type="submit" ion-button full [disabled]="!loadAuthForm.valid">{{ "_SUBMIT_BTN" | translate }}</button>
         </form>
-        
+
         <button class="historyBtn" (click)="location.h3 = !location.h3;getLoadedHistory(location.location_name)">{{ "_LOADED_HISTORY_BTN" | translate }}</button>
       </div>
 
       <div [hidden]="location.h3">
         <ion-card-content>
           <ion-list>
+            <div class="listItemCard" *ngFor="let local of localLoadHistory; let i = index;">
+              <div class="harvestListItemNo">
+                <div class="litsItemNoValue bgColor-purple fontColor-white">{{i+1}}</div>
+              </div>
+              <div class="harvestListItemContent">
+                <div class="listItemLabel fontColor-dark"><b>{{local .registration_no}}</b></div>
+              </div>
+              <div class="harvestListItemTotal">
+                <div class="harvestListItemValue fontColor-brown">
+                  {{local .bunch_count}}
+                </div>
+              </div>
+            </div>
+
             <div class="listItemCard" *ngFor="let history of loadedHistoryData; let i = index;">
               <div class="harvestListItemNo">
                 <div class="litsItemNoValue bgColor-purple fontColor-white">{{i+1}}</div>

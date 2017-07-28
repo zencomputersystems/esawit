@@ -29,3 +29,31 @@ export class UserImeiModel {
 		return stringify ? JSON.stringify({ resource: [doc] }) : doc;
 	}
 }
+
+export class MasterImeiModel {
+	constructor(
+		
+		public IMEI_GUID: string = "",
+		public user_IMEI: string = "",
+		public active:number=null,
+		public created_ts: string = null,
+		public createdby_GUID: string = null,
+		public updatedby_GUID: string = null,
+		public updated_ts: string = null
+	) { }
+
+	toJson(stringify?: boolean): any {
+		var doc = {
+			IMEI_GUID: this.IMEI_GUID,
+			user_IMEI: this.user_IMEI,
+			active:this.active,
+			created_ts: this.created_ts,
+			createdby_GUID: this.createdby_GUID,
+			updatedby_GUID: this.updatedby_GUID,
+			updated_ts: this.updated_ts
+		};
+
+		return stringify ? JSON.stringify({ resource: [doc] }) : doc;
+	}
+}
+
