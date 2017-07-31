@@ -1,7 +1,7 @@
 {
   "_MENU": "Menu",
   "_TITLE": "eSawit Mobile",
-  "_CONFIRMATION_TITLE": "Create New Record?",
+  "_CONFIRMATION_TITLE": "Save Confirmation",
   "_DEVICE_ID_LBL":"Your device's UUID is :",
   "_CONTACT_ADMIN_LBL":"Please contact to the admin.",
   "_BUNCH_COUNT_VLD": "* Bunch Count Required",
@@ -32,7 +32,7 @@
   "_HARVEST_LBL": "HARVEST",
   "_LOAD_LBL": "LOAD",
   "_HOME": "Home",
-  "_CONFIRMATION_MESSAGE_LBL":"Do you really want to add new record with given values?",
+  "_CONFIRMATION_MESSAGE_LBL":"Do you want to Save the Info?",
   "_SELECT_LANGUAGE_LBL": "Language Selection",
   "_DATE_LBL": "Date",
   "_LOCATION_LBL": "Location",

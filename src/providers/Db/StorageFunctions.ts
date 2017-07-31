@@ -10,6 +10,8 @@ import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { CountBunchesModel } from '../../models/CountBunchesModel';
 import { SurveyHistoryModel } from '../../models/SurveyHistoryModel';
 import { DriverLocationModel } from '../../models/SQLiteSync/DriverLocationModel';
+import { VehicleDriverModel } from '../../models/SQLiteSync/VehicleDriverModel';
+
 import { HarvestBunchesModel } from '../../models/HarvestBunchesModel';
 import { VehicleLocationModel } from '../../models/SQLiteSync/VehicleLocationModel';
 import { MasterVehicleModel } from '../../models/SQLiteSync/MasterVehicleModel';
@@ -19,15 +21,11 @@ import { LoadHistoryModel } from '../../models/LoadHistoryModel';
 import { MandorInfoModel } from '../../models/MandorInfoModel';
 import { HarvestInfoLocal } from '../../models//SQLiteSync/HarvestInfoLocal';
 
-import { SharedFunctions } from '../../providers/Shared/Functions';
-
-import { App, Platform, ActionSheetController, ToastController, AlertController } from 'ionic-angular';
+import { ToastController } from 'ionic-angular';
 import { AcceptBunchesModel } from '../../models/AcceptBunchesModel';
 import { FactoryHistoryModel } from '../../models/FactoryHistoryModel';
 // Translation Service:
 import { TranslateService } from '@ngx-translate/core';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 class ServerResponse {
 	constructor(public resource: any) {
@@ -41,7 +39,7 @@ export class StorageService {
 	failedToast = this.translate.get("_FAILED_TOAST_LBL")["value"];
 	module: any;
 	// public masterLocationList: MasterLocationModel[] = [];
-	constructor( public toastCtrl: ToastController, public translate: TranslateService, private sqlite: SQLite, private http: Http, private network: Network) {
+	constructor(public toastCtrl: ToastController, public translate: TranslateService, private sqlite: SQLite, private http: Http, private network: Network) {
 	}
 
 
@@ -203,6 +201,7 @@ export class StorageService {
 		});
 		return storageLocationItems;
 	}
+
 	syncDriverLocationToSQLite(masterLocationList: DriverLocationModel[]) {
 		// alert('In Sync Function');
 		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
@@ -245,6 +244,85 @@ export class StorageService {
 				driverLocationList.push(masterLocation);
 			});
 			this.syncDriverLocationToSQLite(driverLocationList);
+			// console.table(this.masterLocationList);
+			// return this.masterLocationList;
+		});
+		// });
+		// console.table(this.masterLocationList);
+		// return this.masterLocationList;
+	}
+
+	getVehicleDriverFromSQLite(vehicleId: string) {
+		// alert('Inside Get From Lite Function');
+		var storageLocationItems = [];
+		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
+			var query = "select * from vehicle_driver where vehicle_GUID='" + vehicleId + "'";
+			console.log(query);
+			db.executeSql(query, {}).then((data) => {
+				console.log('Selecting Inserted list from Sqlite');
+				if (data.rows.length > 0) {
+					console.log(data.rows.length);
+					for (var i = 0; i < data.rows.length; i++) {
+						console.log('Record ' + (i + 1) + " :" + data.rows.item(i).vehicle_no);
+						storageLocationItems.push({ id: data.rows.item(i).id, location_name: data.rows.item(i).location_name, location_GUID: data.rows.item(i).location_GUID, driver_GUID: data.rows.item(i).driver_GUID, driver_name: data.rows.item(i).driver_name });
+					}
+				}
+			}, (err) => {
+				console.log('getVehicleDriverFromSQLite :' + JSON.stringify(err));
+			});
+		}).catch(e => {
+			console.log("getVehicleDriverFromSQLite :" + JSON.stringify(e))
+		});
+		return storageLocationItems;
+	}
+
+	syncVehicleDriverToSQLite(masterLocationList: VehicleDriverModel[]) {
+		console.table(masterLocationList)
+		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
+			var tableQuery = 'CREATE TABLE IF NOT EXISTS vehicle_driver(id INTEGER,vehicle_GUID TEXT,vehicle_no TEXT,driver_GUID TEXT,driver_name  TEXT)';
+			console.log(tableQuery)
+			db.executeSql(tableQuery, {})
+				.then(() =>
+					db.executeSql('DELETE FROM vehicle_driver', null)).then(() => {
+						console.log('Table Deleted');
+						console.log('Locations Count' + masterLocationList.length);
+						if (masterLocationList.length > 0) {
+							masterLocationList.forEach(locationRec => {
+								console.log('Record' + locationRec.Id + " :" + locationRec.Id + "." + locationRec.vehicle_GUID + "=>" + locationRec.vehicle_no);
+								db.executeSql('INSERT INTO vehicle_driver(id,vehicle_GUID,vehicle_no,driver_GUID,driver_name) VALUES(?,?,?,?,?)', [locationRec.Id, locationRec.vehicle_GUID, locationRec.vehicle_no, locationRec.driver_GUID, locationRec.driver_name])
+									.then(() => {
+										console.log('Record Inserted' + locationRec.vehicle_no);
+									}).catch(e => {
+										console.log('syncVehicleDriverToSQLite :' + JSON.stringify(e))
+									});
+							});
+						}
+					}).catch(e => {
+						//  alert('syncDriverLocationToSQLite :' + JSON.stringify(e))
+					});
+		}).catch(e => {
+			//  alert('syncDriverLocationToSQLite :' + JSON.stringify(e))
+		});
+	}
+
+	getVehicleDriverListFromCloud() {
+		// alert(UserGUID)
+		var url = constants.DREAMFACTORY_TABLE_URL + "/active_vehicle_driver_view?api_key=" + constants.DREAMFACTORY_API_KEY;
+		// console.log(url)
+		var vehicleDriverList: VehicleDriverModel[] = [];
+		this.http.get(url).map(res => res.json()).subscribe(data => {
+			var locationListFromDb = data["resource"];
+			// console.table(locationListFromDb);
+			locationListFromDb.forEach(element => {
+				var masterLocation: VehicleDriverModel = new VehicleDriverModel();
+				masterLocation.Id = element.h1;
+				masterLocation.vehicle_GUID = element.vehicle_GUID;
+				masterLocation.vehicle_no = element.registration_no;
+				masterLocation.driver_GUID = element.driver_GUID;
+				masterLocation.driver_name = element.fullname;
+				vehicleDriverList.push(masterLocation);
+			});
+			this.syncVehicleDriverToSQLite(vehicleDriverList);
 			// console.table(this.masterLocationList);
 			// return this.masterLocationList;
 		});
@@ -451,7 +529,7 @@ export class StorageService {
 		// alert('Inside Get From Lite Function');
 		var surveyItems = [];
 		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
-			var query = 'select B.location_name,A.bunch_count,A.month from transact_survey AS  A INNER JOIN user_location AS B where A.location_GUID = B.location_GUID';
+			var query = 'select B.location_name,A.bunch_count,A.month from transact_survey AS  A INNER JOIN user_location AS B where A.location_GUID = B.location_GUID ORDER BY A.created_ts DESC';
 			// alert('Selecting Inserted list from Sqlite'+query);
 			db.executeSql(query, {}).then((data) => {
 				// alert(data.rows.length);
@@ -553,21 +631,21 @@ export class StorageService {
 
 
 	//--------------------------Mandor Module-------------------------------------
-  getStringDate() {
-    var myDate = new Date();
-    var day: string = null;
-    var month: string = null;
-    var temp = myDate.getDate();
-    if (temp < 10) { day = "0" + temp; } else { day = temp + ""; }
-    temp = (myDate.getMonth() + 1);
-    if (temp < 10) { month = "0" + temp; } else { month = temp + ""; }
-    return (myDate.getFullYear() + "-" + month + "-" + day);
-  }
+	getStringDate() {
+		var myDate = new Date();
+		var day: string = null;
+		var month: string = null;
+		var temp = myDate.getDate();
+		if (temp < 10) { day = "0" + temp; } else { day = temp + ""; }
+		temp = (myDate.getMonth() + 1);
+		if (temp < 10) { month = "0" + temp; } else { month = temp + ""; }
+		return (myDate.getFullYear() + "-" + month + "-" + day);
+	}
 	saveMandorHarvestInfoLocal(myModel: any) {
 		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
 			db.executeSql('CREATE TABLE IF NOT EXISTS mandor_harvested_info(harvest_date TEXT,location_GUID TEXT,bunch_count INTEGER)', {})
 				.then(() => {
-					alert('Saving Harvest Sync:' )
+					alert('Saving Harvest Sync:')
 					db.executeSql('INSERT INTO mandor_harvested_info(harvest_date,location_GUID,bunch_count) VALUES(?,?,?)', ["this.getStringDate()", myModel.location_GUID, myModel.bunch_count])
 						.then(() => {
 							// this.showToast('bottom', 'Saved Successfully');
@@ -590,7 +668,7 @@ export class StorageService {
 			var query = "select * from mandor_harvested_info";
 			alert(query)
 			db.executeSql(query, {}).then((data) => {
-				alert('Selecting Inserted list from Sqlite');		
+				alert('Selecting Inserted list from Sqlite');
 				// alert('push :' + data.rows.item(0).total_harvested)
 				mandorInfo.harvest_date = (data.rows.item(0).harvest_date);
 				mandorInfo.location_GUID = (data.rows.item(0).location_GUID);
@@ -602,7 +680,7 @@ export class StorageService {
 			// alert('list:' + mandorInfo.total_harvested + " , " + mandorInfo.total_loaded)
 			return mandorInfo;
 		}).catch(e => {
-			 alert("getMandorInfoFromSQLite: " + JSON.stringify(e))
+			alert("getMandorInfoFromSQLite: " + JSON.stringify(e))
 		});
 		// alert('list:' + mandorInfo.total_harvested + " , " + mandorInfo.total_loaded)
 		return mandorInfo;
@@ -827,8 +905,9 @@ export class StorageService {
 		// alert('Inside Get From Lite Function');
 		var harvestItems = [];
 		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
-			var query = "select B.location_name,A.bunch_count,A.created_ts from transact_harvest AS A INNER JOIN user_location AS B on A.location_GUID = B.location_GUID where B.location_name='" + locationSelected + "'";
-			// alert(query)
+			//------------Change Now to real time-------------
+			var query = "select B.location_name,A.bunch_count,strftime('%d/%m/%Y','now') AS created_ts from transact_harvest AS A INNER JOIN user_location AS B on A.location_GUID = B.location_GUID where B.location_name='" + locationSelected + "' ORDER BY A.created_ts DESC";
+			console.log(query)
 			db.executeSql(query, {}).then((data) => {
 				// alert('Selecting Inserted list from Sqlite');
 				// alert(query + '   ' + data.rows.length)
@@ -842,6 +921,7 @@ export class StorageService {
 						survey.created_ts = data.rows.item(i).created_ts;
 						harvestItems.push(survey);
 					}
+					console.table(harvestItems)
 				}
 			}, (err) => {
 				alert('getHarvestFromSQLite: ' + JSON.stringify(err));
@@ -986,7 +1066,7 @@ export class StorageService {
 		// alert('Inside Get From Lite Function');
 		var loadItems = [];
 		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
-			var query = "select Distinct C.vehicle_no AS registration_no ,A.bunch_count from transact_loading AS A INNER JOIN user_location AS B on A.location_GUID = B.location_GUID INNER JOIN vehicle_location AS C on A.vehicle_GUID = C.vehicle_GUID   where B.location_name='" + locationSelected + "'";
+			var query = "select Distinct C.vehicle_no AS registration_no ,A.bunch_count from transact_loading AS A INNER JOIN user_location AS B on A.location_GUID = B.location_GUID INNER JOIN vehicle_location AS C on A.vehicle_GUID = C.vehicle_GUID   where B.location_name='" + locationSelected + "' ORDER BY A.created_ts DESC";
 			// alert(query)
 			db.executeSql(query, {}).then((data) => {
 				// alert('Selecting Inserted list from Sqlite');
@@ -1147,7 +1227,7 @@ export class StorageService {
 		// alert('Inside Get From Lite Function');
 		var unloadItems = [];
 		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
-			var query = 'select B.location_name,A.bunch_count, C.vehicle_no from transact_unloading AS  A INNER JOIN master_location AS B on  A.location_GUID = B.location_GUID INNER JOIN master_vehicles AS C ON A.vehicle_GUID=C.vehicle_GUID ';
+			var query = 'select B.location_name,A.bunch_count, C.vehicle_no from transact_unloading AS  A INNER JOIN master_location AS B on  A.location_GUID = B.location_GUID INNER JOIN master_vehicles AS C ON A.vehicle_GUID=C.vehicle_GUID ORDER BY A.created_ts DESC';
 			db.executeSql(query, {}).then((data) => {
 				// alert('Selecting Inserted list from Sqlite');
 				if (data.rows.length > 0) {
@@ -1219,9 +1299,9 @@ export class StorageService {
 
 
 	//----------------------Obsolete Functions------------------------
-	private storeToken(data) {
-		localStorage.setItem('session_token', data.session_token);
-	}
+	// private storeToken(data) {
+	// 	localStorage.setItem('session_token', data.session_token);
+	// }
 	GenerateToken() {
 		// var queryHeaders = new Headers();
 		// queryHeaders.append('Content-Type', 'application/json');

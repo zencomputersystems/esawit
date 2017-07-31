@@ -32,6 +32,8 @@ export class AcceptBunchesPage {
         if (this.network.type != "none") {
             this.myCloud.saveUnloadToCloudFromSQLite();
             this.myCloud.syncUnloadHistoryCloudToSQLite();
+            // this.myCloud.getVehicleDriverListFromCloud();
+
         }
         this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
         this.authForm = fb.group({
@@ -48,7 +50,7 @@ export class AcceptBunchesPage {
         // });
         //-----------------------------------------Web Design Purpose------------------------------------
     }
-    
+
     submitForm(value: any) {
         this.factoryModel.loading_location_GUID = value.locationSelect;
         this.factoryModel.vehicle_GUID = value.vehicleSelect;
@@ -78,10 +80,11 @@ export class AcceptBunchesPage {
         this.ifConnect.unsubscribe();
     }
 
-    onLocationSelect(locationSelected: string) {
+    onLocationSelect(locationSelected: string) 
+    {
         //-----------------------------------------Web Design Purpose------------------------------------
-        this.driverFromDb = this.myCloud.getDriverLocationsFromSQLite(locationSelected);
         this.vehicleFromDb = this.myCloud.getVehicleLocationsFromSQLite(locationSelected);
+        // this.driverFromDb = this.myCloud.getDriverLocationsFromSQLite(locationSelected);
 
         // var url = constants.DREAMFACTORY_TABLE_URL + "/active_vehicle_location_view?filter=location_GUID=" + locationSelected + "&api_key=" + constants.DREAMFACTORY_API_KEY;
         // this.http.get(url).map(res => res.json()).subscribe(data => {
@@ -92,6 +95,11 @@ export class AcceptBunchesPage {
         //     this.driverFromDb = data["resource"];
         // });
         //-----------------------------------------Web Design Purpose------------------------------------
+    }
+
+    onVehicleSelect(vehicleSelected: string) {
+        this.driverFromDb = this.myCloud.getVehicleDriverFromSQLite(vehicleSelected);
+
     }
 
     //---------------------Language module start---------------------//
