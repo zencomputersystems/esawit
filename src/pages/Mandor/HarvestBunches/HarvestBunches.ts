@@ -181,11 +181,11 @@ export class HarvestBunchesPage {
         this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
             this.totalHarvested = 0;
             this.totalLoaded = 0;
-            var query = "select * from harvested_info where location_GUID='" + locationSelected + "'";
+            var query = "select SUM(bunch_count) AS total_harvested from harvested_info where location_GUID='" + locationSelected + "'";
             db.executeSql(query, {}).then((data) => {
                 this.totalHarvested = data.rows.item(0).total_harvested;
                 this.balanceHarvested = this.totalHarvested - this.totalLoaded
-                query = "select * from mandor_loaded_info where location_GUID='" + locationSelected + "'";
+                query = "select SUM(bunch_count) AS total_loaded  from loaded_info where location_GUID='" + locationSelected + "'";
                 db.executeSql(query, {}).then((data) => {
                     this.totalLoaded = data.rows.item(0).total_loaded;
                     this.balanceHarvested = this.totalHarvested - this.totalLoaded
@@ -255,6 +255,7 @@ export class HarvestBunchesPage {
             this.global.showConfirm('cloud', constants.DREAMFACTORY_TABLE_URL + '/transact_loading', this.loadModel.toJson(true));
             this.myCloud.syncLoadHistoryCloudToSQLite();
         }
+        this.myCloud.saveMandorLoadedInfoLocal(this.harvestModel);
         this.loadAuthForm.reset();
     }
 
