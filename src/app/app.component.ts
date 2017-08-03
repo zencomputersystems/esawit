@@ -67,7 +67,7 @@ export class MyApp {
           var loggedInUserFromDB = data["resource"][0];
           if (loggedInUserFromDB == null) {
             //----------------------First Time App is installed----------------------
-            this.userImei.Imei_Id = UUID.UUID();
+            this.userImei.Imei_GUID = UUID.UUID();
             this.userImei.user_IMEI = this.UIDFromMobile;
             this.userImei.active = 2;
             this.userImei.user_GUID = this.userImei.updated_ts = this.userImei.created_ts = this.global.getStringTimeStamp();
