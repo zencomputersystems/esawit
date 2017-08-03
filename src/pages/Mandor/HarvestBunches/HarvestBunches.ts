@@ -46,7 +46,7 @@ export class HarvestBunchesPage {
     localHarvestHistory: any;
 
     constructor(private sqlite: SQLite, private network: Network, public actionsheetCtrl: ActionSheetController, public global: SharedFunctions,
-        private myCloud: StorageService, public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public fb: FormBuilder, public navParams: NavParams, public alertCtrl: AlertController, public translate: TranslateService, public translateService: TranslateService) {
+        private myCloud: StorageService, public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public fb: FormBuilder, public navParams: NavParams, public  alertCtrl: AlertController, public translate: TranslateService) {
 
         this.translateToEnglish();
 
@@ -75,6 +75,12 @@ export class HarvestBunchesPage {
         //-----------------------------------------Web Design Purpose------------------------------------
     }
 
+
+    isLoadValid(loadValue: number) {
+        if (loadValue > this.balanceHarvested) return false;
+        else return true;
+    }
+
     //-----------------------Offline Sync---------------------------
     ionViewDidEnter() {
         this.ifConnect = this.network.onConnect().subscribe(data => {
@@ -84,7 +90,7 @@ export class HarvestBunchesPage {
             this.myCloud.saveLoadToCloudFromSQLite();
             this.myCloud.syncLoadHistoryCloudToSQLite();
 
-        }, error => alert('Error In SurveyorHistory :' + error));
+        }, error => console.log('Error In SurveyorHistory :' + error));
     }
     ionViewWillLeave() {
         this.ifConnect.unsubscribe();
@@ -122,54 +128,54 @@ export class HarvestBunchesPage {
 
         //--------------------------It is synced data maintained locally -----------------Depricated
         // {
-        if (this.network.type == "none") {
-            this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
-                this.totalHarvested = 0;
-                this.totalLoaded = 0;
-                var query = "select * from mandor_harvested_info where location_GUID='" + locationSelected + "'";
-                db.executeSql(query, {}).then((data) => {
-                    this.totalHarvested = data.rows.item(0).total_harvested;
-                    this.balanceHarvested = this.totalHarvested - this.totalLoaded
-                    query = "select * from mandor_loaded_info where location_GUID='" + locationSelected + "'";
-                    db.executeSql(query, {}).then((data) => {
-                        this.totalLoaded = data.rows.item(0).total_loaded;
-                        this.balanceHarvested = this.totalHarvested - this.totalLoaded
-                    }, (err) => {
-                        alert('getMandorInfoFromSQLite: ' + JSON.stringify(err));
-                    });
-                }, (err) => {
-                    alert('getMandorInfoFromSQLite: ' + JSON.stringify(err));
-                });
-                this.balanceHarvested = this.totalHarvested - this.totalLoaded
-            }).catch(e => alert("getMandorInfoFromSQLite: " + JSON.stringify(e)));
-        }
-        else {
-            this.totalHarvested = 0;
-            this.totalLoaded = 0;
-            var url = constants.DREAMFACTORY_TABLE_URL + "/harvested_count_loc_date_view?filter=(location_GUID=" + locationSelected + ")AND(user_GUID=" + this.UserGUID + ")AND(harvested_date=" + this.global.getStringDate() + ")&api_key=" + constants.DREAMFACTORY_API_KEY;
-            this.http.get(url).map(res => res.json()).subscribe(data => {
-                var cloudData = data["resource"];
-                if (cloudData.length == 0) {
-                    this.totalHarvested = 0
-                }
-                else {
-                    this.totalHarvested = cloudData[0].total_bunches
-                    this.balanceHarvested = this.totalHarvested - this.totalLoaded
-                }
-            });
-            url = constants.DREAMFACTORY_TABLE_URL + "/loaded_count_loc_date_view?filter=(location_GUID=" + locationSelected + ")AND(user_GUID=" + this.UserGUID + ")AND(loaded_date=" + this.global.getStringDate() + ")&api_key=" + constants.DREAMFACTORY_API_KEY;
-            this.http.get(url).map(res => res.json()).subscribe(data => {
-                var cloudData = data["resource"];
-                if (cloudData.length == 0) {
-                    this.totalLoaded = 0
-                }
-                else {
-                    this.totalLoaded = cloudData[0].total_bunches
-                    this.balanceHarvested = this.totalHarvested - this.totalLoaded
-                }
-            });
-            this.balanceHarvested = this.totalHarvested - this.totalLoaded
-        }
+        // if (this.network.type == "none") {
+        //     this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
+        //         this.totalHarvested = 0;
+        //         this.totalLoaded = 0;
+        //         var query = "select * from mandor_harvested_info where location_GUID='" + locationSelected + "'";
+        //         db.executeSql(query, {}).then((data) => {
+        //             this.totalHarvested = data.rows.item(0).total_harvested;
+        //             this.balanceHarvested = this.totalHarvested - this.totalLoaded
+        //             query = "select * from mandor_loaded_info where location_GUID='" + locationSelected + "'";
+        //             db.executeSql(query, {}).then((data) => {
+        //                 this.totalLoaded = data.rows.item(0).total_loaded;
+        //                 this.balanceHarvested = this.totalHarvested - this.totalLoaded
+        //             }, (err) => {
+        //                 console.log('getMandorInfoFromSQLite: ' + JSON.stringify(err));
+        //             });
+        //         }, (err) => {
+        //             console.log('getMandorInfoFromSQLite: ' + JSON.stringify(err));
+        //         });
+        //         this.balanceHarvested = this.totalHarvested - this.totalLoaded
+        //     }).catch(e => console.log("getMandorInfoFromSQLite: " + JSON.stringify(e)));
+        // }
+        // else {
+        //     this.totalHarvested = 0;
+        //     this.totalLoaded = 0;
+        //     var url = constants.DREAMFACTORY_TABLE_URL + "/harvested_count_loc_date_view?filter=(location_GUID=" + locationSelected + ")AND(user_GUID=" + this.UserGUID + ")AND(harvested_date=" + this.global.getStringDate() + ")&api_key=" + constants.DREAMFACTORY_API_KEY;
+        //     this.http.get(url).map(res => res.json()).subscribe(data => {
+        //         var cloudData = data["resource"];
+        //         if (cloudData.length == 0) {
+        //             this.totalHarvested = 0
+        //         }
+        //         else {
+        //             this.totalHarvested = cloudData[0].total_bunches
+        //             this.balanceHarvested = this.totalHarvested - this.totalLoaded
+        //         }
+        //     });
+        //     url = constants.DREAMFACTORY_TABLE_URL + "/loaded_count_loc_date_view?filter=(location_GUID=" + locationSelected + ")AND(user_GUID=" + this.UserGUID + ")AND(loaded_date=" + this.global.getStringDate() + ")&api_key=" + constants.DREAMFACTORY_API_KEY;
+        //     this.http.get(url).map(res => res.json()).subscribe(data => {
+        //         var cloudData = data["resource"];
+        //         if (cloudData.length == 0) {
+        //             this.totalLoaded = 0
+        //         }
+        //         else {
+        //             this.totalLoaded = cloudData[0].total_bunches
+        //             this.balanceHarvested = this.totalHarvested - this.totalLoaded
+        //         }
+        //     });
+        //     this.balanceHarvested = this.totalHarvested - this.totalLoaded
+        // }
         // }
         //--------------------------It is synced data maintained locally -----------------Depricated
 
@@ -190,17 +196,16 @@ export class HarvestBunchesPage {
                     this.totalLoaded = data.rows.item(0).total_loaded;
                     this.balanceHarvested = this.totalHarvested - this.totalLoaded
                 }, (err) => {
-                    alert('getMandorInfoFromSQLite: ' + JSON.stringify(err));
+                    console.log('getMandorInfoFromSQLite: ' + JSON.stringify(err));
                 });
             }, (err) => {
-                alert('getMandorInfoFromSQLite: ' + JSON.stringify(err));
+                console.log('getMandorInfoFromSQLite: ' + JSON.stringify(err));
             });
             this.balanceHarvested = this.totalHarvested - this.totalLoaded
-        }).catch(e => alert("getMandorInfoFromSQLite: " + JSON.stringify(e)));
+        }).catch(e => console.log("getMandorInfoFromSQLite: " + JSON.stringify(e)));
         //--------------------------It is synced data maintained locally -----------------Depricated
 
     }
-
 
     getDataByLocation(locationSelected: any) {
         //-----------------------------------------Web Design Purpose------------------------------------
@@ -220,6 +225,7 @@ export class HarvestBunchesPage {
         // });
         //-----------------------------------------Web Design Purpose------------------------------------
     }
+
     onVehicleSelect(vehicleSelected: string) {
         this.driverFromDB = this.myCloud.getVehicleDriverFromSQLite(vehicleSelected);
 
@@ -242,21 +248,27 @@ export class HarvestBunchesPage {
     }
 
     submitLoadForm(value: any, location_GUID: string) {
-        this.loadModel.location_GUID = location_GUID;
-        this.loadModel.vehicle_GUID = value.vehicleSelect;
-        this.loadModel.driver_GUID = value.driverSelect;
-        this.loadModel.bunch_count = value.loadedBunchCount;
-        this.loadModel.createdby_GUID = this.loadModel.updatedby_GUID = this.loadModel.user_GUID = this.UserGUID;
-        this.loadModel.created_ts = this.loadModel.updated_ts = this.global.getTimeStamp();
-        if (this.network.type == "none") {
-            this.global.showConfirm('sqlite', '3', this.loadModel);
+        if (this.isLoadValid(value.loadedBunchCount)) {
+            this.loadModel.location_GUID = location_GUID;
+            this.loadModel.vehicle_GUID = value.vehicleSelect;
+            this.loadModel.driver_GUID = value.driverSelect;
+            this.loadModel.bunch_count = value.loadedBunchCount;
+            this.loadModel.createdby_GUID = this.loadModel.updatedby_GUID = this.loadModel.user_GUID = this.UserGUID;
+            this.loadModel.created_ts = this.loadModel.updated_ts = this.global.getTimeStamp();
+            if (this.network.type == "none") {
+                this.global.showConfirm('sqlite', '3', this.loadModel);
+            }
+            else {
+                this.global.showConfirm('cloud', constants.DREAMFACTORY_TABLE_URL + '/transact_loading', this.loadModel.toJson(true));
+                this.myCloud.syncLoadHistoryCloudToSQLite();
+            }
+            this.myCloud.saveMandorLoadedInfoLocal(this.loadModel);
+            this.loadAuthForm.reset();
         }
         else {
-            this.global.showConfirm('cloud', constants.DREAMFACTORY_TABLE_URL + '/transact_loading', this.loadModel.toJson(true));
-            this.myCloud.syncLoadHistoryCloudToSQLite();
+            alert(this.translate.get("_LOAD_COUNT_VLD")["value"])
+            this.loadAuthForm.reset();
         }
-        this.myCloud.saveMandorLoadedInfoLocal(this.harvestModel);
-        this.loadAuthForm.reset();
     }
 
 
@@ -265,13 +277,13 @@ export class HarvestBunchesPage {
     public translateToMalayClicked: boolean = true;
 
     public translateToEnglish() {
-        this.translateService.use('en');
+        this.translate.use('en');
         this.translateToMalayClicked = !this.translateToMalayClicked;
         this.translateToEnglishClicked = !this.translateToEnglishClicked;
     }
 
     public translateToMalay() {
-        this.translateService.use('ms');
+        this.translate.use('ms');
         this.translateToEnglishClicked = !this.translateToEnglishClicked;
         this.translateToMalayClicked = !this.translateToMalayClicked;
     }

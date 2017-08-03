@@ -41,7 +41,7 @@ export class FactoryHomePage {
         this.ifConnect = this.network.onConnect().subscribe(data => {
             this.myCloud.saveUnloadToCloudFromSQLite();
             this.myCloud.syncUnloadHistoryCloudToSQLite();
-        }, error => alert('Error In SurveyorHistory :' + error));
+        }, error => console.log('Error In SurveyorHistory :' + error));
     }
     ionViewWillLeave() {
         this.ifConnect.unsubscribe();

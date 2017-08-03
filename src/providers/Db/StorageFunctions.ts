@@ -683,7 +683,8 @@ export class StorageService {
 					//-----------------------SQLITE DB structure-------------------------
 					var query = "select * from sqlite_master WHERE type='table'";
 					console.log(query)
-					db.executeSql(query, {}).then((data) => {
+					db.executeSql(query, {}).then((data) => 
+					{
 						console.log(query);
 					}, (err) => {
 						console.log('getMandorInfoFromSQLite: ' + JSON.stringify(err));
