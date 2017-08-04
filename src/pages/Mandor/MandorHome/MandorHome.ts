@@ -28,7 +28,7 @@ export class MandorHomePage {
             this.myCloud.syncHarvestHistoryCloudToSQLite();
             this.myCloud.saveLoadToCloudFromSQLite();
             this.myCloud.syncLoadHistoryCloudToSQLite();
-                    this.myCloud.getVehicleDriverListFromCloud();
+            this.myCloud.getVehicleDriverListFromCloud();
 
         }
         this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
@@ -43,66 +43,90 @@ export class MandorHomePage {
             this.myCloud.syncHarvestHistoryCloudToSQLite();
             this.myCloud.saveLoadToCloudFromSQLite();
             this.myCloud.syncLoadHistoryCloudToSQLite();
-        }, error => alert('Error In SurveyorHistory :' + error));
+        }, error => console.log('Error In SurveyorHistory :' + error));
     }
     ionViewWillLeave() {
         this.ifConnect.unsubscribe();
     }
     //-----------------------End Offline Sync---------------------------
+    getSummaryOld() {
+        // if (this.network.type == "none") {
+        //     this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
+        //         this.totalHarvested = 0;
+        //         this.totalLoaded = 0;
+        //         var query = "select * from mandor_harvested_info";
+        //         db.executeSql(query, {}).then((data) => {
+        //             this.totalHarvested = data.rows.item(0).total_harvested;
+        //             this.balanceHarvested = this.totalHarvested - this.totalLoaded
+        //             query = "select * from mandor_loaded_info";
+        //             db.executeSql(query, {}).then((data) => {
+        //                 this.totalLoaded = data.rows.item(0).total_loaded;
+        //                 this.balanceHarvested = this.totalHarvested - this.totalLoaded
+        //             }, (err) => {
+        //                 console.log('getMandorInfoFromSQLite: ' + JSON.stringify(err));
+        //             });
+        //         }, (err) => {
+        //             console.log('getMandorInfoFromSQLite: ' + JSON.stringify(err));
+        //         });
+        //         this.balanceHarvested = this.totalHarvested - this.totalLoaded
+        //     }).catch(e => console.log("getMandorInfoFromSQLite: " + JSON.stringify(e)));
+        // }
+        // else {
+        //     this.totalHarvested = 0;
+        //     this.totalLoaded = 0;
+        //     var url = constants.DREAMFACTORY_TABLE_URL + "/harvested_count_loc_date_view?filter=(user_GUID=" + this.UserGUID + ")AND(harvested_date=" + this.global.getStringDate() + ")&api_key=" + constants.DREAMFACTORY_API_KEY;
+        //     this.http.get(url).map(res => res.json()).subscribe(data => {
+        //         var cloudData = data["resource"];
+        //         if (cloudData.length == 0) {
+        //             this.totalHarvested = 0
+        //         }
+        //         else {
+        //             cloudData.forEach(element => {
+        //                 this.totalHarvested += element.total_bunches
+        //             });
+        //             this.balanceHarvested = this.totalHarvested - this.totalLoaded
+        //         }
+        //     });
+        //     url = constants.DREAMFACTORY_TABLE_URL + "/loaded_count_loc_date_view?filter=(user_GUID=" + this.UserGUID + ")AND(loaded_date=" + this.global.getStringDate() + ")&api_key=" + constants.DREAMFACTORY_API_KEY;
+        //     this.http.get(url).map(res => res.json()).subscribe(data => {
+        //         var cloudData = data["resource"];
+        //         if (cloudData.length == 0) {
+        //             this.totalLoaded = 0
+        //         }
+        //         else {
+        //             cloudData.forEach(element => {
+        //                 this.totalLoaded += element.total_bunches
+        //             });
+        //             this.balanceHarvested = this.totalHarvested - this.totalLoaded
+        //         }
+        //     });
+        //     this.balanceHarvested = this.totalHarvested - this.totalLoaded
+        // }
+    }
+
     getSummary() {
-        if (this.network.type == "none") {
-            this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
-                this.totalHarvested = 0;
-                this.totalLoaded = 0;
-                var query = "select * from mandor_harvested_info";
-                db.executeSql(query, {}).then((data) => {
-                    this.totalHarvested = data.rows.item(0).total_harvested;
-                    this.balanceHarvested = this.totalHarvested - this.totalLoaded
-                    query = "select * from mandor_loaded_info";
-                    db.executeSql(query, {}).then((data) => {
-                        this.totalLoaded = data.rows.item(0).total_loaded;
-                        this.balanceHarvested = this.totalHarvested - this.totalLoaded
-                    }, (err) => {
-                        alert('getMandorInfoFromSQLite: ' + JSON.stringify(err));
-                    });
-                }, (err) => {
-                    alert('getMandorInfoFromSQLite: ' + JSON.stringify(err));
-                });
-                this.balanceHarvested = this.totalHarvested - this.totalLoaded
-            }).catch(e => alert("getMandorInfoFromSQLite: " + JSON.stringify(e)));
-        }
-        else {
+        this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
             this.totalHarvested = 0;
             this.totalLoaded = 0;
-            var url = constants.DREAMFACTORY_TABLE_URL + "/harvested_count_loc_date_view?filter=(user_GUID=" + this.UserGUID + ")AND(harvested_date=" + this.global.getStringDate() + ")&api_key=" + constants.DREAMFACTORY_API_KEY;
-            this.http.get(url).map(res => res.json()).subscribe(data => {
-                var cloudData = data["resource"];
-                if (cloudData.length == 0) {
-                    this.totalHarvested = 0
-                }
-                else {
-                    cloudData.forEach(element => {
-                        this.totalHarvested += element.total_bunches
-                    });
+            var query = "select SUM(bunch_count) AS total_harvested from harvested_info";
+            db.executeSql(query, {}).then((data) => {
+                this.totalHarvested = data.rows.item(0).total_harvested;
+                this.balanceHarvested = this.totalHarvested - this.totalLoaded
+                query = "select SUM(bunch_count) AS total_loaded  from loaded_info";
+                db.executeSql(query, {}).then((data) => {
+                    this.totalLoaded = data.rows.item(0).total_loaded;
                     this.balanceHarvested = this.totalHarvested - this.totalLoaded
-                }
-            });
-            url = constants.DREAMFACTORY_TABLE_URL + "/loaded_count_loc_date_view?filter=(user_GUID=" + this.UserGUID + ")AND(loaded_date=" + this.global.getStringDate() + ")&api_key=" + constants.DREAMFACTORY_API_KEY;
-            this.http.get(url).map(res => res.json()).subscribe(data => {
-                var cloudData = data["resource"];
-                if (cloudData.length == 0) {
-                    this.totalLoaded = 0
-                }
-                else {
-                    cloudData.forEach(element => {
-                        this.totalLoaded += element.total_bunches
-                    });
-                    this.balanceHarvested = this.totalHarvested - this.totalLoaded
-                }
+                }, (err) => {
+                    console.log('getMandorInfoFromSQLite: ' + JSON.stringify(err));
+                });
+            }, (err) => {
+                console.log('getMandorInfoFromSQLite: ' + JSON.stringify(err));
             });
             this.balanceHarvested = this.totalHarvested - this.totalLoaded
-        }
+        }).catch(e => console.log("getMandorInfoFromSQLite: " + JSON.stringify(e)));
+
     }
+
 
 
     onLink(url: string) {

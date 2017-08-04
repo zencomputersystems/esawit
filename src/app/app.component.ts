@@ -1,4 +1,4 @@
-import { UserImeiModel  } from '../models/UserImeiModel';
+import { UserImeiModel } from '../models/UserImeiModel';
 import { Component } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -26,7 +26,7 @@ export class MyApp {
   UIDFromMobile: string;
   locationListFromDb: any;
   module: number;
-  userImei: UserImeiModel  = new UserImeiModel ();
+  userImei: UserImeiModel = new UserImeiModel();
   constructor(public global: SharedFunctions, private network: Network, private device: Device, private myCloud: StorageService, public http: Http, platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, translate: TranslateService) {
     translate.setDefaultLang('en');
     platform.ready().then(() => {
@@ -36,11 +36,11 @@ export class MyApp {
         // "f47b4e39376dbe34"; 
         this.device.uuid;
       //-----------------------------------------End Web Design Purpose------------------------------------
-      // alert(this.network.type)
+      // console.log(this.network.type)
       localStorage.setItem('device_UUID', this.UIDFromMobile);
       if (this.network.type == "none") {
         //--------------------------------------------------Device in Offline--------------------------------------------
-        // alert('you are in offline');
+        // console.log('you are in offline');
         var tempModule = localStorage.getItem('selected_module');
         var userGUID = localStorage.getItem('loggedIn_user_GUID');
         var isActive = localStorage.getItem('isActive');
@@ -61,16 +61,17 @@ export class MyApp {
       }
       else {
         //--------------------------------------------------Device in Online--------------------------------------------
-        // alert('you are in online');
+        // console.log('you are in online');
         var url = constants.DREAMFACTORY_TABLE_URL + "/user_imei?filter=user_IMEI=" + this.UIDFromMobile + "&api_key=" + constants.DREAMFACTORY_API_KEY;
         this.http.get(url).map(res => res.json()).subscribe(data => {
           var loggedInUserFromDB = data["resource"][0];
           if (loggedInUserFromDB == null) {
             //----------------------First Time App is installed----------------------
-            this.userImei.Imei_Id = UUID.UUID();
+            this.userImei.Imei_GUID = UUID.UUID();
             this.userImei.user_IMEI = this.UIDFromMobile;
             this.userImei.active = 2;
-            this.userImei.user_GUID = this.userImei.updated_ts = this.userImei.created_ts = this.global.getStringTimeStamp();
+            this.userImei.updated_ts = this.userImei.created_ts = this.global.getStringTimeStamp();
+            console.log(JSON.stringify(this.userImei))
             this.myCloud.saveToCloud(constants.DREAMFACTORY_TABLE_URL + '/user_imei', this.userImei.toJson(true));
             this.module = 0;
             //----------------------First Time App is installed---------------------
@@ -88,7 +89,7 @@ export class MyApp {
             this.module = loggedInUserFromDB.module_id == null ? 0 : loggedInUserFromDB.module_id;
             //-------------------------User is Authorized--------------------------  
           }
-          // alert(this.module)
+          // console.log(this.module)
           switch (this.module) {
             case 1: this.rootPage = SurveyorHomePage; break;
             case 2:
@@ -106,14 +107,14 @@ export class MyApp {
           }
         }, err => {
           if (err.status == 400) {
-            alert('400 Error')
+            console.log('400 Error')
           } else if (err.status == 403) {
-            alert('403 Error')
+            console.log('403 Error')
           } else if (err.status == 500) {
-            alert('Something wrong with server');
+            console.log('Something wrong with server');
           }
           else if (err.status == 404) {
-            alert('UUID is not registered')
+            console.log('UUID is not registered')
           }
           this.rootPage = UnAuthorizedUserPage;
         });

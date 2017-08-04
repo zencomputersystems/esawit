@@ -27,7 +27,7 @@
     <ion-list>
       <ion-item>
         <ion-label>{{ "_LOCATION_LBL" | translate }}</ion-label>
-        <ion-select #ddLocation [(ngModel)]="locationID" (ionChange)="LocationClick(locationID); getSummaryByLocationOld(locationID);">
+        <ion-select #ddLocation [(ngModel)]="locationID" (ionChange)="LocationClick(locationID)">
           <ion-option *ngFor="let location of locationFromDB" value={{location.location_GUID}} interface="popover">{{location.location_name}}</ion-option>
         </ion-select>
       </ion-item>
@@ -38,7 +38,7 @@
       <div class="harvestContent MandorListRow borderColor-lightGrey" *ngIf="LocationClicked == location.location_GUID">
 
         <ion-segment [(ngModel)]="locationData" color="earth">
-          <ion-segment-button value="seg_info" (click)="getSummaryByLocationOld(location.location_GUID)">
+          <ion-segment-button value="seg_info" (click)="getSummaryByLocation(location.location_GUID)">
             {{"_INFO_LBL" | translate }}
           </ion-segment-button>
           <ion-segment-button value="seg_harvest" (click)="getHarvestedHistory(location.location_name)">
