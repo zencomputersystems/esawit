@@ -33,7 +33,7 @@ export class SurveyorHomePage {
         this.ifConnect = this.network.onConnect().subscribe(data => {
             this.myCloud.saveSurveyToCloudFromSQLite();
             this.myCloud.syncHistoryCloudToSQLite();
-        }, error => alert('Error In SurveyorHistory :' + error));
+        }, error => console.log('Error In SurveyorHistory :' + error));
     }
     ionViewWillLeave() {
         this.ifConnect.unsubscribe();

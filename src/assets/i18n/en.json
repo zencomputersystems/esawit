@@ -9,6 +9,7 @@
   "_DRIVER_SELECT_VLD": "* Please Select the Driver",
   "_LOCATION_SELECT_VLD": "* Please Select the Location",
   "_MONTH_SELECT_VLD": "* Please Select the Month",
+  "_LOAD_COUNT_VLD":"The Harvested count is not enough to Load.",
   "_CANCEL_BTN":"Cancel",
   "_ACCEPT_BTN":"Yes",
   "_SURVEYOR_BTN": "Surveyor",
