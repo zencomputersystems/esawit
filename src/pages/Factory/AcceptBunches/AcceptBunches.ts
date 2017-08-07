@@ -32,8 +32,6 @@ export class AcceptBunchesPage {
         if (this.network.type != "none") {
             this.myCloud.saveUnloadToCloudFromSQLite();
             this.myCloud.syncUnloadHistoryCloudToSQLite();
-            // this.myCloud.getVehicleDriverListFromCloud();
-
         }
         this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
         this.authForm = fb.group({
@@ -49,6 +47,39 @@ export class AcceptBunchesPage {
         //     this.locationFromDb = data["resource"];
         // });
         //-----------------------------------------Web Design Purpose------------------------------------
+    }
+
+    syncAndRefresh() {
+        this.myCloud.saveUnloadToCloudFromSQLite();
+        this.myCloud.syncUnloadHistoryCloudToSQLite();
+
+        //-----------------------Offline Sync---------------------------
+        this.myCloud.getCloudMasterLocations();
+        this.myCloud.getVehicleLocationListFromCloud();
+        this.myCloud.getDriverLocationListFromCloud();
+        this.myCloud.getMasterVehiclesListFromCloud();
+        this.myCloud.getMasterVehiclesFromSQLite();
+        this.myCloud.syncUnloadHistoryCloudToSQLite();
+        //-----------------------End Offline Sync---------------------------
+
+        //----------------------Driver Vehicle----------------------
+        this.myCloud.getVehicleDriverListFromCloud();
+
+        //----------------------Driver Vehicle----------------------
+    }
+
+    ionViewWillEnter() {
+        if (this.network.type != "none") {
+            this.syncAndRefresh();
+        }
+        this.ifConnect = this.network.onConnect().subscribe(data => {
+            this.syncAndRefresh();
+        }, error => console.log('Error In SurveyorHistory :' + error));
+    }
+
+
+    ionViewWillLeave() {
+        this.ifConnect.unsubscribe();
     }
 
     submitForm(value: any) {
@@ -69,19 +100,7 @@ export class AcceptBunchesPage {
 
     }
 
-    ionViewDidEnter() {
-        this.ifConnect = this.network.onConnect().subscribe(data => {
-            this.myCloud.saveUnloadToCloudFromSQLite();
-            this.myCloud.syncUnloadHistoryCloudToSQLite();
-        }, error => console.error(error));
-    }
-
-    ionViewWillLeave() {
-        this.ifConnect.unsubscribe();
-    }
-
-    onLocationSelect(locationSelected: string) 
-    {
+    onLocationSelect(locationSelected: string) {
         //-----------------------------------------Web Design Purpose------------------------------------
         this.vehicleFromDb = this.myCloud.getVehicleLocationsFromSQLite(locationSelected);
         // this.driverFromDb = this.myCloud.getDriverLocationsFromSQLite(locationSelected);

@@ -46,17 +46,10 @@ export class HarvestBunchesPage {
     localHarvestHistory: any;
 
     constructor(private sqlite: SQLite, private network: Network, public actionsheetCtrl: ActionSheetController, public global: SharedFunctions,
-        private myCloud: StorageService, public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public fb: FormBuilder, public navParams: NavParams, public  alertCtrl: AlertController, public translate: TranslateService) {
+        private myCloud: StorageService, public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public fb: FormBuilder, public navParams: NavParams, public alertCtrl: AlertController, public translate: TranslateService) {
 
         this.translateToEnglish();
 
-        if (this.network.type != "none") {
-            this.myCloud.syncMandorInfoCloudToSQLite(this.UserGUID, this.global.getStringDate());
-            this.myCloud.saveHarvestToCloudFromSQLite();
-            this.myCloud.syncHarvestHistoryCloudToSQLite();
-            this.myCloud.saveLoadToCloudFromSQLite();
-            this.myCloud.syncLoadHistoryCloudToSQLite();
-        }
         this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
         this.harvestAuthForm = fb.group({
             'harvestedBunchCount': [null, Validators.compose([Validators.pattern('^(?!(0))[0-9]*'), Validators.required])]
@@ -66,6 +59,32 @@ export class HarvestBunchesPage {
             'driverSelect': [null, Validators.compose([Validators.required])],
             'vehicleSelect': [null, Validators.compose([Validators.required])]
         });
+    }
+
+    isLoadValid(loadValue: number) {
+        if (loadValue > this.balanceHarvested) return false;
+        else return true;
+    }
+
+    syncAndRefresh() {
+        this.myCloud.syncMandorInfoCloudToSQLite(this.UserGUID, this.global.getStringDate());
+        this.myCloud.saveHarvestToCloudFromSQLite();
+        this.myCloud.syncHarvestHistoryCloudToSQLite();
+        this.myCloud.saveLoadToCloudFromSQLite();
+        this.myCloud.syncLoadHistoryCloudToSQLite();
+        this.myCloud.getVehicleDriverListFromCloud();
+    }
+
+    //-----------------------Offline Sync---------------------------
+
+    ionViewWillEnter() {
+        if (this.network.type != "none") {
+            this.syncAndRefresh();
+        }
+        this.ifConnect = this.network.onConnect().subscribe(data => {
+            this.syncAndRefresh();
+        }, error => console.log('Error In SurveyorHistory :' + error));
+
         //-----------------------------------------Web Design Purpose------------------------------------
         this.locationFromDB = this.myCloud.getUserLocationsFromSQLite();
         // var url = constants.DREAMFACTORY_TABLE_URL + "/active_users_location_view?filter=user_GUID=" + this.UserGUID + "&api_key=" + constants.DREAMFACTORY_API_KEY;
@@ -75,23 +94,6 @@ export class HarvestBunchesPage {
         //-----------------------------------------Web Design Purpose------------------------------------
     }
 
-
-    isLoadValid(loadValue: number) {
-        if (loadValue > this.balanceHarvested) return false;
-        else return true;
-    }
-
-    //-----------------------Offline Sync---------------------------
-    ionViewDidEnter() {
-        this.ifConnect = this.network.onConnect().subscribe(data => {
-            this.myCloud.syncMandorInfoCloudToSQLite(this.UserGUID, this.global.getStringDate());
-            this.myCloud.saveHarvestToCloudFromSQLite();
-            this.myCloud.syncHarvestHistoryCloudToSQLite();
-            this.myCloud.saveLoadToCloudFromSQLite();
-            this.myCloud.syncLoadHistoryCloudToSQLite();
-
-        }, error => console.log('Error In SurveyorHistory :' + error));
-    }
     ionViewWillLeave() {
         this.ifConnect.unsubscribe();
     }
@@ -187,13 +189,14 @@ export class HarvestBunchesPage {
         this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
             this.totalHarvested = 0;
             this.totalLoaded = 0;
-            var query = "select SUM(bunch_count) AS total_harvested from harvested_info where location_GUID='" + locationSelected + "'";
+            var query = "select SUM(bunch_count) AS total_harvested from harvested_info where location_GUID='" + locationSelected + "' AND date_stamp=strftime('%Y-%m-%d','now')";
             db.executeSql(query, {}).then((data) => {
-                this.totalHarvested = data.rows.item(0).total_harvested;
+                this.totalHarvested = data.rows.item(0).total_harvested || 0;
+
                 this.balanceHarvested = this.totalHarvested - this.totalLoaded
-                query = "select SUM(bunch_count) AS total_loaded  from loaded_info where location_GUID='" + locationSelected + "'";
+                query = "select SUM(bunch_count) AS total_loaded  from loaded_info where location_GUID='" + locationSelected + "' AND date_stamp=strftime('%Y-%m-%d','now')";
                 db.executeSql(query, {}).then((data) => {
-                    this.totalLoaded = data.rows.item(0).total_loaded;
+                    this.totalLoaded = data.rows.item(0).total_loaded || 0;
                     this.balanceHarvested = this.totalHarvested - this.totalLoaded
                 }, (err) => {
                     console.log('getMandorInfoFromSQLite: ' + JSON.stringify(err));

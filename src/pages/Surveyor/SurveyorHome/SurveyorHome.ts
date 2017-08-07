@@ -15,26 +15,30 @@ export class SurveyorHomePage {
     ifConnect: Subscription;
 
     constructor(private network: Network, private myCloud: StorageService, public navCtrl: NavController, public platform: Platform, public actionsheetCtrl: ActionSheetController, public translate: TranslateService, public translateService: TranslateService) {
-        this.translateToEnglish();
+        this.translateToEnglish(); 
+    }
 
+     SyncAndRefresh() {
+        this.myCloud.saveSurveyToCloudFromSQLite();
+        this.myCloud.syncHistoryCloudToSQLite();
+    }
+
+    ionViewWillEnter() {
         if (this.network.type != "none") {
-            this.myCloud.saveSurveyToCloudFromSQLite();
-            this.myCloud.syncHistoryCloudToSQLite();
+            this.SyncAndRefresh();
         }
-        //-----------------------Offline Sync---------------------------
+        this.ifConnect = this.network.onConnect().subscribe(data => {
+            this.SyncAndRefresh();
+        }, error => console.error(error));
+
+         //-----------------------Offline Sync---------------------------
         this.myCloud.getUserLocationListFromCloud();
         this.myCloud.syncHistoryCloudToSQLite();
         //-----------------------End Offline Sync---------------------------
-
     }
 
     //-----------------------Offline Sync---------------------------
-    ionViewDidEnter() {
-        this.ifConnect = this.network.onConnect().subscribe(data => {
-            this.myCloud.saveSurveyToCloudFromSQLite();
-            this.myCloud.syncHistoryCloudToSQLite();
-        }, error => console.log('Error In SurveyorHistory :' + error));
-    }
+  
     ionViewWillLeave() {
         this.ifConnect.unsubscribe();
     }

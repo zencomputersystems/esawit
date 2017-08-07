@@ -645,21 +645,11 @@ export class StorageService {
 		console.log('In Save Mandor Info')
 		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
 			console.log('DB Created')
-			db.executeSql('CREATE TABLE IF NOT EXISTS harvested_info(harvest_date TEXT,location_GUID TEXT,bunch_count INTEGER)', {})
+			db.executeSql('CREATE TABLE IF NOT EXISTS harvested_info(date_stamp TEXT,harvest_date TEXT,location_GUID TEXT,bunch_count INTEGER)', {})
 				.then(() => {
 
-					//-----------------------SQLITE DB structure-------------------------
-					var query = "select * from sqlite_master WHERE type='table'";
-					console.log(query)
-					db.executeSql(query, {}).then((data) => {
-						console.log(query);
-					}, (err) => {
-						console.log('getMandorInfoFromSQLite: ' + JSON.stringify(err));
-					});
-					//-----------------------SQLITE DB structure-------------------------
-
 					console.log('Table Created')
-					db.executeSql('INSERT INTO harvested_info(harvest_date,location_GUID,bunch_count) VALUES(?,?,?)', [myModel.created_ts, myModel.location_GUID, myModel.bunch_count])
+					db.executeSql('INSERT INTO harvested_info(date_stamp,harvest_date,location_GUID,bunch_count) VALUES(?,?,?,?)', [this.getStringDate(),myModel.created_ts, myModel.location_GUID, myModel.bunch_count])
 						.then(() => {
 							console.log('Record Inserted to SQLite' + myModel.bunch_count);
 						}).catch(e => {
@@ -677,22 +667,11 @@ export class StorageService {
 		console.log('In Save Mandor Loaded Info')
 		this.sqlite.create({ name: 'esawit.db', location: 'default' }).then((db: SQLiteObject) => {
 			console.log('DB Created')
-			db.executeSql('CREATE TABLE IF NOT EXISTS loaded_info(loaded_date TEXT,location_GUID TEXT,bunch_count INTEGER)', {})
+			db.executeSql('CREATE TABLE IF NOT EXISTS loaded_info(date_stamp TEXT,loaded_date TEXT,location_GUID TEXT,bunch_count INTEGER)', {})
 				.then(() => {
-
-					//-----------------------SQLITE DB structure-------------------------
-					var query = "select * from sqlite_master WHERE type='table'";
-					console.log(query)
-					db.executeSql(query, {}).then((data) => 
-					{
-						console.log(query);
-					}, (err) => {
-						console.log('getMandorInfoFromSQLite: ' + JSON.stringify(err));
-					});
-					//-----------------------SQLITE DB structure-------------------------
-
+					
 					console.log('Table Created')
-					db.executeSql('INSERT INTO loaded_info(loaded_date,location_GUID,bunch_count) VALUES(?,?,?)', [myModel.created_ts, myModel.location_GUID, myModel.bunch_count])
+					db.executeSql('INSERT INTO loaded_info(date_stamp,loaded_date,location_GUID,bunch_count) VALUES(?,?,?,?)', [this.getStringDate(),myModel.created_ts, myModel.location_GUID, myModel.bunch_count])
 						.then(() => {
 							console.log('Record Inserted to SQLite' + myModel.bunch_count);
 						}).catch(e => {
