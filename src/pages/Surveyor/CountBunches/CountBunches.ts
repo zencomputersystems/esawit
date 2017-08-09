@@ -28,12 +28,7 @@ export class CountBunchesPage {
 
     constructor(private myCloud: StorageService, private network: Network, public actionsheetCtrl: ActionSheetController, private storage: Storage, public global: SharedFunctions,
         public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public fb: FormBuilder, public navParams: NavParams, public alertCtrl: AlertController, public translate: TranslateService, public translateService: TranslateService) {
-        this.translateToEnglish();
-
-        if (this.network.type != "none") {
-            this.myCloud.saveSurveyToCloudFromSQLite();
-            this.myCloud.syncHistoryCloudToSQLite();
-        }
+        // this.translateToEnglish();
         this.authForm = fb.group({
             'bunchCount': [null, Validators.compose([Validators.pattern('^(?!(0))[0-9]*'), Validators.required])],
             'monthSelect': [null, Validators.compose([Validators.required])],
@@ -42,22 +37,31 @@ export class CountBunchesPage {
         this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
         this.getMonths();
         this.currentYear = new Date().getFullYear();
+        }
 
-        //-----------------------------------------Web Design Purpose------------------------------------
+    SyncAndRefresh() {
+        this.myCloud.saveSurveyToCloudFromSQLite();
+        this.myCloud.syncHistoryCloudToSQLite();
+    }
+
+    ionViewWillEnter() {
+        if (this.network.type != "none") {
+            this.SyncAndRefresh();
+        }
+        this.ifConnect = this.network.onConnect().subscribe(data => {
+            this.SyncAndRefresh();
+        }, error => console.error(error));
+
+         //-----------------------------------------Web Design Purpose------------------------------------
         this.locationListFromDb = this.myCloud.getUserLocationsFromSQLite();
         // 		var url = constants.DREAMFACTORY_TABLE_URL + "/active_users_location_view?filter=user_GUID=" + this.UserGUID + "&api_key=" + constants.DREAMFACTORY_API_KEY;
         // this.http.get(url).map(res => res.json()).subscribe(data => {
         // 	 this.locationListFromDb = data["resource"];
         // });
         //-----------------------------------------Web Design Purpose------------------------------------
+   
     }
 
-    ionViewDidEnter() {
-        this.ifConnect = this.network.onConnect().subscribe(data => {
-            this.myCloud.saveSurveyToCloudFromSQLite();
-            this.myCloud.syncHistoryCloudToSQLite();
-        }, error => console.error(error));
-    }
     ionViewWillLeave() {
         this.ifConnect.unsubscribe();
     }
@@ -96,20 +100,20 @@ export class CountBunchesPage {
     }
 
     //---------------------Language module start---------------------//
-    public translateToEnglishClicked: boolean = false;
-    public translateToMalayClicked: boolean = true;
+    // public translateToEnglishClicked: boolean = false;
+    // public translateToMalayClicked: boolean = true;
 
-    public translateToEnglish() {
-        this.translateService.use('en');
-        this.translateToMalayClicked = !this.translateToMalayClicked;
-        this.translateToEnglishClicked = !this.translateToEnglishClicked;
-    }
+    // public translateToEnglish() {
+    //     this.translateService.use('en');
+    //     this.translateToMalayClicked = !this.translateToMalayClicked;
+    //     this.translateToEnglishClicked = !this.translateToEnglishClicked;
+    // }
 
-    public translateToMalay() {
-        this.translateService.use('ms');
-        this.translateToEnglishClicked = !this.translateToEnglishClicked;
-        this.translateToMalayClicked = !this.translateToMalayClicked;
-    }
+    // public translateToMalay() {
+    //     this.translateService.use('ms');
+    //     this.translateToEnglishClicked = !this.translateToEnglishClicked;
+    //     this.translateToMalayClicked = !this.translateToMalayClicked;
+    // }
     //---------------------Language module end---------------------//
 }
 

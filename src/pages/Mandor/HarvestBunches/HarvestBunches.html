@@ -1,7 +1,7 @@
-﻿<ion-header>
+﻿<!-- <ion-header>
   <ion-navbar class="bgColor-darkBlue">
     <ion-avatar class="logoSize" item-start>
-      <img src="../../../assets/img/eSawitLogo.png">
+      <img src="assets/img/eSawitLogo.png">
     </ion-avatar>
     <div class="headerInfo">
       <ion-fab top right edge class="topZero rightZero">
@@ -13,7 +13,7 @@
       </ion-fab>
     </div>
   </ion-navbar>
-</ion-header>
+</ion-header> -->
 
 
 <ion-content class="bgColor-lightGrey">
@@ -27,7 +27,7 @@
     <ion-list>
       <ion-item>
         <ion-label>{{ "_LOCATION_LBL" | translate }}</ion-label>
-        <ion-select #ddLocation [(ngModel)]="locationID" (ionChange)="LocationClick(locationID); getSummaryByLocation(locationID);">
+        <ion-select #ddLocation [(ngModel)]="locationID" (ionChange)="LocationClick(locationID)">
           <ion-option *ngFor="let location of locationFromDB" value={{location.location_GUID}} interface="popover">{{location.location_name}}</ion-option>
         </ion-select>
       </ion-item>
@@ -82,7 +82,7 @@
 
             <div [hidden]="location.h2">
               <ion-card-content>
-                <ion-list >
+                <ion-list>
                   <div class="listItemCard" *ngFor="let local of localHarvestHistory; let i = index;">
                     <div class="harvestListItemNo">
                       <div class="litsItemNoValue bgColor-green fontColor-white">{{i+1}}</div>
@@ -113,10 +113,10 @@
                 </ion-list>
 
 
-                <b> 
+              <b>  
 
-                  <!-- Local Mandor Info purpose -->
-                  <!-- <ion-list>
+                <!-- Local Mandor Info purpose -->
+                <!-- <ion-list>
                   <div class="listItemCard" *ngFor="let hinfo of harvestInfo; let i = index;">
                     <div class="harvestListItemNo">
                       <div class="litsItemNoValue bgColor-green fontColor-white">{{i+1}}</div>

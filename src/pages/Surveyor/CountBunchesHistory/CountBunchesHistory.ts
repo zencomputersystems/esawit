@@ -20,7 +20,7 @@ export class CountBunchesHistoryPage {
     ifConnect: Subscription;
 
     constructor(public global: SharedFunctions, private myCloud: StorageService, private network: Network, public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, public http: Http, public platform: Platform, public actionsheetCtrl: ActionSheetController, public translate: TranslateService, public translateService: TranslateService) {
-        this.translateToEnglish();
+        // this.translateToEnglish();
 
         //-----------------------------------------Web Design Purpose------------------------------------
         this.historyDataInitializer();
@@ -52,7 +52,7 @@ export class CountBunchesHistoryPage {
         this.ifConnect = this.network.onConnect().subscribe(data => {
             this.myCloud.saveSurveyToCloudFromSQLite();
             this.myCloud.syncHistoryCloudToSQLite();
-        }, error => alert('Error In SurveyorHistory :' + error));
+        }, error => console.log('Error In SurveyorHistory :' + error));
     }
     ionViewWillLeave() {
         this.ifConnect.unsubscribe();
@@ -60,20 +60,20 @@ export class CountBunchesHistoryPage {
     //-----------------------End Offline Sync---------------------------
 
     //---------------------Language module start---------------------//
-    public translateToEnglishClicked: boolean = false;
-    public translateToMalayClicked: boolean = true;
+    // public translateToEnglishClicked: boolean = false;
+    // public translateToMalayClicked: boolean = true;
 
-    public translateToEnglish() {
-        this.translateService.use('en');
-        this.translateToMalayClicked = !this.translateToMalayClicked;
-        this.translateToEnglishClicked = !this.translateToEnglishClicked;
-    }
+    // public translateToEnglish() {
+    //     this.translateService.use('en');
+    //     this.translateToMalayClicked = !this.translateToMalayClicked;
+    //     this.translateToEnglishClicked = !this.translateToEnglishClicked;
+    // }
 
-    public translateToMalay() {
-        this.translateService.use('ms');
-        this.translateToEnglishClicked = !this.translateToEnglishClicked;
-        this.translateToMalayClicked = !this.translateToMalayClicked;
-    }
+    // public translateToMalay() {
+    //     this.translateService.use('ms');
+    //     this.translateToEnglishClicked = !this.translateToEnglishClicked;
+    //     this.translateToMalayClicked = !this.translateToMalayClicked;
+    // }
     //---------------------Language module end---------------------//
 }
 

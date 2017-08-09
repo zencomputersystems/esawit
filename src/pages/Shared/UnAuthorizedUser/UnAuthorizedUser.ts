@@ -13,7 +13,7 @@ this.device_UUID = localStorage.getItem('device_UUID');
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad UnauthorizedUserPage');
+   
   }
 
 }

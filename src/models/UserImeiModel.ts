@@ -1,7 +1,7 @@
 export class UserImeiModel {
 	constructor(
 		public user_GUID: string = "",
-		public user_IMEI_GUID: string = "",
+		public Imei_GUID: string = null,
 		public user_mobile_no: string = "",
 		public user_IMEI: string = "",
 		public module_id: number = null,
@@ -15,7 +15,7 @@ export class UserImeiModel {
 	toJson(stringify?: boolean): any {
 		var doc = {
 			user_GUID: this.user_GUID,
-			user_IMEI_GUID: this.user_IMEI_GUID,
+			Imei_GUID: this.Imei_GUID,
 			user_mobile_no: this.user_mobile_no,
 			user_IMEI: this.user_IMEI,
 			module_id: this.module_id,
