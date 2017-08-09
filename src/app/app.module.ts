@@ -8,11 +8,8 @@ import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { Network } from '@ionic-native/network';
 
 import { MandorHomePage } from '../pages/Mandor/MandorHome/MandorHome';
-import { HarvestedHistoryPage } from '../pages/Mandor/HarvestedHistory/HarvestedHistory';
 import { HarvestBunchesPage } from '../pages/Mandor/HarvestBunches/HarvestBunches';
 
-import { SettingsPage } from '../pages/Shared/Settings/Settings';
-import { LoginPage } from '../pages/Shared/Login/Login';
 import {UnAuthorizedUserPage} from '../pages/Shared/UnAuthorizedUser/UnAuthorizedUser'
 
 import { CountBunchesPage } from '../pages/Surveyor/CountBunches/CountBunches';
@@ -33,8 +30,8 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 @NgModule({
   declarations: [
     MyApp,
-    MandorHomePage, HarvestedHistoryPage, HarvestBunchesPage,
-    SettingsPage, LoginPage,UnAuthorizedUserPage,
+    MandorHomePage,  HarvestBunchesPage,
+   UnAuthorizedUserPage,
     SurveyorHomePage, CountBunchesPage, CountBunchesHistoryPage,
     AcceptBunchesPage, AcceptedBunchesHistoryPage, FactoryHomePage
   ],
@@ -54,8 +51,8 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    MandorHomePage, HarvestedHistoryPage, HarvestBunchesPage,
-    SettingsPage, LoginPage, UnAuthorizedUserPage,
+    MandorHomePage,  HarvestBunchesPage,
+   UnAuthorizedUserPage,
     SurveyorHomePage, CountBunchesPage, CountBunchesHistoryPage,
     AcceptBunchesPage, AcceptedBunchesHistoryPage, FactoryHomePage
   ],

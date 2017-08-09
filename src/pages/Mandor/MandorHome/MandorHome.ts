@@ -1,7 +1,6 @@
 ﻿import { Component } from '@angular/core';
 import { NavController, Platform, ActionSheetController } from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
-import { HarvestedHistoryPage } from '../HarvestedHistory/HarvestedHistory';
 import { HarvestBunchesPage } from '../HarvestBunches/HarvestBunches';
 import { SharedFunctions } from '../../../providers/Shared/Functions';
 import { StorageService } from '../../../providers/Db/StorageFunctions';
@@ -20,7 +19,7 @@ export class MandorHomePage {
     UserGUID: string;
     totalHarvested: number; totalLoaded: number; balanceHarvested: number;
     constructor(private network: Network, public global: SharedFunctions, public http: Http, private sqlite: SQLite, private myCloud: StorageService, private mainMenu: SharedFunctions, public navCtrl: NavController, public platform: Platform, public actionsheetCtrl: ActionSheetController, public translate: TranslateService, public translateService: TranslateService) {
-        this.translateToEnglish();
+        // this.translateToEnglish();
         this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
         this.getSummary();
     }
@@ -139,24 +138,22 @@ export class MandorHomePage {
     public NewHarvest() {
         this.navCtrl.push(HarvestBunchesPage, {});
     }
-    public GetHistory() {
-        this.navCtrl.push(HarvestedHistoryPage, {});
-    }
+ 
 
     //---------------------Language module start---------------------//
-    public translateToEnglishClicked: boolean = false;
-    public translateToMalayClicked: boolean = true;
+    // public translateToEnglishClicked: boolean = false;
+    // public translateToMalayClicked: boolean = true;
 
-    public translateToEnglish() {
-        this.translateService.use('en');
-        this.translateToMalayClicked = !this.translateToMalayClicked;
-        this.translateToEnglishClicked = !this.translateToEnglishClicked;
-    }
+    // public translateToEnglish() {
+    //     this.translateService.use('en');
+    //     this.translateToMalayClicked = !this.translateToMalayClicked;
+    //     this.translateToEnglishClicked = !this.translateToEnglishClicked;
+    // }
 
-    public translateToMalay() {
-        this.translateService.use('ms');
-        this.translateToEnglishClicked = !this.translateToEnglishClicked;
-        this.translateToMalayClicked = !this.translateToMalayClicked;
-    }
+    // public translateToMalay() {
+    //     this.translateService.use('ms');
+    //     this.translateToEnglishClicked = !this.translateToEnglishClicked;
+    //     this.translateToMalayClicked = !this.translateToMalayClicked;
+    // }
     //---------------------Language module end---------------------//
 }

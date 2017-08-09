@@ -1,5 +1,9 @@
 {
   "_MENU": "Menu",
+  "_SURVEYOR_MENU":"Surveyor Menu",
+  "_SUPERVISOR_MENU":"Supervisor Menu",
+  "_FACTORY_MENU":"Factory Menu",
+  "_HOME_MENU":"Home",  
   "_TITLE": "eSawit Mobile",
   "_CONFIRMATION_TITLE": "Save Confirmation",
   "_DEVICE_ID_LBL":"Your device's UUID is :",
