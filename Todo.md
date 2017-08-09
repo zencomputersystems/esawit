@@ -1,3 +1,9 @@
+Updated on 9th August 2017
+- [x]Mandor Info Page is not refreshing-Bug resolved.
+- [x]Unnecessary Pages are identified and removed safely.
+- [x]Introduced Action sheet controller for Dynamic Menu.
+- [x]Language selection is made available globally.
+
 Updated on 4th August 2017
 - [x]History Sync from SQLite
 - [x]Date format in harvest page
