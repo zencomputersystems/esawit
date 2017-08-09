@@ -1,3 +1,7 @@
+
+.contentMarginTop {margin-top: 55px;}
+.contentMarginTop .scroll-content {padding-bottom: 70px !important;}
+
 .bgColor-white {background: #fff;}
 .bgColor-lightGrey {background: #f6f6f6;}
 .bgColor-lightblue {background: #a6bed2;}
@@ -101,6 +105,13 @@
 .menuShow { display: block !important; }
 .menuHide { display: none;}
 .settingBtnFab {margin-left: 50px !important;margin-right: 50px !important;}
+
+.btnBackIcon {   
+    position: absolute;
+    left: 13px;
+    top: 13px;
+    font-size: 30px;
+}
 
 .btnMainIcon {
     width: 55px;

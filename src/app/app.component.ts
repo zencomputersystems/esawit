@@ -107,9 +107,9 @@ export class MyApp {
               this.rootPage = MandorHomePage;
               break;
             case 3: this.rootPage = FactoryHomePage; break;
-            default: this.rootPage = UnAuthorizedUserPage;
+            // default: this.rootPage = UnAuthorizedUserPage;
             // default: this.rootPage = FactoryHomePage;
-            // default: this.rootPage = SurveyorHomePage;
+            default: this.rootPage = SurveyorHomePage;
           }
         }, err => {
           if (err.status == 400) {
@@ -141,6 +141,7 @@ export class MyApp {
     let factoryMenu = this.translate.get("_FACTORY_MENU")["value"];
     let acceptBunches = this.translate.get("_ACCEPT_BUNCHES_BTN")["value"];
     let acceptBunchesHistory = this.translate.get("_ACCEPTED_BUNCHES_HISTORY_BTN")["value"];
+    alert(this.module);
     if (this.module == 1) {
       let actionSheet = this.actionsheetCtrl.create({
         title: surveyMenu,
