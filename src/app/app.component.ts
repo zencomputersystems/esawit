@@ -39,8 +39,8 @@ export class MyApp {
       //-----------------------------------------Web Design Purpose------------------------------------
       this.UIDFromMobile =
         // "343434";
-        "f47b4e39376dbe34";
-      // this.device.uuid;
+        // "f47b4e39376dbe34";
+      this.device.uuid;
       //-----------------------------------------End Web Design Purpose------------------------------------
       // console.log(this.network.type)
       localStorage.setItem('device_UUID', this.UIDFromMobile);
