@@ -1,5 +1,5 @@
 ﻿import { Component } from '@angular/core';
-import { NavController, Platform, ActionSheetController } from 'ionic-angular';
+import { App,NavController, Platform, ActionSheetController } from 'ionic-angular';
 import { AcceptBunchesPage } from '../AcceptBunches/AcceptBunches';
 import { AcceptedBunchesHistoryPage } from '../AcceptedBunchesHistory/AcceptedBunchesHistory';
 import { TranslateService } from '@ngx-translate/core';
@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class FactoryHomePage {
     ifConnect: Subscription;
-    constructor(private network: Network, private myCloud: StorageService, public navCtrl: NavController, public platform: Platform, public actionsheetCtrl: ActionSheetController, public translate: TranslateService, public translateService: TranslateService) {
+    constructor(public appCtrl: App,private network: Network, private myCloud: StorageService, public navCtrl: NavController, public platform: Platform, public actionsheetCtrl: ActionSheetController, public translate: TranslateService, public translateService: TranslateService) {
         // this.translateToEnglish();
     }
 
@@ -52,10 +52,12 @@ export class FactoryHomePage {
     //-----------------------End Offline Sync---------------------------
 
     public NewAcceptance() {
-        this.navCtrl.push(AcceptBunchesPage, {});
+        this.appCtrl.getRootNav().setRoot(AcceptBunchesPage);
+        // this.navCtrl.setRoot(AcceptBunchesPage);
     }
     public GetHistory() {
-        this.navCtrl.push(AcceptedBunchesHistoryPage, {});
+       this.appCtrl.getRootNav().setRoot(AcceptedBunchesHistoryPage);
+        // this.navCtrl.setRoot(AcceptedBunchesHistoryPage);
     }
 
     //---------------------Language module start---------------------//

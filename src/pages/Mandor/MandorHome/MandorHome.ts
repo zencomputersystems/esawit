@@ -136,7 +136,7 @@ export class MandorHomePage {
     }
 
     public NewHarvest() {
-        this.navCtrl.push(HarvestBunchesPage, {});
+        this.navCtrl.setRoot(HarvestBunchesPage, {});
     }
  
 

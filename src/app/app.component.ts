@@ -1,6 +1,6 @@
 import { UserImeiModel } from '../models/UserImeiModel';
 import { Component } from '@angular/core';
-import { Platform, ActionSheetController } from 'ionic-angular';
+import { App, Platform, ActionSheetController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import * as constants from '../config/constants';
@@ -31,18 +31,17 @@ export class MyApp {
   UIDFromMobile: string;
   locationListFromDb: any;
   module: number;
-  // cpage: number = 1; 
   userImei: UserImeiModel = new UserImeiModel();
-  constructor(public global: SharedFunctions, public actionsheetCtrl: ActionSheetController, private network: Network, private device: Device, private myCloud: StorageService, public http: Http, public platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, public translate: TranslateService) {
+  constructor(public app: App, public global: SharedFunctions, public actionsheetCtrl: ActionSheetController, private network: Network, private device: Device, private myCloud: StorageService, public http: Http, public platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, public translate: TranslateService) {
     this.translateToMalay();
-
+    this.translate.setDefaultLang('en'); //Fallback language
     platform.ready().then(() => {
 
       //-----------------------------------------Web Design Purpose------------------------------------
       this.UIDFromMobile =
         // "343434";
-        // "f47b4e39376dbe34";
-      this.device.uuid;
+        "f47b4e39376dbe34";
+      // this.device.uuid;
       //-----------------------------------------End Web Design Purpose------------------------------------
       // console.log(this.network.type)
       localStorage.setItem('device_UUID', this.UIDFromMobile);
@@ -143,7 +142,6 @@ export class MyApp {
     let factoryMenu = this.translate.get("_FACTORY_MENU")["value"];
     let acceptBunches = this.translate.get("_ACCEPT_BUNCHES_BTN")["value"];
     let acceptBunchesHistory = this.translate.get("_ACCEPTED_BUNCHES_HISTORY_BTN")["value"];
-    alert(this.module);
     if (this.module == 1) {
       let actionSheet = this.actionsheetCtrl.create({
         title: surveyMenu,
@@ -153,21 +151,24 @@ export class MyApp {
             text: home,
             icon: !this.platform.is('ios') ? 'home' : null,
             handler: () => {
-              this.rootPage = SurveyorHomePage;
+              this.app.getRootNav().setRoot(SurveyorHomePage);
+
             }
           },
           {
             text: countBunches,
-            icon: !this.platform.is('ios') ? 'share' : null,
+            icon: !this.platform.is('ios') ? 'logo-buffer' : null,
             handler: () => {
-              this.rootPage = CountBunchesPage;
+              this.app.getRootNav().setRoot(CountBunchesPage);
+
             }
           },
           {
             text: bunchesHistory,
-            icon: !this.platform.is('ios') ? 'arrow-dropright-circle' : null,
+            icon: !this.platform.is('ios') ? 'md-filing' : null,
             handler: () => {
-              this.rootPage = CountBunchesHistoryPage;
+              this.app.getRootNav().setRoot(CountBunchesHistoryPage);
+
             }
           }
         ]
@@ -184,14 +185,16 @@ export class MyApp {
             text: home,
             icon: !this.platform.is('ios') ? 'home' : null,
             handler: () => {
-              this.rootPage = MandorHomePage;
+              this.app.getRootNav().setRoot(MandorHomePage);
+
             }
           },
           {
             text: harvestBunches,
-            icon: !this.platform.is('ios') ? 'share' : null,
+            icon: !this.platform.is('ios') ? 'leaf' : null,
             handler: () => {
-              this.rootPage = HarvestBunchesPage;
+              this.app.getRootNav().setRoot(HarvestBunchesPage);
+
             }
           }
         ]
@@ -208,21 +211,22 @@ export class MyApp {
             text: home,
             icon: !this.platform.is('ios') ? 'home' : null,
             handler: () => {
-              this.rootPage = FactoryHomePage;
+              this.app.getRootNav().setRoot(FactoryHomePage);
             }
           },
           {
             text: acceptBunches,
-            icon: !this.platform.is('ios') ? 'share' : null,
+            icon: !this.platform.is('ios') ? 'cut' : null,
             handler: () => {
-              this.rootPage = AcceptBunchesPage;
+              this.app.getRootNav().setRoot(AcceptBunchesPage);
+
             }
           },
           {
             text: acceptBunchesHistory,
-            icon: !this.platform.is('ios') ? 'arrow-dropright-circle' : null,
+            icon: !this.platform.is('ios') ? 'bus' : null,
             handler: () => {
-              this.rootPage = AcceptedBunchesHistoryPage;
+              this.app.getRootNav().setRoot(AcceptedBunchesHistoryPage);
             }
           }
         ]
@@ -233,8 +237,8 @@ export class MyApp {
 
 
   //---------------------Language module start---------------------//
-  public translateToEnglishClicked: boolean = false;
-  public translateToMalayClicked: boolean = true;
+  public translateToEnglishClicked: boolean = true;
+  public translateToMalayClicked: boolean = false;
 
   public translateToEnglish() {
     this.translate.use('en');
