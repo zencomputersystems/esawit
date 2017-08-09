@@ -31,9 +31,11 @@ export class MyApp {
   UIDFromMobile: string;
   locationListFromDb: any;
   module: number;
+  // cpage: number = 1; 
   userImei: UserImeiModel = new UserImeiModel();
   constructor(public global: SharedFunctions, public actionsheetCtrl: ActionSheetController, private network: Network, private device: Device, private myCloud: StorageService, public http: Http, public platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, public translate: TranslateService) {
-    this.translateToEnglish();
+    this.translateToMalay();
+
     platform.ready().then(() => {
 
       //-----------------------------------------Web Design Purpose------------------------------------
@@ -107,9 +109,9 @@ export class MyApp {
               this.rootPage = MandorHomePage;
               break;
             case 3: this.rootPage = FactoryHomePage; break;
-            // default: this.rootPage = UnAuthorizedUserPage;
+            default: this.rootPage = UnAuthorizedUserPage;
             // default: this.rootPage = FactoryHomePage;
-            default: this.rootPage = SurveyorHomePage;
+            // default: this.rootPage = SurveyorHomePage;
           }
         }, err => {
           if (err.status == 400) {
