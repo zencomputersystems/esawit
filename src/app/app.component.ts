@@ -31,9 +31,11 @@ export class MyApp {
   UIDFromMobile: string;
   locationListFromDb: any;
   module: number;
+  // cpage: number = 1; 
   userImei: UserImeiModel = new UserImeiModel();
   constructor(public global: SharedFunctions, public actionsheetCtrl: ActionSheetController, private network: Network, private device: Device, private myCloud: StorageService, public http: Http, public platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, public translate: TranslateService) {
-    this.translateToEnglish();
+    this.translateToMalay();
+
     platform.ready().then(() => {
 
       //-----------------------------------------Web Design Purpose------------------------------------
@@ -141,6 +143,7 @@ export class MyApp {
     let factoryMenu = this.translate.get("_FACTORY_MENU")["value"];
     let acceptBunches = this.translate.get("_ACCEPT_BUNCHES_BTN")["value"];
     let acceptBunchesHistory = this.translate.get("_ACCEPTED_BUNCHES_HISTORY_BTN")["value"];
+    alert(this.module);
     if (this.module == 1) {
       let actionSheet = this.actionsheetCtrl.create({
         title: surveyMenu,
