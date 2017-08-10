@@ -14,12 +14,13 @@ import { Subscription } from 'rxjs/Subscription';
 export class FactoryHomePage {
     ifConnect: Subscription;
     constructor(private network: Network, private myCloud: StorageService, public navCtrl: NavController, public platform: Platform, public actionsheetCtrl: ActionSheetController, public translate: TranslateService, public translateService: TranslateService) {
-        this.translateToEnglish();
+        // this.translateToEnglish();
+    }
 
-        if (this.network.type != "none") {
-            this.myCloud.saveUnloadToCloudFromSQLite();
-            this.myCloud.syncUnloadHistoryCloudToSQLite();
-        }
+    syncAndRefresh() {
+        this.myCloud.saveUnloadToCloudFromSQLite();
+        this.myCloud.syncUnloadHistoryCloudToSQLite();
+
         //-----------------------Offline Sync---------------------------
         this.myCloud.getCloudMasterLocations();
         this.myCloud.getVehicleLocationListFromCloud();
@@ -33,16 +34,18 @@ export class FactoryHomePage {
         this.myCloud.getVehicleDriverListFromCloud();
 
         //----------------------Driver Vehicle----------------------
-
     }
 
     //-----------------------Offline Sync---------------------------
-    ionViewDidEnter() {
+    ionViewWillEnter() {
+        if (this.network.type != "none") {
+            this.syncAndRefresh();
+        }
         this.ifConnect = this.network.onConnect().subscribe(data => {
-            this.myCloud.saveUnloadToCloudFromSQLite();
-            this.myCloud.syncUnloadHistoryCloudToSQLite();
+            this.syncAndRefresh();
         }, error => console.log('Error In SurveyorHistory :' + error));
     }
+
     ionViewWillLeave() {
         this.ifConnect.unsubscribe();
     }
@@ -56,19 +59,19 @@ export class FactoryHomePage {
     }
 
     //---------------------Language module start---------------------//
-    public translateToEnglishClicked: boolean = false;
-    public translateToMalayClicked: boolean = true;
+    // public translateToEnglishClicked: boolean = false;
+    // public translateToMalayClicked: boolean = true;
 
-    public translateToEnglish() {
-        this.translateService.use('en');
-        this.translateToMalayClicked = !this.translateToMalayClicked;
-        this.translateToEnglishClicked = !this.translateToEnglishClicked;
-    }
+    // public translateToEnglish() {
+    //     this.translateService.use('en');
+    //     this.translateToMalayClicked = !this.translateToMalayClicked;
+    //     this.translateToEnglishClicked = !this.translateToEnglishClicked;
+    // }
 
-    public translateToMalay() {
-        this.translateService.use('ms');
-        this.translateToEnglishClicked = !this.translateToEnglishClicked;
-        this.translateToMalayClicked = !this.translateToMalayClicked;
-    }
+    // public translateToMalay() {
+    //     this.translateService.use('ms');
+    //     this.translateToEnglishClicked = !this.translateToEnglishClicked;
+    //     this.translateToMalayClicked = !this.translateToMalayClicked;
+    // }
     //---------------------Language module end---------------------//
 }

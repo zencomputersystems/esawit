@@ -1,6 +1,6 @@
 import { UserImeiModel } from '../models/UserImeiModel';
 import { Component } from '@angular/core';
-import { Platform } from 'ionic-angular';
+import { Platform, ActionSheetController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import * as constants from '../config/constants';
@@ -8,8 +8,13 @@ import { SharedFunctions } from "../providers/Shared/Functions";
 import { Http, } from '@angular/http';
 import { StorageService } from '../providers/Db/StorageFunctions';
 import { FactoryHomePage } from '../pages/Factory/FactoryHome/FactoryHome';
+import { AcceptBunchesPage } from '../pages/Factory/AcceptBunches/AcceptBunches';
+import { AcceptedBunchesHistoryPage } from '../pages/Factory/AcceptedBunchesHistory/AcceptedBunchesHistory';
 import { MandorHomePage } from '../pages/Mandor/MandorHome/MandorHome';
+import { HarvestBunchesPage } from '../pages/Mandor/HarvestBunches/HarvestBunches';
 import { SurveyorHomePage } from '../pages/Surveyor/SurveyorHome/SurveyorHome';
+import { CountBunchesPage } from '../pages/Surveyor/CountBunches/CountBunches';
+import { CountBunchesHistoryPage } from '../pages/Surveyor/CountBunchesHistory/CountBunchesHistory';
 import { Device } from '@ionic-native/device';
 import { UnAuthorizedUserPage } from '../pages/Shared/UnAuthorizedUser/UnAuthorizedUser'
 // Translation Service:
@@ -22,19 +27,22 @@ import { UUID } from 'angular2-uuid';
   providers: [SharedFunctions, StorageService, Device]
 })
 export class MyApp {
-  rootPage: any;
+  rootPage: any; public headerButtonClicked: boolean = true;
   UIDFromMobile: string;
   locationListFromDb: any;
   module: number;
+  // cpage: number = 1; 
   userImei: UserImeiModel = new UserImeiModel();
-  constructor(public global: SharedFunctions, private network: Network, private device: Device, private myCloud: StorageService, public http: Http, platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, translate: TranslateService) {
-    translate.setDefaultLang('en');
+  constructor(public global: SharedFunctions, public actionsheetCtrl: ActionSheetController, private network: Network, private device: Device, private myCloud: StorageService, public http: Http, public platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, public translate: TranslateService) {
+    this.translateToMalay();
+
     platform.ready().then(() => {
+
       //-----------------------------------------Web Design Purpose------------------------------------
       this.UIDFromMobile =
         // "343434";
-        // "f47b4e39376dbe34"; 
-        this.device.uuid;
+        // "f47b4e39376dbe34";
+      this.device.uuid;
       //-----------------------------------------End Web Design Purpose------------------------------------
       // console.log(this.network.type)
       localStorage.setItem('device_UUID', this.UIDFromMobile);
@@ -124,4 +132,121 @@ export class MyApp {
       statusBar.styleDefault(); splashScreen.hide();
     });
   }
+
+  presentMenu() {
+    let surveyMenu = this.translate.get("_SURVEYOR_MENU")["value"];
+    let home = this.translate.get("_HOME_MENU")["value"];
+    let countBunches = this.translate.get("_COUNT_BUNCHES_BTN")["value"];
+    let bunchesHistory = this.translate.get("_COUNT_HISTORY_BTN")["value"];
+    let supervisorMenu = this.translate.get("_SUPERVISOR_MENU")["value"];
+    let harvestBunches = this.translate.get("_HARVEST_BTN")["value"];
+    let factoryMenu = this.translate.get("_FACTORY_MENU")["value"];
+    let acceptBunches = this.translate.get("_ACCEPT_BUNCHES_BTN")["value"];
+    let acceptBunchesHistory = this.translate.get("_ACCEPTED_BUNCHES_HISTORY_BTN")["value"];
+    alert(this.module);
+    if (this.module == 1) {
+      let actionSheet = this.actionsheetCtrl.create({
+        title: surveyMenu,
+        cssClass: 'action-sheets-basic-page',
+        buttons: [
+          {
+            text: home,
+            icon: !this.platform.is('ios') ? 'home' : null,
+            handler: () => {
+              this.rootPage = SurveyorHomePage;
+            }
+          },
+          {
+            text: countBunches,
+            icon: !this.platform.is('ios') ? 'share' : null,
+            handler: () => {
+              this.rootPage = CountBunchesPage;
+            }
+          },
+          {
+            text: bunchesHistory,
+            icon: !this.platform.is('ios') ? 'arrow-dropright-circle' : null,
+            handler: () => {
+              this.rootPage = CountBunchesHistoryPage;
+            }
+          }
+        ]
+      });
+      actionSheet.present();
+    }
+
+    else if (this.module == 2) {
+      let actionSheet = this.actionsheetCtrl.create({
+        title: supervisorMenu,
+        cssClass: 'action-sheets-basic-page',
+        buttons: [
+          {
+            text: home,
+            icon: !this.platform.is('ios') ? 'home' : null,
+            handler: () => {
+              this.rootPage = MandorHomePage;
+            }
+          },
+          {
+            text: harvestBunches,
+            icon: !this.platform.is('ios') ? 'share' : null,
+            handler: () => {
+              this.rootPage = HarvestBunchesPage;
+            }
+          }
+        ]
+      });
+      actionSheet.present();
+    }
+
+    else if (this.module == 3) {
+      let actionSheet = this.actionsheetCtrl.create({
+        title: factoryMenu,
+        cssClass: 'action-sheets-basic-page',
+        buttons: [
+          {
+            text: home,
+            icon: !this.platform.is('ios') ? 'home' : null,
+            handler: () => {
+              this.rootPage = FactoryHomePage;
+            }
+          },
+          {
+            text: acceptBunches,
+            icon: !this.platform.is('ios') ? 'share' : null,
+            handler: () => {
+              this.rootPage = AcceptBunchesPage;
+            }
+          },
+          {
+            text: acceptBunchesHistory,
+            icon: !this.platform.is('ios') ? 'arrow-dropright-circle' : null,
+            handler: () => {
+              this.rootPage = AcceptedBunchesHistoryPage;
+            }
+          }
+        ]
+      });
+      actionSheet.present();
+    }
+  }
+
+
+  //---------------------Language module start---------------------//
+  public translateToEnglishClicked: boolean = false;
+  public translateToMalayClicked: boolean = true;
+
+  public translateToEnglish() {
+    this.translate.use('en');
+    this.translateToMalayClicked = !this.translateToMalayClicked;
+    this.translateToEnglishClicked = !this.translateToEnglishClicked;
+  }
+
+  public translateToMalay() {
+    this.translate.use('ms');
+    this.translateToEnglishClicked = !this.translateToEnglishClicked;
+    this.translateToMalayClicked = !this.translateToMalayClicked;
+  }
+  //---------------------Language module end---------------------//
+
 }
