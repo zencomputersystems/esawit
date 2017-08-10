@@ -45,11 +45,11 @@ export class SurveyorHomePage {
     //-----------------------End Offline Sync---------------------------
 
     public NewCount() {
-        this.navCtrl.push(CountBunchesPage, {});
+        this.navCtrl.setRoot(CountBunchesPage, {});
 
     }
     public GetCountHistory() {
-        this.navCtrl.push(CountBunchesHistoryPage, {});
+        this.navCtrl.setRoot(CountBunchesHistoryPage, {});
 
     }
 
