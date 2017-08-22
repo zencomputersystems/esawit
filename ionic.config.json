@@ -1,5 +1,8 @@
 {
   "name": "eSawit",
   "app_id": "13f0a9d2",
-  "type": "ionic-angular"
+  "type": "ionic-angular",
+  "integrations": {
+    "cordova": {}
+  }
 }

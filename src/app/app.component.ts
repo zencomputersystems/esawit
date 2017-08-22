@@ -237,9 +237,9 @@ export class MyApp {
 
 
   //---------------------Language module start---------------------//
-  public translateToEnglishClicked: boolean = true;
   public translateToMalayClicked: boolean = false;
-
+  public translateToEnglishClicked: boolean = true;
+  
   public translateToEnglish() {
     this.translate.use('en');
     this.translateToMalayClicked = !this.translateToMalayClicked;

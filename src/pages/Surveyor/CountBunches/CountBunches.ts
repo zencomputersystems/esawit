@@ -40,11 +40,21 @@ export class CountBunchesPage {
         }
 
     SyncAndRefresh() {
+        var url = constants.DREAMFACTORY_TABLE_URL + "/user_imei?filter=user_IMEI=" + this.UIDFromMobile + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+        this.http.get(url).map(res => res.json()).subscribe(data => {
+          var loggedInUserFromDB = data["resource"][0];
+          if (loggedInUserFromDB.active == 2 || loggedInUserFromDB.active == 0){
+              
+          }
+        
+        });
+
         this.myCloud.saveSurveyToCloudFromSQLite();
         this.myCloud.syncHistoryCloudToSQLite();
     }
 
     ionViewWillEnter() {
+
         if (this.network.type != "none") {
             this.SyncAndRefresh();
         }
