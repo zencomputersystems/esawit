@@ -1,5 +1,5 @@
 ﻿import { Component } from '@angular/core';
-import { NavController, NavParams, Platform, AlertController, ActionSheetController, ToastController } from 'ionic-angular';
+import { App,NavController, NavParams, Platform, AlertController, ActionSheetController, ToastController } from 'ionic-angular';
 import { Http } from '@angular/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HarvestBunchesModel } from '../../../models/HarvestBunchesModel';
@@ -11,6 +11,7 @@ import { StorageService } from '../../../providers/Db/StorageFunctions';
 import { Network } from '@ionic-native/network';
 import { Subscription } from 'rxjs/Subscription';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
+import { UnAuthorizedUserPage } from '../../Shared/UnAuthorizedUser/UnAuthorizedUser'
 
 @Component
     ({
@@ -28,8 +29,6 @@ export class HarvestBunchesPage {
     }
 
     locationData: string = "seg_harvest";
-
-
     harvestAuthForm: FormGroup;
     loadAuthForm: FormGroup;
     locationFromDB: any;
@@ -45,12 +44,8 @@ export class HarvestBunchesPage {
     ifConnect: Subscription;
     localHarvestHistory: any;
 
-    constructor(private sqlite: SQLite, private network: Network, public actionsheetCtrl: ActionSheetController, public global: SharedFunctions,
+    constructor(private appCntrl:App,private sqlite: SQLite, private network: Network, public actionsheetCtrl: ActionSheetController, public global: SharedFunctions,
         private myCloud: StorageService, public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public fb: FormBuilder, public navParams: NavParams, public alertCtrl: AlertController, public translate: TranslateService) {
-
-        // this.translateToEnglish();
-
-        this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
         this.harvestAuthForm = fb.group({
             'harvestedBunchCount': [null, Validators.compose([Validators.pattern('^(?!(0))[0-9]*'), Validators.required])]
         });
@@ -67,17 +62,29 @@ export class HarvestBunchesPage {
     }
 
     syncAndRefresh() {
-        this.myCloud.syncMandorInfoCloudToSQLite(this.UserGUID, this.global.getStringDate());
-        this.myCloud.saveHarvestToCloudFromSQLite();
-        this.myCloud.syncHarvestHistoryCloudToSQLite();
-        this.myCloud.saveLoadToCloudFromSQLite();
-        this.myCloud.syncLoadHistoryCloudToSQLite();
-        this.myCloud.getVehicleDriverListFromCloud();
+        var url = constants.DREAMFACTORY_TABLE_URL + "/user_imei?filter=user_IMEI=" + this.UIDFromMobile + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+        this.http.get(url).map(res => res.json()).subscribe(data => {
+            var loggedInUserFromDB = data["resource"][0];
+            if (loggedInUserFromDB == null || loggedInUserFromDB.active == 2 || loggedInUserFromDB.active == 0) {
+                localStorage.setItem('isActive', null);
+                this.appCntrl.getRootNav().setRoot(UnAuthorizedUserPage);
+            }
+            else {
+                this.myCloud.syncMandorInfoCloudToSQLite(this.UserGUID, this.global.getStringDate());
+                this.myCloud.saveHarvestToCloudFromSQLite();
+                this.myCloud.syncHarvestHistoryCloudToSQLite();
+                this.myCloud.saveLoadToCloudFromSQLite();
+                this.myCloud.syncLoadHistoryCloudToSQLite();
+                this.myCloud.getVehicleDriverListFromCloud();
+            }
+        });       
     }
 
     //-----------------------Offline Sync---------------------------
 
     ionViewWillEnter() {
+        this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
+        this.UIDFromMobile = localStorage.getItem("device_UUID");                
         if (this.network.type != "none") {
             this.syncAndRefresh();
         }
@@ -274,23 +281,6 @@ export class HarvestBunchesPage {
         }
     }
 
-
-    //---------------------Language module start---------------------//
-    // public translateToEnglishClicked: boolean = false;
-    // public translateToMalayClicked: boolean = true;
-
-    // public translateToEnglish() {
-    //     this.translate.use('en');
-    //     this.translateToMalayClicked = !this.translateToMalayClicked;
-    //     this.translateToEnglishClicked = !this.translateToEnglishClicked;
-    // }
-
-    // public translateToMalay() {
-    //     this.translate.use('ms');
-    //     this.translateToEnglishClicked = !this.translateToEnglishClicked;
-    //     this.translateToMalayClicked = !this.translateToMalayClicked;
-    // }
-    //---------------------Language module end---------------------//
 }
 
 
