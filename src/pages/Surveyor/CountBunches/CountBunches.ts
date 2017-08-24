@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, Platform, AlertController, ActionSheetController, ToastController } from 'ionic-angular';
+import { App, NavController, NavParams, Platform, AlertController, ActionSheetController, ToastController } from 'ionic-angular';
 import { Http } from '@angular/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Storage } from '@ionic/storage';
@@ -10,6 +10,7 @@ import { StorageService } from '../../../providers/Db/StorageFunctions';
 import { Network } from '@ionic-native/network';
 import { Subscription } from 'rxjs/Subscription';
 import { TranslateService } from '@ngx-translate/core';
+import { UnAuthorizedUserPage } from '../../Shared/UnAuthorizedUser/UnAuthorizedUser'
 
 @Component({
     selector: 'page-CountBunches',
@@ -26,9 +27,8 @@ export class CountBunchesPage {
     UserGUID: string;
     ifConnect: Subscription;
 
-    constructor(private myCloud: StorageService, private network: Network, public actionsheetCtrl: ActionSheetController, private storage: Storage, public global: SharedFunctions,
+    constructor(public appCntrl: App, private myCloud: StorageService, private network: Network, public actionsheetCtrl: ActionSheetController, private storage: Storage, public global: SharedFunctions,
         public platform: Platform, public toastCtrl: ToastController, public navCtrl: NavController, public http: Http, public fb: FormBuilder, public navParams: NavParams, public alertCtrl: AlertController, public translate: TranslateService, public translateService: TranslateService) {
-        // this.translateToEnglish();
         this.authForm = fb.group({
             'bunchCount': [null, Validators.compose([Validators.pattern('^(?!(0))[0-9]*'), Validators.required])],
             'monthSelect': [null, Validators.compose([Validators.required])],
@@ -37,14 +37,46 @@ export class CountBunchesPage {
         this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
         this.getMonths();
         this.currentYear = new Date().getFullYear();
-        }
+    }
+
+    // checkUser(){
+    //     this.UIDFromMobile = localStorage.getItem("device_UUID");
+    //     var url = constants.DREAMFACTORY_TABLE_URL + "/user_imei?filter=user_IMEI=" + this.UIDFromMobile + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+    //     this.http.get(url).map(res => res.json()).subscribe(data => {
+    //         var loggedInUserFromDB = data["resource"][0];            
+    //         if (loggedInUserFromDB == null || loggedInUserFromDB.active == 2 || loggedInUserFromDB.active == 0) {
+    //         return true
+    //         }
+    //         else {
+    //            return false;
+    //         }
+    //     });
+    // }
 
     SyncAndRefresh() {
-        this.myCloud.saveSurveyToCloudFromSQLite();
-        this.myCloud.syncHistoryCloudToSQLite();
+        var url = constants.DREAMFACTORY_TABLE_URL + "/user_imei?filter=user_IMEI=" + this.UIDFromMobile + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+        this.http.get(url).map(res => res.json()).subscribe(data => {
+            var loggedInUserFromDB = data["resource"][0];
+            if (loggedInUserFromDB == null || loggedInUserFromDB.active == 2 || loggedInUserFromDB.active == 0) {
+                localStorage.setItem('isActive', null);
+                this.appCntrl.getRootNav().setRoot(UnAuthorizedUserPage);
+            }
+            else {
+                this.myCloud.saveSurveyToCloudFromSQLite();
+                this.myCloud.syncHistoryCloudToSQLite();
+            }
+        });
+        // if (this.checkUser()) {
+        //     this.appCntrl.getRootNav().setRoot(UnAuthorizedUserPage);
+        // }
+        // else {
+        //     this.myCloud.saveSurveyToCloudFromSQLite();
+        //     this.myCloud.syncHistoryCloudToSQLite();
+        // }
     }
 
     ionViewWillEnter() {
+        this.UIDFromMobile = localStorage.getItem("device_UUID");        
         if (this.network.type != "none") {
             this.SyncAndRefresh();
         }
@@ -52,14 +84,14 @@ export class CountBunchesPage {
             this.SyncAndRefresh();
         }, error => console.error(error));
 
-         //-----------------------------------------Web Design Purpose------------------------------------
+        //-----------------------------------------Web Design Purpose------------------------------------
         this.locationListFromDb = this.myCloud.getUserLocationsFromSQLite();
         // 		var url = constants.DREAMFACTORY_TABLE_URL + "/active_users_location_view?filter=user_GUID=" + this.UserGUID + "&api_key=" + constants.DREAMFACTORY_API_KEY;
         // this.http.get(url).map(res => res.json()).subscribe(data => {
         // 	 this.locationListFromDb = data["resource"];
         // });
         //-----------------------------------------Web Design Purpose------------------------------------
-   
+
     }
 
     ionViewWillLeave() {
@@ -99,21 +131,5 @@ export class CountBunchesPage {
         this.authForm.reset();
     }
 
-    //---------------------Language module start---------------------//
-    // public translateToEnglishClicked: boolean = false;
-    // public translateToMalayClicked: boolean = true;
-
-    // public translateToEnglish() {
-    //     this.translateService.use('en');
-    //     this.translateToMalayClicked = !this.translateToMalayClicked;
-    //     this.translateToEnglishClicked = !this.translateToEnglishClicked;
-    // }
-
-    // public translateToMalay() {
-    //     this.translateService.use('ms');
-    //     this.translateToEnglishClicked = !this.translateToEnglishClicked;
-    //     this.translateToMalayClicked = !this.translateToMalayClicked;
-    // }
-    //---------------------Language module end---------------------//
 }
 

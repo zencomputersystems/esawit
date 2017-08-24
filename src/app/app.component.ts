@@ -40,8 +40,8 @@ export class MyApp {
       //-----------------------------------------Web Design Purpose------------------------------------
       this.UIDFromMobile =
         // "343434";
-        "f47b4e39376dbe34";
-      // this.device.uuid;
+        // "f47b4e39376dbe34";
+        this.device.uuid;
       //-----------------------------------------End Web Design Purpose------------------------------------
       // console.log(this.network.type)
       localStorage.setItem('device_UUID', this.UIDFromMobile);
@@ -83,7 +83,7 @@ export class MyApp {
             this.module = 0;
             //----------------------First Time App is installed---------------------
           }
-          else if (loggedInUserFromDB.active == 2 || loggedInUserFromDB.active == 0) {
+          else if (loggedInUserFromDB.active != 1) {
             //----------------------User is not activated yet------------------------
             this.module = 0;
           }
@@ -237,8 +237,8 @@ export class MyApp {
 
 
   //---------------------Language module start---------------------//
-  public translateToEnglishClicked: boolean = true;
   public translateToMalayClicked: boolean = false;
+  public translateToEnglishClicked: boolean = true;
 
   public translateToEnglish() {
     this.translate.use('en');

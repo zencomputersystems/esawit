@@ -1314,7 +1314,7 @@ export class StorageService {
 				this.showToast('bottom', 'Saved Successfully');
 
 			}, (error) => {
-				// console.log(error);
+				console.log(error);
 				this.showToast('bottom', 'Failed to Save');
 			});
 	}

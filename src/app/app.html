@@ -1,20 +1,3 @@
-<!-- <ion-header>
-  <ion-navbar class="bgColor-darkBlue">
-    <ion-avatar class="logoSize" item-start>
-      <img src="assets/img/eSawitLogo.png">
-    </ion-avatar>
-    <div class="headerInfo">
-      <ion-fab top right edge class="topZero rightZero">
-        <button ion-fab mini class="btnClear"><ion-icon name="settings"></ion-icon></button>
-        <ion-fab-list class="settingBtnFab" side="left">
-          <button ion-fab class="bgColor-green" [class.menuHide]="translateToMalayClicked" (click)="translateToMalay()">BM</button>
-          <button ion-fab class="bgColor-green" [class.menuHide]="translateToEnglishClicked" (click)="translateToEnglish()">EN</button>
-        </ion-fab-list>
-      </ion-fab>
-    </div>
-  </ion-navbar>
-</ion-header> -->
-
 <ion-header *ngIf="module != 0">
   <ion-navbar class="bgColor-darkBlue">
     <div class="headerBack">
@@ -22,12 +5,9 @@
     </div>
     <ion-avatar class="logoSize" item-start>
       <img src="assets/img/eSawitLogo.png">
-    </ion-avatar>
-    <!-- <button ion-button block (click)="presentMenu()">
-      <ion-icon name="menu" class="fontColor-white"></ion-icon>
-    </button> -->
+    </ion-avatar>  
+    
     <div class="headerInfo">
-
       <ion-fab top right edge class="topZero rightZero">
         <button ion-fab mini class="btnClear"><ion-icon name="settings"></ion-icon></button>
         <ion-fab-list class="settingBtnFab" side="left">
@@ -35,35 +15,7 @@
           <button ion-fab class="bgColor-green" [class.menuHide]="translateToEnglishClicked" (click)="translateToEnglish()">EN</button>
         </ion-fab-list>
       </ion-fab>
-
-    </div>
-    <!-- <ion-avatar class="logoSize" item-start> 
-      <img src="assets/img/eSawitLogo.png">
-    </ion-avatar> -->
-    <!-- <div class="headerInfo">
-
-       <ion-fab top right edge class="topZero rightZero">
-        <button ion-fab mini (click)="headerButtonClick('Process')">
-          <img class="headerImage" src="http://gurucul.com/wp-content/uploads/2015/01/default-user-icon-profile.png">
-        </button>
-        <ion-fab-list side="left">
-          <button ion-fab class="bgColor-red"><ion-icon name="md-power"></ion-icon></button>
-          <button ion-fab class="bgColor-green"><ion-icon name="md-settings"></ion-icon></button>
-          <button ion-fab class="bgColor-purple" [class.menuHide]="translateToMalayClicked" (click)="translateToMalay()">BM</button>
-          <button ion-fab class="bgColor-purple" [class.menuHide]="translateToEnglishClicked" (click)="translateToEnglish()">EN</button>
-          <button ion-fab class="bgColor-yellow"><ion-icon name="md-help"></ion-icon></button>
-        </ion-fab-list>
-      </ion-fab>  -->
-
-    <!-- <ion-thumbnail class="floatRight" item-start>
-        <img class="headerImage" src="http://gurucul.com/wp-content/uploads/2015/01/default-user-icon-profile.png">
-      </ion-thumbnail> 
-
-       <ion-label class="headerLabel floatRight fontColor-grey" *ngIf="headerButtonClicked">
-        System Account
-      </ion-label> 
-       -->
-    <!-- </div>    -->
+    </div>    
   </ion-navbar>
 </ion-header>
 <ion-nav [root]="rootPage"></ion-nav>

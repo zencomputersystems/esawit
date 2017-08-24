@@ -1,5 +1,5 @@
 ﻿import { Component } from '@angular/core';
-import { NavController, Platform, ActionSheetController } from 'ionic-angular';
+import { App,NavController, Platform, ActionSheetController } from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
 import { HarvestBunchesPage } from '../HarvestBunches/HarvestBunches';
 import { SharedFunctions } from '../../../providers/Shared/Functions';
@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import * as constants from '../../../config/constants';
 import { Http } from '@angular/http';
+import { UnAuthorizedUserPage } from '../../Shared/UnAuthorizedUser/UnAuthorizedUser'
 
 @Component({
     selector: 'page-home',
@@ -16,31 +17,46 @@ import { Http } from '@angular/http';
 })
 export class MandorHomePage {
     ifConnect: Subscription;
-    UserGUID: string;
+    UserGUID: string;    UIDFromMobile: string;
+    
     totalHarvested: number; totalLoaded: number; balanceHarvested: number;
-    constructor(private network: Network, public global: SharedFunctions, public http: Http, private sqlite: SQLite, private myCloud: StorageService, private mainMenu: SharedFunctions, public navCtrl: NavController, public platform: Platform, public actionsheetCtrl: ActionSheetController, public translate: TranslateService, public translateService: TranslateService) {
-        // this.translateToEnglish();
-        this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
-        this.getSummary();
+    constructor(public appCtrl: App,private network: Network, public global: SharedFunctions, public http: Http, private sqlite: SQLite, private myCloud: StorageService, private mainMenu: SharedFunctions, public navCtrl: NavController, public platform: Platform, public actionsheetCtrl: ActionSheetController, public translate: TranslateService, public translateService: TranslateService) {
     }
 
     //-----------------------Offline Sync---------------------------
     syncAndRefresh() {
-        this.myCloud.syncMandorInfoCloudToSQLite(this.UserGUID, this.global.getStringDate());
-        this.myCloud.saveHarvestToCloudFromSQLite();
-        this.myCloud.syncHarvestHistoryCloudToSQLite();
-        this.myCloud.saveLoadToCloudFromSQLite();
-        this.myCloud.syncLoadHistoryCloudToSQLite();
-        this.myCloud.getVehicleDriverListFromCloud();
+        var url = constants.DREAMFACTORY_TABLE_URL + "/user_imei?filter=user_IMEI=" + this.UIDFromMobile + "&api_key=" + constants.DREAMFACTORY_API_KEY;
+        this.http.get(url).map(res => res.json()).subscribe(data => {
+            var loggedInUserFromDB = data["resource"][0];
+            if (loggedInUserFromDB == null || loggedInUserFromDB.active == 2 || loggedInUserFromDB.active == 0) {
+                localStorage.setItem('isActive', null);
+                this.appCtrl.getRootNav().setRoot(UnAuthorizedUserPage);
+            }
+            else {
+                this.myCloud.syncMandorInfoCloudToSQLite(this.UserGUID, this.global.getStringDate());
+                this.myCloud.saveHarvestToCloudFromSQLite();
+                this.myCloud.syncHarvestHistoryCloudToSQLite();
+                this.myCloud.saveLoadToCloudFromSQLite();
+                this.myCloud.syncLoadHistoryCloudToSQLite();
+                this.myCloud.getVehicleDriverListFromCloud();
+
+            }
+        });     
     }
 
     ionViewWillEnter() {
+        this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
+        this.UIDFromMobile = localStorage.getItem("device_UUID");        
+        
         if (this.network.type != "none") {
             this.syncAndRefresh();
         }
         this.ifConnect = this.network.onConnect().subscribe(data => {
             this.syncAndRefresh();
         }, error => console.log('Error In SurveyorHistory :' + error));
+
+        this.getSummary();                
+        
 
     }
     ionViewWillLeave() {
@@ -136,24 +152,7 @@ export class MandorHomePage {
     }
 
     public NewHarvest() {
-        this.navCtrl.setRoot(HarvestBunchesPage, {});
-    }
- 
-
-    //---------------------Language module start---------------------//
-    // public translateToEnglishClicked: boolean = false;
-    // public translateToMalayClicked: boolean = true;
-
-    // public translateToEnglish() {
-    //     this.translateService.use('en');
-    //     this.translateToMalayClicked = !this.translateToMalayClicked;
-    //     this.translateToEnglishClicked = !this.translateToEnglishClicked;
-    // }
-
-    // public translateToMalay() {
-    //     this.translateService.use('ms');
-    //     this.translateToEnglishClicked = !this.translateToEnglishClicked;
-    //     this.translateToMalayClicked = !this.translateToMalayClicked;
-    // }
-    //---------------------Language module end---------------------//
+        // this.navCtrl.setRoot(HarvestBunchesPage, {});
+        this.appCtrl.getRootNav().setRoot(HarvestBunchesPage);        
+    }    
 }
