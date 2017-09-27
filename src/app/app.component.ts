@@ -94,7 +94,7 @@ export class MyApp {
             localStorage.setItem('loggedIn_user_GUID', loggedInUserFromDB.user_GUID);
             localStorage.setItem('selected_module', loggedInUserFromDB.module_id);
             this.module = loggedInUserFromDB.module_id == null ? 0 : loggedInUserFromDB.module_id;
-            //-------------------------User is Authorized--------------------------  
+            //-------------------------User is Authorized--------------------------
           }
           // console.log(this.module)
           switch (this.module) {

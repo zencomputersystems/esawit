@@ -16,6 +16,15 @@
 </ion-header> -->
 
 <ion-content class="bgColor-lightGrey contentMarginTop">
+
+    <ion-refresher (ionRefresh) = "refreshData($event);">
+        <ion-refresher-content
+        pullingText = "Pull To Refresh"
+        refreshingSpinner="circles"
+        refreshingText="Fetching Data...">
+        </ion-refresher-content>
+      </ion-refresher>
+
   <div class="headerBox bgColor-gradOrange">
     <div class="headerBoxTitle2">{{ "_ACCEPT_BUNCHES_HEADER" | translate }}</div>
   </div>
@@ -30,7 +39,7 @@
         </ion-item>
         <ion-item>
           <ion-label floating>{{ "_VEHICLE_NO_LBL" | translate }}</ion-label>
-           <ion-select formControlName="vehicleSelect" interface="popover" [(ngModel)]='vehicleSelect' (ionChange)="onVehicleSelect(vehicleSelect)"> 
+           <ion-select formControlName="vehicleSelect" interface="popover" [(ngModel)]='vehicleSelect' (ionChange)="onVehicleSelect(vehicleSelect)">
           <!-- <ion-select formControlName="vehicleSelect" interface="popover" > -->
             <ion-option *ngFor="let vehicle of vehicleFromDb" value={{vehicle.vehicle_GUID}}>{{vehicle.vehicle_no}}</ion-option>
           </ion-select>

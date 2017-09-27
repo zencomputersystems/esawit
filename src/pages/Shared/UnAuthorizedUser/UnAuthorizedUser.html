@@ -1,5 +1,14 @@
 <ion-content padding class="bgColor-red">
 
+    <ion-refresher (ionRefresh) = "refreshData($event);">
+        <ion-refresher-content
+        pullingText = "Pull To Refresh"
+        refreshingSpinner="circles"
+        refreshingText="Fetching Data...">
+
+        </ion-refresher-content>
+      </ion-refresher>
+
   <div class="unauthorizedIcon fontColor-lightYellow" >
     <ion-icon name="ios-warning"></ion-icon>
   </div>
@@ -15,14 +24,14 @@
 
 
   <div class="bodyLabel">
-    <p>{{ "_UNAUTHORIZE_INFO1" | translate }}</p> 
-    <p>{{ "_UNAUTHORIZE_INFO2" | translate }}</p>    
+    <p>{{ "_UNAUTHORIZE_INFO1" | translate }}</p>
+    <p>{{ "_UNAUTHORIZE_INFO2" | translate }}</p>
     <p>{{ "_UNAUTHORIZE_INFO3" | translate }}</p>
   </div>
 
   <div class="textCenter">
     <button ion-button class="unauthorizedBtn bgColor-red">
-         {{ "_CONTACT_ADMIN_BTN" | translate }} 
+         {{ "_CONTACT_ADMIN_BTN" | translate }}
   </button>
   </div>
 

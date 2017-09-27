@@ -16,10 +16,17 @@ import { Http } from '@angular/http';
 })
 export class FactoryHomePage {
     ifConnect: Subscription;    UIDFromMobile: string;
-    
+
     constructor(private http:Http,public appCtrl: App,private network: Network, private myCloud: StorageService, public navCtrl: NavController, public platform: Platform, public actionsheetCtrl: ActionSheetController, public translate: TranslateService, public translateService: TranslateService) {
     }
-
+    refreshData(refresher) {
+      if (this.network.type != "none") {
+        this.syncAndRefresh();
+      }
+      setTimeout(() => {
+        refresher.complete();
+      }, 3000);
+    }
     syncAndRefresh() {
         var url = constants.DREAMFACTORY_TABLE_URL + "/user_imei?filter=user_IMEI=" + this.UIDFromMobile + "&api_key=" + constants.DREAMFACTORY_API_KEY;
         this.http.get(url).map(res => res.json()).subscribe(data => {
@@ -31,7 +38,7 @@ export class FactoryHomePage {
             else {
                 this.myCloud.saveUnloadToCloudFromSQLite();
                 this.myCloud.syncUnloadHistoryCloudToSQLite();
-        
+
                 //-----------------------Offline Sync---------------------------
                 this.myCloud.getCloudMasterLocations();
                 this.myCloud.getVehicleLocationListFromCloud();
@@ -40,21 +47,21 @@ export class FactoryHomePage {
                 this.myCloud.getMasterVehiclesFromSQLite();
                 this.myCloud.syncUnloadHistoryCloudToSQLite();
                 //-----------------------End Offline Sync---------------------------
-        
+
                 //----------------------Driver Vehicle----------------------
                 this.myCloud.getVehicleDriverListFromCloud();
-        
+
                 //----------------------Driver Vehicle----------------------
             }
         });
 
-       
+
     }
 
     //-----------------------Offline Sync---------------------------
     ionViewWillEnter() {
-        this.UIDFromMobile = localStorage.getItem("device_UUID");        
-        
+        this.UIDFromMobile = localStorage.getItem("device_UUID");
+
         if (this.network.type != "none") {
             this.syncAndRefresh();
         }

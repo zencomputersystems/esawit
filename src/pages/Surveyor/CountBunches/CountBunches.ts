@@ -43,7 +43,7 @@ export class CountBunchesPage {
     //     this.UIDFromMobile = localStorage.getItem("device_UUID");
     //     var url = constants.DREAMFACTORY_TABLE_URL + "/user_imei?filter=user_IMEI=" + this.UIDFromMobile + "&api_key=" + constants.DREAMFACTORY_API_KEY;
     //     this.http.get(url).map(res => res.json()).subscribe(data => {
-    //         var loggedInUserFromDB = data["resource"][0];            
+    //         var loggedInUserFromDB = data["resource"][0];
     //         if (loggedInUserFromDB == null || loggedInUserFromDB.active == 2 || loggedInUserFromDB.active == 0) {
     //         return true
     //         }
@@ -52,6 +52,15 @@ export class CountBunchesPage {
     //         }
     //     });
     // }
+
+    refreshData(refresher) {
+      if (this.network.type != "none") {
+        this.SyncAndRefresh();
+      }
+      setTimeout(() => {
+        refresher.complete();
+      }, 3000);
+    }
 
     SyncAndRefresh() {
         var url = constants.DREAMFACTORY_TABLE_URL + "/user_imei?filter=user_IMEI=" + this.UIDFromMobile + "&api_key=" + constants.DREAMFACTORY_API_KEY;
@@ -76,7 +85,7 @@ export class CountBunchesPage {
     }
 
     ionViewWillEnter() {
-        this.UIDFromMobile = localStorage.getItem("device_UUID");        
+        this.UIDFromMobile = localStorage.getItem("device_UUID");
         if (this.network.type != "none") {
             this.SyncAndRefresh();
         }

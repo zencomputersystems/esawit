@@ -17,7 +17,13 @@
 
 
 <ion-content class="bgColor-lightGrey contentMarginTop">
-
+    <ion-refresher (ionRefresh) = "refreshData($event);">
+        <ion-refresher-content
+        pullingText = "Pull To Refresh"
+        refreshingSpinner="circles"
+        refreshingText="Fetching Data...">
+        </ion-refresher-content>
+      </ion-refresher>
   <div class="headerBox bgColor-gradOrange">
     <div class="headerBoxTitle2">{{ "_COUNT_BUNCHES_HISTORY_HEADER" | translate }}</div>
   </div>
@@ -73,7 +79,7 @@
               <form [formGroup]="harvestAuthForm" (ngSubmit)="submitHarvestForm(harvestAuthForm.value,location.location_GUID,location.location_name)">
                 <ion-item>
                   <ion-label floating>{{'_TOTAL_BUNCHES_LBL' | translate }}</ion-label>
-                  <ion-input formControlName="harvestedBunchCount" type="text"></ion-input>
+                  <ion-input formControlName="harvestedBunchCount" type="number"></ion-input>
                 </ion-item>
                 <button class="formBtnCircle" type="submit" ion-button full [disabled]="!harvestAuthForm.valid">{{ "_SUBMIT_BTN" | translate }}</button>
               </form>
@@ -113,7 +119,7 @@
                 </ion-list>
 
 
-              <b>  
+                <b>
 
                 <!-- Local Mandor Info purpose -->
                 <!-- <ion-list>
@@ -166,7 +172,7 @@
           </ion-item>
           <ion-item>
             <ion-label floating>{{'_TOTAL_BUNCHES_LBL' | translate }}</ion-label>
-            <ion-input formControlName="loadedBunchCount" type="text"></ion-input>
+            <ion-input formControlName="loadedBunchCount" type="number"></ion-input>
           </ion-item>
           <button class="formBtnCircle" type="submit" ion-button full [disabled]="!loadAuthForm.valid">{{ "_SUBMIT_BTN" | translate }}</button>
         </form>

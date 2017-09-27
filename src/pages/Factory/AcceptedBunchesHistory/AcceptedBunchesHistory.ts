@@ -19,8 +19,17 @@ export class AcceptedBunchesHistoryPage {
     labelsFromStorage: any; UserGUID: any;
     acceptedBunchesHistoryData: any; ifConnect: Subscription;
     localHistoryData: any;    UIDFromMobile: string;
-    
+
     constructor(private appCntrl:App,public global: SharedFunctions, private myCloud: StorageService, private network: Network, public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController, public http: Http, public platform: Platform, public actionsheetCtrl: ActionSheetController, public translate: TranslateService, public translateService: TranslateService) {
+    }
+
+    refreshData(refresher) {
+      if (this.network.type != "none") {
+        this.historyDataInitializer();
+      }
+      setTimeout(() => {
+        refresher.complete();
+      }, 3000);
     }
 
     //-----------------------Offline Sync---------------------------
@@ -47,11 +56,11 @@ export class AcceptedBunchesHistoryPage {
                 }
             });
 
-           
+
         }
     }
     ionViewWillEnter() {
-        this.UIDFromMobile = localStorage.getItem("device_UUID");                
+        this.UIDFromMobile = localStorage.getItem("device_UUID");
         this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
         this.ifConnect = this.network.onConnect().subscribe(data => {
             this.historyDataInitializer();

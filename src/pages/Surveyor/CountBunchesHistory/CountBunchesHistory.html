@@ -16,6 +16,14 @@
 </ion-header> -->
 
 <ion-content class="bgColor-lightGrey contentMarginTop">
+    <ion-refresher (ionRefresh) = "refreshData($event);">
+        <ion-refresher-content
+        pullingText = "Pull To Refresh"
+        refreshingSpinner="circles"
+        refreshingText="Fetching Data...">
+        </ion-refresher-content>
+      </ion-refresher>
+
   <div class="headerBox bgColor-gradOrange">
     <div class="headerBoxTitle2">{{ "_COUNT_BUNCHES_HISTORY_HEADER" | translate }}</div>
   </div>
@@ -142,5 +150,5 @@
 
     </div>
   </div>-->
-  
+
 </ion-content>

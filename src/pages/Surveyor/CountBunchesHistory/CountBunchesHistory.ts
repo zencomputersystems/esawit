@@ -24,6 +24,15 @@ export class CountBunchesHistoryPage {
 
     }
 
+    refreshData(refresher) {
+      if (this.network.type != "none") {
+        this.historyDataInitializer();
+      }
+      setTimeout(() => {
+        refresher.complete();
+      }, 3000);
+    }
+
     //-----------------------Offline Sync---------------------------
     historyDataInitializer() {
         if (this.network.type == "none") {
@@ -52,9 +61,9 @@ export class CountBunchesHistoryPage {
     }
 
     ionViewWillEnter() {
-        this.UIDFromMobile = localStorage.getItem("device_UUID");        
-        this.ifConnect = this.network.onConnect().subscribe(data => {          
-            this.historyDataInitializer();            
+        this.UIDFromMobile = localStorage.getItem("device_UUID");
+        this.ifConnect = this.network.onConnect().subscribe(data => {
+            this.historyDataInitializer();
         }, error => console.log('Error In SurveyorHistory :' + error));
 
         //-----------------------------------------Web Design Purpose------------------------------------
