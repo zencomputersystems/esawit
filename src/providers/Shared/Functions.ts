@@ -103,10 +103,6 @@ export class SharedFunctions {
     confirm.present();
   }
 
-
-
-
-
   showToast(position: string, tostMessage: string) {
     let toast = this.toastCtrl.create({
       message: tostMessage,

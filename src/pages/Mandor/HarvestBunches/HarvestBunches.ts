@@ -56,6 +56,15 @@ export class HarvestBunchesPage {
         });
     }
 
+    refreshData(refresher) {
+      if (this.network.type != "none") {
+        this.syncAndRefresh();
+      }
+      setTimeout(() => {
+        refresher.complete();
+      }, 3000);
+    }
+
     isLoadValid(loadValue: number) {
         if (loadValue > this.balanceHarvested) return false;
         else return true;
@@ -77,14 +86,14 @@ export class HarvestBunchesPage {
                 this.myCloud.syncLoadHistoryCloudToSQLite();
                 this.myCloud.getVehicleDriverListFromCloud();
             }
-        });       
+        });
     }
 
     //-----------------------Offline Sync---------------------------
 
     ionViewWillEnter() {
         this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
-        this.UIDFromMobile = localStorage.getItem("device_UUID");                
+        this.UIDFromMobile = localStorage.getItem("device_UUID");
         if (this.network.type != "none") {
             this.syncAndRefresh();
         }

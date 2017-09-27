@@ -19,7 +19,14 @@ export class SurveyorHomePage {
     UIDFromMobile: any;
     constructor(private http: Http, public appCtrl: App, private network: Network, private myCloud: StorageService, public navCtrl: NavController, public platform: Platform, public actionsheetCtrl: ActionSheetController, public translate: TranslateService, public translateService: TranslateService) {
     }
-
+    refreshData(refresher) {
+      if (this.network.type != "none") {
+        this.SyncAndRefresh();
+      }
+      setTimeout(() => {
+        refresher.complete();
+      }, 3000);
+    }
     SyncAndRefresh() {
         var url = constants.DREAMFACTORY_TABLE_URL + "/user_imei?filter=user_IMEI=" + this.UIDFromMobile + "&api_key=" + constants.DREAMFACTORY_API_KEY;
         this.http.get(url).map(res => res.json()).subscribe(data => {
@@ -30,7 +37,7 @@ export class SurveyorHomePage {
             }
             else {
                 this.myCloud.getUserLocationListFromCloud();
-                
+
                 this.myCloud.saveSurveyToCloudFromSQLite();
                 this.myCloud.syncHistoryCloudToSQLite();
             }
@@ -38,7 +45,7 @@ export class SurveyorHomePage {
     }
 
     ionViewWillEnter() {
-        this.UIDFromMobile = localStorage.getItem("device_UUID");        
+        this.UIDFromMobile = localStorage.getItem("device_UUID");
         if (this.network.type != "none") {
             this.SyncAndRefresh();
         }

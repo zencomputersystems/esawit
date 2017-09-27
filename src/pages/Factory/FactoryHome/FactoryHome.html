@@ -18,7 +18,13 @@
 
 
 <ion-content class="bgColor-gradOrange contentMarginTop">
-
+    <ion-refresher (ionRefresh) = "refreshData($event);">
+        <ion-refresher-content
+        pullingText = "Pull To Refresh"
+        refreshingSpinner="circles"
+        refreshingText="Fetching Data...">
+        </ion-refresher-content>
+      </ion-refresher>
   <div class="headerBox2">
 
     <div class="headerBoxTitle1">{{"_ACCEPTED_LBL" | translate}}</div>

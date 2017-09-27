@@ -18,9 +18,18 @@ import { UnAuthorizedUserPage } from '../../Shared/UnAuthorizedUser/UnAuthorized
 export class MandorHomePage {
     ifConnect: Subscription;
     UserGUID: string;    UIDFromMobile: string;
-    
+
     totalHarvested: number; totalLoaded: number; balanceHarvested: number;
     constructor(public appCtrl: App,private network: Network, public global: SharedFunctions, public http: Http, private sqlite: SQLite, private myCloud: StorageService, private mainMenu: SharedFunctions, public navCtrl: NavController, public platform: Platform, public actionsheetCtrl: ActionSheetController, public translate: TranslateService, public translateService: TranslateService) {
+    }
+
+    refreshData(refresher) {
+      if (this.network.type != "none") {
+        this.syncAndRefresh();
+      }
+      setTimeout(() => {
+        refresher.complete();
+      }, 3000);
     }
 
     //-----------------------Offline Sync---------------------------
@@ -39,15 +48,16 @@ export class MandorHomePage {
                 this.myCloud.saveLoadToCloudFromSQLite();
                 this.myCloud.syncLoadHistoryCloudToSQLite();
                 this.myCloud.getVehicleDriverListFromCloud();
+                this.getSummary();
 
             }
-        });     
+        });
     }
 
     ionViewWillEnter() {
         this.UserGUID = localStorage.getItem('loggedIn_user_GUID');
-        this.UIDFromMobile = localStorage.getItem("device_UUID");        
-        
+        this.UIDFromMobile = localStorage.getItem("device_UUID");
+
         if (this.network.type != "none") {
             this.syncAndRefresh();
         }
@@ -55,8 +65,8 @@ export class MandorHomePage {
             this.syncAndRefresh();
         }, error => console.log('Error In SurveyorHistory :' + error));
 
-        this.getSummary();                
-        
+        this.getSummary();
+
 
     }
     ionViewWillLeave() {
@@ -153,6 +163,6 @@ export class MandorHomePage {
 
     public NewHarvest() {
         // this.navCtrl.setRoot(HarvestBunchesPage, {});
-        this.appCtrl.getRootNav().setRoot(HarvestBunchesPage);        
-    }    
+        this.appCtrl.getRootNav().setRoot(HarvestBunchesPage);
+    }
 }
